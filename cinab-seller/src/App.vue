@@ -8,7 +8,7 @@ import NavBar from './components/NavBar.vue';
 
 <div>
    <NavBar />
-   <RouterView  class="text-black sm:ml-52 p-2 mt-16"/>
+   <RouterView  class="text-black sm:ml-52 p-2 mt-16 bg-white dark:bg-gray-900"/>
 </div>
  
 
