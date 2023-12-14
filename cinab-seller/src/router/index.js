@@ -19,7 +19,11 @@ const router = createRouter({
       name: 'vendor',
       component: () => import('../views/VendorDetails.vue')
     },
-    
+    {
+      path: '/inbox',
+      name: 'inbox',
+      component: () => import('../views/ChatAreaView.vue')
+    },
     {
       path: '/about',
       name: 'about',
@@ -44,9 +48,13 @@ const router = createRouter({
       path: '/orders',
       name: 'Orders',
       component: () => import('../views/OrdersView.vue')
-    }
+    },
+    {
+      path: '/productform',
+      name: 'UploadForm',
+      component: () => import('../views/UploadFormView.vue')
+    },
 
-    
   ]
 })
 
