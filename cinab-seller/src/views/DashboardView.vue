@@ -93,7 +93,7 @@
 <template>
   <div class="dash text-black dark:text-white">
     <div class="grid gap-4">
-      <div class="grid grid-cols-4 gap-4">
+      <div class="grid md:grid-cols-4 grid-cols-2 gap-4">
 
 
         <div class="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
