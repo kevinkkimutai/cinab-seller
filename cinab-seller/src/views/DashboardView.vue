@@ -28,5 +28,22 @@ import SalesChart from '@/components/SalesChart.vue';
 
 
 <style scoped>
+.bg-green{
+  background-color: #A3C86D;
+}
+
+.bg-yellow{
+  background-color: #FDD761;
+}
+.bg-orange{
+  background-color: #FF7857;
+}
+
+.bg-purple{
+	background-color: #b17897;
+}
+.bg-blue{
+	background-color: #7a83ee;
+}
 
 </style>

@@ -17,11 +17,12 @@
             <div>
               <span class="text-lg font-bold">10</span>
             </div>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">Stock Inventory</p>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">Inventory</p>
           </div>
         </div>
       </a>
 
+      <a href="/offers">
         <div class="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
           <div class="flex-1 flex items-center justify-center bg-orange">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-10 h-10">
@@ -36,7 +37,10 @@
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">Offers</p>
           </div>
         </div>
+      </a>
 
+
+      <a href="/orders">
         <div class="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
           <div class="flex-1 flex items-center justify-center bg-blue">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-10 h-10">
@@ -51,6 +55,7 @@
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">Orders</p>
           </div>
         </div>
+      </a>
 
         <div class="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
           <div class="flex-1 flex items-center justify-center bg-green">
