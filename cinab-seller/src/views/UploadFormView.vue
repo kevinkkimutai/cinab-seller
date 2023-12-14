@@ -64,3 +64,48 @@
       </form>
     </div>
   </template>
+
+<script>
+export default {
+  data() {
+    return {
+      selectedFiles: [],
+    };
+  },
+  methods: {
+    submitForm() {
+      // The form is handling the submission logic here:
+    },
+    handleFileChange(event) {
+      const files = event.target.files;
+
+      // Check the number of files, there should be a maximum of three
+      if (files.length > 3) {
+        alert('Please upload a maximum of 3 files.');
+        event.target.value = ''; // Clear the file input
+        return;
+      }
+
+      // Checking the file types uploaded
+      for (const file of files) {
+        const fileType = file.type.split('/')[0]; // Get the file type (e.g., 'image')
+
+        if (fileType !== 'image') {
+          alert('Please upload only image files (PNG, JPG, JPEG).');
+          event.target.value = ''; // Clear the file input
+          return;
+        }
+      }
+
+      // Store the selected files
+      this.selectedFiles = Array.from(files);
+
+      console.log('File validation passed');
+    },
+  },
+};
+</script>
+
+<style scoped>
+    
+</style>
