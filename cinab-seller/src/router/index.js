@@ -38,7 +38,12 @@ const router = createRouter({
       path: '/inventory',
       name: 'Inventory',
       component: () => import('../views/InventoryView.vue')
-    }
+    },
+    {
+      path: '/productform',
+      name: 'UploadForm',
+      component: () => import('../views/UploadFormView.vue')
+    },
   ]
 })
 
