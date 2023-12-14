@@ -1,12 +1,170 @@
 <template>
-    <div class="grid grid-cols-2 md:grid-cols-4">
-<h2 class="text-black"> this is the inventory page</h2>
+    <div>
+
+
+
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+     <div class="bg-purple h-10">
+        <h1 class="font-bold text-xl ml-3 ">Stock Inventory</h1>
+    </div>
+
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                
+                <th scope="col" class="px-6 py-3">
+                    Product name
+                </th>
+
+                <th scope="col" class="px-6 py-3">
+                    Description
+                </th>
+               
+                <th scope="col" class="px-6 py-3">
+                    Category
+                </th>
+                
+                <th scope="col" class="px-6 py-3">
+                    In-Stock
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Price
+                </th>
+              
+                <th scope="col" class="px-6 py-3">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    Apple MacBook Pro 17"
+                </th>
+                <td class="px-6 py-4">
+                    Silver
+                </td>
+                <td class="px-6 py-4">
+                    Laptop
+                </td>
+                <td class="px-6 py-4">
+                    Yes
+                </td>
+              
+                <td class="px-6 py-4">
+                    $2999
+                </td>
+               
+                <td class="flex items-center px-6 py-4">
+                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                </td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+               
+                
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    Microsoft Surface Pro
+                </th>
+                <td class="px-6 py-4">
+                    White
+                </td>
+                <td class="px-6 py-4">
+                    Laptop PC
+                </td>
+                <td class="px-6 py-4">
+                    No
+                </td>
+               
+                <td class="px-6 py-4">
+                    $1999
+                </td>
+               
+                <td class="flex items-center px-6 py-4">
+                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                </td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+             
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    Magic Mouse 2
+                </th>
+                <td class="px-6 py-4">
+                    Black
+                </td>
+                <td class="px-6 py-4">
+                    Accessories
+                </td>
+                <td class="px-6 py-4">
+                    Yes
+                </td>
+              
+                <td class="px-6 py-4">
+                    $99
+                </td>
+              
+                <td class="flex items-center px-6 py-4">
+                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                </td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+    
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    Apple Watch
+                </th>
+                <td class="px-6 py-4">
+                    Black
+                </td>
+                <td class="px-6 py-4">
+                    Watches
+                </td>
+                <td class="px-6 py-4">
+                    Yes
+                </td>
+               
+                <td class="px-6 py-4">
+                    $199
+                </td>
+               
+                <td class="flex items-center px-6 py-4">
+                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                </td>
+            </tr>
+         
+        </tbody>
+    </table>
+</div>
 
     </div>
 </template>
+
+
+
+
+
 <script setup>
 
 </script>
 <style scoped>
-    
+    .bg-green{
+  background-color: #A3C86D;
+}
+
+.bg-yellow{
+  background-color: #FDD761;
+}
+.bg-orange{
+  background-color: #FF7857;
+}
+
+.bg-purple{
+	background-color: #b17897;
+}
+.bg-blue{
+	background-color: #7a83ee;
+}
 </style>
