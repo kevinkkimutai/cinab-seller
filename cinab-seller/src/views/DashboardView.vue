@@ -13,7 +13,7 @@ import SalesChart from '@/components/SalesChart.vue';
   <DashboardView />
   <SalesChart />
 
-   <div class="grid gap-4">
+   <div class="grid gap-4 mt-8">
   <div class="grid grid-cols-2 gap-4">
 
     <TableProducts />
