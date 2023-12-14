@@ -190,7 +190,7 @@
 </script>
 <style scoped>
 #popup-modal {
-    background-color: beige;
+    background-color: rgb(255, 255, 255);
 }
 
 </style>
