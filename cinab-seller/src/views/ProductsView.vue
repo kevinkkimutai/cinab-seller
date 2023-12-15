@@ -1,4 +1,5 @@
 <template>
+    
     <div class="w-full">
         <div class="title text-center">
             <h3 class="text-black dark:text-white font-bold text-md md:text-3xl underline pb-3">List Of All Products</h3>
