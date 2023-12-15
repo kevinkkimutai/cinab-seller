@@ -3,8 +3,7 @@
         <div class="title text-center">
             <h3 class="text-black dark:text-white font-bold text-md md:text-3xl underline pb-3">List Of All Products</h3>
         </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto ">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-2 mx-auto custom-grid">
             <div
                 class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <a href="#">
@@ -291,8 +290,40 @@ export default {
 
 </script>
 <style scoped>
-#popup-modal {
-    background-color: rgb(255, 255, 255);
+@media (max-width: 767px) {
+  /* Styles for screens smaller than 768px (e.g., mobile devices) */
+  .custom-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Styles for screens between 768px and 1023px (e.g., tablets) */
+  .custom-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  /* Styles for screens between 1024px and 1279px (e.g., 14-inch laptops) */
+  .custom-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1919px) {
+  /* Styles for screens between 1280px and 1919px (e.g., 22-inch monitors) */
+  .custom-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1920px) {
+  /* Styles for screens larger than 1919px (e.g., extra-large screens) */
+  .custom-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
 
 </style>
