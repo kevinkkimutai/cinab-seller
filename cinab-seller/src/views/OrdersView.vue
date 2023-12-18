@@ -30,7 +30,12 @@
                 <th scope="col" class="px-6 py-3">
                     Price
                 </th>
-              
+                <th scope="col" class="px-6 py-3">
+                    Units Bought
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Purchase Date
+                </th>
                 <th scope="col" class="px-6 py-3">
                     Action
                 </th>
@@ -55,6 +60,14 @@
                 <td class="px-6 py-4">
                     $2999
                 </td>
+                <td class="px-6 py-4">
+                    4
+                </td>
+                <td class="px-6 py-4">
+                    12-12-23
+                </td>
+               
+               
                
                 <td class="flex items-center px-6 py-4">
                     <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
@@ -80,6 +93,12 @@
                 <td class="px-6 py-4">
                     $1999
                 </td>
+                <td class="px-6 py-4">
+                    4
+                </td>
+                <td class="px-6 py-4">
+                    12-12-23
+                </td>
                
                 <td class="flex items-center px-6 py-4">
                     <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
@@ -104,6 +123,12 @@
                 <td class="px-6 py-4">
                     $99
                 </td>
+                <td class="px-6 py-4">
+                    4
+                </td>
+                <td class="px-6 py-4">
+                    12-12-23
+                </td>
               
                 <td class="flex items-center px-6 py-4">
                     <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
@@ -127,6 +152,12 @@
                
                 <td class="px-6 py-4">
                     $199
+                </td>
+                <td class="px-6 py-4">
+                    4
+                </td>
+                <td class="px-6 py-4">
+                    12-12-23
                 </td>
                
                 <td class="flex items-center px-6 py-4">
