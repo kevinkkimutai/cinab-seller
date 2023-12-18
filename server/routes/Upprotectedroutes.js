@@ -9,6 +9,7 @@ const router = express.Router();
 const userController = require("../controllers/UserController");
 
 router.post("/forget", userController.forgetPassword);
+router.post("/register", userController.create);
 router.post("/verify-otp", userController.VerifyOtp);
 router.put("/forget-password", userController.ResetPassword);
 router.post("/login", userController.authenticate);
