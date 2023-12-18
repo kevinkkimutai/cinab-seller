@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "cinab_user",
+    "password": "1UbBYmZJ8U6Xc8Lr5rESiV8luUuPtAOg",
+    "database": "cinab",
+    "host": "dpg-cm02c5ud3nmc738ia2rg-a.oregon-postgres.render.com",
+    "port": 5432,
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": true
+    }
+  },
+  "production": {
+    "username": "cinab_user",
+    "password": "1UbBYmZJ8U6Xc8Lr5rESiV8luUuPtAOg",
+    "database": "cinab",
+    "host": "dpg-cm02c5ud3nmc738ia2rg-a.oregon-postgres.render.com",
+    "port": 5432,
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": true
+    }
+  }
+}
