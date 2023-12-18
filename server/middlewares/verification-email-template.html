@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Verification</title>
+    <!-- Link the Tailwind CSS stylesheet -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div
+      style="background-color: #f3f4f6; padding: 16px; font-family: sans-serif"
+    >
+      <div
+        style="
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #ffffff;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          padding: 24px;
+        "
+      >
+        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 16px">
+          Email Verification
+        </h1>
+        <p>Hello, {name},</p>
+        <p style="margin-bottom: 16px">
+          Please verify your email by clicking the link below:
+        </p>
+        <a
+          href="{verificationLink}"
+          style="
+            background-color: #0074d9;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+          "
+          >Verify Email</a
+        >
+        <p style="margin-top: 16px">
+          If you did not request this email, please contact our support team. Do
+          not click the verification link.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
