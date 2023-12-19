@@ -330,7 +330,6 @@ const userController = {
         const { id, email, name, role } = user;
 
         return res.status(201).json({
-          token: accessToken,
           refreshToken: refreshToken,
           user: {
             id,
