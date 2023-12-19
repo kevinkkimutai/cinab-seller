@@ -345,7 +345,6 @@ const userController = {
       return res.status(400).send({ error: "Login failed" });
     }
   },
-  
 
   logout: async (req, res) => {
     try {
