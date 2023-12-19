@@ -14,7 +14,7 @@ export default function NavBar() {
             </svg>
          </button>
         <a href="/" class="flex ms-2 md:me-24">
-          <img src="../assets/cinablogo.png" class="h-8  me-3" alt="Cinab Logo" />
+          <img src="../assets/images/cinablogo.png" class="h-8  me-3" alt="Cinab Logo" />
           <span class="self-center text-xl font-semibold sm:text-2xl text-black whitespace-nowrap dark:text-white">Cinab-Seller</span>
         </a>
       </div>
