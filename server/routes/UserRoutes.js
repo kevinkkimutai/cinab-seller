@@ -28,4 +28,5 @@ router.delete("/logout", userController.logout);
  */
 router.get("/users", userController.getAllUsers);
 
+
 module.exports = router;
