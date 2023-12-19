@@ -6,10 +6,7 @@ require("dotenv").config();
 const { User, Token, UserProfile } = require("../models");
 
 const crypto = require("crypto");
-const {
-  sendEmails,
-  sendingEmails,
-} = require("../middlewares/Verification");
+const { sendEmails, sendingEmails } = require("../middlewares/Verification");
 function generateOTP() {
   const min = 1000; // Minimum 4-digit number
   const max = 9999; // Maximum 4-digit number
@@ -281,9 +278,6 @@ const userController = {
     }
   },
 
- 
-
- 
   // AUTHETICATION
   authenticate: async (req, res) => {
     try {
@@ -295,7 +289,7 @@ const userController = {
       if (!user) {
         return res.status(404).send({ error: "Email Not Found." });
       }
-    
+
       // Validate Password
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
@@ -346,6 +340,17 @@ const userController = {
     } catch (error) {
       console.log(error);
       return res.status(400).send({ error: "Login failed" });
+    }
+  },
+  
+  getAllUsers: async (req, res) => {
+    try {
+      const users = await User.findAll();
+      if (!users) {
+        return res.status(400).json({ users });
+      }
+    } catch (error) {
+      return res.status(500).send({ error: "Internal Server Error" });
     }
   },
 
