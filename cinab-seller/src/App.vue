@@ -5,16 +5,9 @@ import NavBar from './components/NavBar.vue';
 </script>
 
 <template>
-
-<div>
-   <NavBar />
-   <RouterView  class="text-black w-auto sm:ml-52 p-2 mt-16 bg-white dark:bg-gray-900"/>
-</div>
- 
-
-
+<NavBar />
+<RouterView  class="md:w-10/12 md:ml-56 p-2 pt-20" />
 </template>
 
 <style scoped>
-
 </style>

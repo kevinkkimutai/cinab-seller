@@ -165,7 +165,10 @@ const userController = {
     }
   },
 
-  //
+
+
+  // Function to reset password using OTP
+
   ResetPassword: async (req, res) => {
     try {
       const { otp, newPassword } = req.body;
@@ -342,8 +345,6 @@ const userController = {
       return res.status(400).send({ error: "Login failed" });
     }
   },
-
-
 
   logout: async (req, res) => {
     try {

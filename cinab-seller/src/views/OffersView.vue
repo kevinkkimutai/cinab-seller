@@ -1,10 +1,12 @@
 <template>
     <div>
-  
+
+
+
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-     <div class="bg-purple h-10">
-        <h1 class="font-bold text-xl ml-3 ">Stock Inventory</h1>
+     <div class="bg-orange h-10">
+        <h1 class="font-bold text-xl ml-3 ">Your Current Offers</h1>
     </div>
 
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -26,12 +28,18 @@
                     In-Stock
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Units Left
+                    Previous Price
                 </th>
-              
+                <th scope="col" class="px-6 py-3">
+                    Offer Price
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    End Date
+                </th>
                 <th scope="col" class="px-6 py-3">
                     Action
                 </th>
+
             </tr>
         </thead>
         <tbody>
@@ -51,9 +59,14 @@
                 </td>
               
                 <td class="px-6 py-4">
-                    99
+                    $2999
                 </td>
-               
+                <td class="px-6 py-4">
+                    $2500
+                </td>
+                <td class="px-6 py-4">
+                    15-7-23
+                </td>
                 <td class="flex items-center px-6 py-4">
                     <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                     <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
@@ -76,7 +89,13 @@
                 </td>
                
                 <td class="px-6 py-4">
-                    1
+                    $1999
+                </td>
+                <td class="px-6 py-4">
+                    $2500
+                </td>
+                <td class="px-6 py-4">
+                    15-7-23
                 </td>
                
                 <td class="flex items-center px-6 py-4">
@@ -100,7 +119,13 @@
                 </td>
               
                 <td class="px-6 py-4">
-                    99
+                    $99
+                </td>
+                <td class="px-6 py-4">
+                    $2500
+                </td>
+                <td class="px-6 py-4">
+                    15-7-23
                 </td>
               
                 <td class="flex items-center px-6 py-4">
@@ -124,7 +149,13 @@
                 </td>
                
                 <td class="px-6 py-4">
-                    19
+                    $199
+                </td>
+                <td class="px-6 py-4">
+                    $2500
+                </td>
+                <td class="px-6 py-4">
+                    15-7-23
                 </td>
                
                 <td class="flex items-center px-6 py-4">
@@ -144,7 +175,7 @@
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-lg font-bold  text-gray-900 dark:text-white">
-                   Update Product
+                   Update Offers
                 </h3>
                 <button type="button" class="text-red-600 bg-transparent hover:bg-red-200 hover:text-red-600 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-red-800" data-modal-toggle="crud-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -180,14 +211,24 @@
               
             </select>
           </div>
-          <div>
-            <label for="item-stock" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Stock/Quantity</label>
-            <input type="number" name="item-weight" id="item-weight" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10" required="">
-          </div>
+       
           <div class="sm:col-span-1">
             <label for="description" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Description</label>
             <textarea id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Your description here"></textarea>
           </div>
+          <div>
+            <label for="end-date" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">End date</label>
+            <input type="number" name="item-weight" id="item-weight" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10-12-23" required="">
+          </div>
+          <div>
+            <label for="previous-price" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Previous price</label>
+            <input type="number" name="item-weight" id="item-weight" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10" required="">
+          </div>
+          <div>
+            <label for="offer-price" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Offer price</label>
+            <input type="number" name="item-weight" id="item-weight" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10" required="">
+          </div>
+
           <div>
             <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white" for="multiple_files">Upload file(s)</label>
             <input
@@ -227,7 +268,7 @@
 
 
 
-
+ 
 <script>
 export default {
   data() {
@@ -268,6 +309,8 @@ export default {
   },
 };
 </script>
+
+
 <style scoped>
     .bg-green{
   background-color: #A3C86D;

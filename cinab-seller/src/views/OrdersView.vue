@@ -1,10 +1,12 @@
 <template>
     <div>
-  
+
+
+
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-     <div class="bg-purple h-10">
-        <h1 class="font-bold text-xl ml-3 ">Stock Inventory</h1>
+     <div class="bg-blue h-10">
+        <h1 class="font-bold text-xl ml-3 ">Your Current Orders</h1>
     </div>
 
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -26,9 +28,17 @@
                     In-Stock
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Units Left
+                    Price
                 </th>
-              
+                <th scope="col" class="px-6 py-3">
+                    Units Bought
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Purchase Date
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Status
+                </th>
                 <th scope="col" class="px-6 py-3">
                     Action
                 </th>
@@ -51,12 +61,23 @@
                 </td>
               
                 <td class="px-6 py-4">
-                    99
+                    $2999
+                </td>
+                <td class="px-6 py-4">
+                    4
+                </td>
+                <td class="px-6 py-4">
+                    12-12-23
+                </td>
+                <td class="px-6 py-4">
+                    Delivered
                 </td>
                
+               
+               
                 <td class="flex items-center px-6 py-4">
-                    <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                    <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                    
                 </td>
             </tr>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -76,12 +97,21 @@
                 </td>
                
                 <td class="px-6 py-4">
-                    1
+                    $1999
+                </td>
+                <td class="px-6 py-4">
+                    4
+                </td>
+                <td class="px-6 py-4">
+                    12-12-23
+                </td>
+                <td class="px-6 py-4">
+                    Delivered
                 </td>
                
                 <td class="flex items-center px-6 py-4">
-                    <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                    <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                   
                 </td>
             </tr>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -100,12 +130,21 @@
                 </td>
               
                 <td class="px-6 py-4">
-                    99
+                    $99
+                </td>
+                <td class="px-6 py-4">
+                    4
+                </td>
+                <td class="px-6 py-4">
+                    12-12-23
+                </td>
+                <td class="px-6 py-4">
+                    Delivered
                 </td>
               
                 <td class="flex items-center px-6 py-4">
-                    <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                    <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                 
                 </td>
             </tr>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -124,12 +163,21 @@
                 </td>
                
                 <td class="px-6 py-4">
-                    19
+                    $199
+                </td>
+                <td class="px-6 py-4">
+                    4
+                </td>
+                <td class="px-6 py-4">
+                    12-12-23
+                </td>
+                <td class="px-6 py-4">
+                    Delivered
                 </td>
                
                 <td class="flex items-center px-6 py-4">
-                    <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                    <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                   
                 </td>
             </tr>
          
@@ -224,8 +272,7 @@
     </div>
 </template>
 
-
-
+  
 
 
 <script>
@@ -268,6 +315,9 @@ export default {
   },
 };
 </script>
+
+
+
 <style scoped>
     .bg-green{
   background-color: #A3C86D;
