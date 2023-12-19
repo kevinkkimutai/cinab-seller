@@ -39,6 +39,19 @@ const userController = {
     }
   },
 
+  //Function to get all users
+  getUsers: async (req, res) =>{
+try{
+  const response= await User.findAll()
+  if(!response)return  res.status(404).json({error:"not found"})
+  else{
+return res.status(201).json({response})}
+  
+}
+catch (error)
+{return res.status(500).send({error:"failed"})}
+  },
+
   // Function to reset password using OTP
   ResetPassword: async (req, res) => {
     try {
