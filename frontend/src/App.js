@@ -1,5 +1,5 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route,  } from "react-router-dom";
 import {
   Dashboard,
   Inventory,
@@ -10,12 +10,24 @@ import {
   VendorDetails,
 } from "./pages";
 import { NavBar } from "./components";
+import { useStateContext } from "./contexts/ContextProvider";
+
 
 export default function App() {
+  const { setCurrentColor, setCurrentMode, currentMode, } =
+  useStateContext();
+useEffect(() => {
+  const currentThemeColor = localStorage.getItem("colorMode");
+  const currentThemeMode = localStorage.getItem("themeMode");
+  if (currentThemeColor && currentThemeMode) {
+    setCurrentColor(currentThemeColor);
+    setCurrentMode(currentThemeMode);
+  }
+}, [setCurrentColor, setCurrentMode]);
   return (
-    <div>
+    <div className={currentMode === "Light" ? "dark" : ""}>
       <NavBar />
-      <div className="md:w-10/12 md:ml-56 p-2 pt-20">
+      <div className="md:w-10/12 md:ml-56 p-2 pt-20 dark:bg-gray-900">
       <Routes >
           <Route index element={<Dashboard />} />
           <Route path="/inventory" element={<Inventory />} />
