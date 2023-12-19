@@ -342,17 +342,8 @@ const userController = {
       return res.status(400).send({ error: "Login failed" });
     }
   },
-  
-  getAllUsers: async (req, res) => {
-    try {
-      const users = await User.findAll();
-      if (!users) {
-        return res.status(400).json({ users });
-      }
-    } catch (error) {
-      return res.status(500).send({ error: "Internal Server Error" });
-    }
-  },
+
+
 
   logout: async (req, res) => {
     try {
