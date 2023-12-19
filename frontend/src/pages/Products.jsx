@@ -7,7 +7,7 @@ export default function Products() {
         <div class="title text-center">
             <h3 class="text-black dark:text-white font-bold text-md md:text-3xl underline pb-3">List Of All Products</h3>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-2 mx-auto custom-grid">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-2 mx-auto custom-grid">
             <div
                 class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div id="gallery" class="relative w-full" data-carousel="slide">
