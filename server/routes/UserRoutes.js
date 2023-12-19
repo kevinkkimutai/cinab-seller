@@ -23,4 +23,9 @@ router.put("/users/:id", userController.updateUser);
  */
 router.delete("/logout", userController.logout);
 
+/**
+ * Get user.
+ */
+router.get("/user", userController.getUsers);
+
 module.exports = router;
