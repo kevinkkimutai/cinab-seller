@@ -165,7 +165,10 @@ const userController = {
     }
   },
 
-  //
+
+
+  // Function to reset password using OTP
+
   ResetPassword: async (req, res) => {
     try {
       const { otp, newPassword } = req.body;
@@ -343,16 +346,6 @@ const userController = {
     }
   },
   
-  getAllUsers: async (req, res) => {
-    try {
-      const users = await User.findAll();
-      if (!users) {
-        return res.status(400).json({ users });
-      }
-    } catch (error) {
-      return res.status(500).send({ error: "Internal Server Error" });
-    }
-  },
 
   logout: async (req, res) => {
     try {
