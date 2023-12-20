@@ -4,21 +4,20 @@ export default function Inventory() {
   return (
     <div>
   
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
-<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
- <div className="bg-purple h-10">
-    <h1 className="font-bold text-xl ml-3 ">Stock Inventory</h1>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
+    <div class="bg-purple h-10">
+    <h1 class="font-bold text-xl ml-3 ">Stock Inventory</h1>
+
 </div>
+<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+
 
     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
             
             <th scope="col" className="px-6 py-3">
                 Product name
-            </th>
-
-            <th scope="col" className="px-6 py-3">
-                Description
             </th>
            
             <th scope="col" className="px-6 py-3">
@@ -43,10 +42,10 @@ export default function Inventory() {
             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Apple MacBook Pro 17"
             </th>
-            <td className="px-6 py-4">
-                Silver
-            </td>
-            <td className="px-6 py-4">
+
+   
+            <td class="px-6 py-4">
+
                 Laptop
             </td>
             <td className="px-6 py-4">
@@ -68,10 +67,10 @@ export default function Inventory() {
             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Microsoft Surface Pro
             </th>
-            <td className="px-6 py-4">
-                White
-            </td>
-            <td className="px-6 py-4">
+
+          
+            <td class="px-6 py-4">
+
                 Laptop PC
             </td>
             <td className="px-6 py-4">
@@ -92,10 +91,10 @@ export default function Inventory() {
             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Magic Mouse 2
             </th>
-            <td className="px-6 py-4">
-                Black
-            </td>
-            <td className="px-6 py-4">
+
+       
+            <td class="px-6 py-4">
+
                 Accessories
             </td>
             <td className="px-6 py-4">
@@ -116,10 +115,10 @@ export default function Inventory() {
             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Apple Watch
             </th>
-            <td className="px-6 py-4">
-                Black
-            </td>
-            <td className="px-6 py-4">
+
+    
+            <td class="px-6 py-4">
+
                 Watches
             </td>
             <td className="px-6 py-4">
@@ -187,10 +186,9 @@ export default function Inventory() {
         <label for="item-stock" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Stock/Quantity</label>
         <input type="number" name="item-weight" id="item-weight" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10" required="" />
       </div>
-      <div className="sm:col-span-1">
-        <label for="description" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-        <textarea id="description" rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Your description here"></textarea>
-      </div>
+
+   
+
       <div>
         <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-white" for="multiple_files">Upload file(s)</label>
         <input
@@ -207,7 +205,7 @@ export default function Inventory() {
       <div v-if="selectedFiles.length > 0">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white mt-4 mb-1">Selected Files:</h3>
         <ul>
-          <li v-for="(file, index) in selectedFiles" key="index">file</li>
+          <li v-for="(file, index) in selectedFiles" key="index"></li>
         </ul>
       </div>
       <div className="mt-4 sm:mt- sm:col-span-2">
