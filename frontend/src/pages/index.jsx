@@ -6,5 +6,6 @@ export { default as Orders } from "../pages/Orders";
 export { default as Products } from "../pages/Products";
 export { default as UploadForm } from "../pages/UploadForm";
 export { default as VendorDetails } from "../pages/VendorDetails";
+export { default as Sales } from "../pages/Sales";
 
 
