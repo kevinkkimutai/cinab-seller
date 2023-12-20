@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Routes, Route,  } from "react-router-dom";
 import {
   Dashboard,
+  GetVendors,
   Inventory,
   Login,
   Offers,
@@ -38,6 +39,7 @@ useEffect(() => {
           <Route path="/productform" element={<UploadForm />} />
           <Route path="/vendor" element={<VendorDetails />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/get/vendors" element={<GetVendors />} />
         </Routes>
       </div>
     
