@@ -4,10 +4,12 @@ export default function Offers() {
   return (
     <div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <div className="bg-orange h-10">
+
+      <div className="bg-orange h-10">
             <h1 className="font-bold text-xl ml-3 ">Your Current Offers</h1>
           </div>
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+         
 
 
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

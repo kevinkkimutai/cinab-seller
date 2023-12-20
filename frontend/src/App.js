@@ -10,6 +10,7 @@ import {
   Products,
   UploadForm,
   VendorDetails,
+  Sales
 } from "./pages";
 import { NavBar } from "./components";
 import { useStateContext } from "./contexts/ContextProvider";
@@ -41,6 +42,7 @@ useEffect(() => {
           <Route path="/vendor" element={<VendorDetails />} />
           <Route path="/login" element={<Login />} />
           <Route path="/vendors" element={<GetVendors />} />
+          <Route path="/sales" element={<Sales />} />
         </Routes>
       </div>
     </div>
