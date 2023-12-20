@@ -9,8 +9,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      pname: {
         type: Sequelize.STRING
+      },
+      brand: {
+        type: Sequelize.STRING
+      },
+      category: {
+        type: Sequelize.STRING
+      },
+      stock: {
+        type: Sequelize.FLOAT
       },
       price: {
         type: Sequelize.FLOAT
