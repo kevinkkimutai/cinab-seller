@@ -9,7 +9,34 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      businessName: {
+        type: Sequelize.STRING
+      },
+      kraPin: {
+        type: Sequelize.STRING
+      },
+      tradingLicense: {
+        type: Sequelize.STRING
+      },
+      companyAddress: {
+        type: Sequelize.STRING
+      },
+      streetAddress: {
+        type: Sequelize.STRING
+      },
+      city: {
+        type: Sequelize.STRING
+      },
+      phoneNumber: {
+        type: Sequelize.STRING
+      },
+      companyEmail: {
+        type: Sequelize.STRING
+      },
+      website: {
+        type: Sequelize.STRING
+      },
+      serviceDetails: {
         type: Sequelize.STRING
       },
       createdAt: {
