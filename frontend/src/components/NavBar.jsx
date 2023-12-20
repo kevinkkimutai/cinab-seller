@@ -20,12 +20,12 @@ export default function NavBar() {
           <span class="self-center text-xl font-semibold sm:text-2xl text-black whitespace-nowrap dark:text-white">Cinab-Seller</span>
         </a>
       </div>
-      <div class="flex items-center">
+      <div class="flex items-center">G
           <div class="flex items-center ms-3">
             <div>
               <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                 <span class="sr-only">Open user menu</span>
-                <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user phot" />
+                <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" />
               </button>
             </div>
             <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
@@ -51,7 +51,6 @@ export default function NavBar() {
     </div>
   </div>
 </nav>
-
 
 <aside id="logo-sidebar" class="fixed top-14 left-0 z-50 w-56 h-screen pt-4 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-green-800 dark:border-gray-700" aria-label="Sidebar">
    <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
@@ -110,9 +109,6 @@ export default function NavBar() {
       </ul>
    </div>
 </aside>
-
-
-
     </>
   );
 }
