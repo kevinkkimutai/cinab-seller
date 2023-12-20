@@ -1,13 +1,9 @@
 import React from "react";
 import Image from "../assets/cinablogo.png";
-import { BiSun, BiMoon } from "react-icons/bi";
-import { useStateContext } from "../contexts/ContextProvider";
+
 
 export default function NavBar() {
-  const {
-    currentMode,
-    setMode, // Function to toggle mode
-  } = useStateContext();
+
   return (
     <>
 
