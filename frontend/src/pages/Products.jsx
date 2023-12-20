@@ -3,7 +3,7 @@ import React from 'react'
 export default function Products() {
   return (
 
-    <div className="w-full h-full max-h-full overflow-y-auto">
+    <div className="w-full h-full max-h-full overflow-y-auto scrollbar-hidden">
         <div className="title text-center">
             <h3 className="text-black dark:text-white font-bold text-md md:text-3xl underline pb-3">List Of All Products</h3>
         </div>
