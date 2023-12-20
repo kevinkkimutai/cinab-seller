@@ -6,6 +6,7 @@ import {
   Inventory,
   Offers,
   Orders,
+  Login,
   Products,
   UploadForm,
   VendorDetails,
