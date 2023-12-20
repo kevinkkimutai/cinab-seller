@@ -2,18 +2,18 @@ import React from "react";
 
 export default function DashboardPanels() {
   return (
-    <div class="grid gap-4">
-      <div class="grid md:grid-cols-4 grid-cols-2 gap-4">
+    <div className="grid gap-4">
+      <div className="grid md:grid-cols-4 grid-cols-2 gap-4">
         <a href="/inventory">
-          <div class="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
-            <div class="flex-1 flex items-center justify-center bg-purple">
+          <div className="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
+            <div className="flex-1 flex items-center justify-center bg-purple">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="white"
-                class="w-10 h-10"
+                className="w-10 h-10"
               >
                 <path
                   stroke-linecap="round"
@@ -22,11 +22,11 @@ export default function DashboardPanels() {
                 />
               </svg>
             </div>
-            <div class="flex-1 p-4">
+            <div className="flex-1 p-4">
               <div>
-                <span class="text-lg font-bold">10</span>
+                <span className="text-lg font-bold">10</span>
               </div>
-              <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">
+              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">
                 Inventory
               </p>
             </div>
@@ -34,15 +34,15 @@ export default function DashboardPanels() {
         </a>
 
         <a href="/offers">
-          <div class="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
-            <div class="flex-1 flex items-center justify-center bg-orange">
+          <div className="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
+            <div className="flex-1 flex items-center justify-center bg-orange">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="white"
-                class="w-10 h-10"
+                className="w-10 h-10"
               >
                 <path
                   stroke-linecap="round"
@@ -51,11 +51,11 @@ export default function DashboardPanels() {
                 />
               </svg>
             </div>
-            <div class="flex-1 p-4">
+            <div className="flex-1 p-4">
               <div>
-                <span class="text-lg font-bold">10</span>
+                <span className="text-lg font-bold">10</span>
               </div>
-              <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">
+              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">
                 Offers
               </p>
             </div>
@@ -63,15 +63,15 @@ export default function DashboardPanels() {
         </a>
 
         <a href="/orders">
-          <div class="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
-            <div class="flex-1 flex items-center justify-center bg-blue">
+          <div className="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
+            <div className="flex-1 flex items-center justify-center bg-blue">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="white"
-                class="w-10 h-10"
+                className="w-10 h-10"
               >
                 <path
                   stroke-linecap="round"
@@ -80,26 +80,26 @@ export default function DashboardPanels() {
                 />
               </svg>
             </div>
-            <div class="flex-1 p-4">
+            <div className="flex-1 p-4">
               <div>
-                <span class="text-lg font-bold">10</span>
+                <span className="text-lg font-bold">10</span>
               </div>
-              <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">
+              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">
                 Orders
               </p>
             </div>
           </div>
         </a>
 
-        <div class="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
-          <div class="flex-1 flex items-center justify-center bg-green">
+        <div className="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
+          <div className="flex-1 flex items-center justify-center bg-green">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="white"
-              class="w-10 h-10"
+              className="w-10 h-10"
             >
               <path
                 stroke-linecap="round"
@@ -108,11 +108,11 @@ export default function DashboardPanels() {
               />
             </svg>
           </div>
-          <div class="flex-1 p-4">
+          <div className="flex-1 p-4">
             <div>
-              <span class="text-lg font-bold">10</span>
+              <span className="text-lg font-bold">10</span>
             </div>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">
+            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">
               Products
             </p>
           </div>
