@@ -8,7 +8,11 @@ const http = require("http");
 const socketIo = require("socket.io");
 const unprotectRoutes = require("./routes/Upprotectedroutes");
 const UserRoutes = require("./routes/UserRoutes");
+
+const VendorsRoutes = require("./routes/vendorsRoutes")
+
 const ProductRoutes = require("./routes/ProductRoutes");
+
 
 // const verifyJWT = require("./middlewares/verifyJWT");
 require("dotenv").config();
@@ -36,6 +40,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Put here unprotected routes
 app.use("/v2", UserRoutes);
 app.use("/v2", unprotectRoutes);
+app.use("/v2", VendorsRoutes);
 
 // put here product routes
 app.use("/v2", ProductRoutes);
