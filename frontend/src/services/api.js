@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setCredentials, logOut } from "../reducers/AuthReducers";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost/5000/v1",
+  baseUrl: "http://localhost:5000/v2",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
@@ -35,7 +35,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
         result = await baseQuery(args, api, extraOptions);
       } else {
         api.dispatch(logOut());
-        
       }
     } else {
       api.dispatch(logOut());

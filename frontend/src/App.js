@@ -3,6 +3,7 @@ import { Routes, Route,  } from "react-router-dom";
 import {
   Dashboard,
   Inventory,
+  Login,
   Offers,
   Orders,
   Products,
@@ -36,6 +37,7 @@ useEffect(() => {
           <Route path="/orders" element={<Orders />} />
           <Route path="/productform" element={<UploadForm />} />
           <Route path="/vendor" element={<VendorDetails />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
     
