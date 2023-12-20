@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 .bg-green{
     background-color: #A3C86D;
   }
@@ -20,3 +21,4 @@
       background-color: #7a83ee;
   }
   
+
