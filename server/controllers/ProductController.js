@@ -6,13 +6,13 @@ const productController = {
 getAllProducts: async (req, res) => {
   try {
     const products = await Product.findAll();
-    res.json(products);
+  res.status(201).json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 },
 createProduct: async (req, res) => {
-  const { userId, name, description, price, image} = req.body;
+  const { userId, pname, category, stock, brand, description, price, image} = req.body;
 
   try {
     const user = await User.findByPk(userId);
@@ -30,7 +30,10 @@ createProduct: async (req, res) => {
       try {
         const newProduct = await Product.create({
           userId,
-          name,
+          pname,
+          category,
+          stock,
+          brand,
           description,
           price,
           image: "filename.png", // Save the filename in the 'image' field of the product
