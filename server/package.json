@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "serve": "npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate"
+    "serve": "npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all"
   },
   "author": "Moses Ochacha (ochachamoses334@gmail.com)",
   "license": "ISC",
