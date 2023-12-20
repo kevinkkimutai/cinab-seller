@@ -25,6 +25,7 @@ useEffect(() => {
   }
 }, [setCurrentColor, setCurrentMode]);
   return (
+    <>
     <div className={`min-h-screen ${currentMode === "Light" ? "dark h-screen" : "h-screen"}`}>
     <NavBar />
     <div className={`md:w-10/12 md:ml-56 p-2 pt-20 dark:bg-gray-900 h-full`}>
@@ -39,7 +40,7 @@ useEffect(() => {
       </Routes>
     </div>
   </div>
-  
+  </>
    
   );
 }
