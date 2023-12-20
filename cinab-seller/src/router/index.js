@@ -50,6 +50,11 @@ const router = createRouter({
       component: () => import('../views/OrdersView.vue')
     },
     {
+      path: '/sales',
+      name: 'Sales',
+      component: () => import('../views/SalesView.vue')
+    },
+    {
       path: '/productform',
       name: 'UploadForm',
       component: () => import('../views/UploadFormView.vue')

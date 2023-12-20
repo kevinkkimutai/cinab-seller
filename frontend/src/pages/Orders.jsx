@@ -6,11 +6,14 @@ export default function Orders() {
 
 
 
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
-<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
- <div className="bg-blue h-10">
-    <h1 className="font-bold text-xl ml-3 ">Your Current Orders</h1>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
+    <div class="bg-blue h-10">
+    <h1 class="font-bold text-xl ml-3 ">Your Current Orders</h1>
+
 </div>
+<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+
 
     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
