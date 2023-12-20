@@ -12,7 +12,7 @@ export default function DashboardPanels() {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
-                stroke="white"
+                stroke="currentColor"
                 class="w-10 h-10"
               >
                 <path

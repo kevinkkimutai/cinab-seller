@@ -18,9 +18,6 @@ export default function Inventory() {
                 Product name
             </th>
 
-            <th scope="col" class="px-6 py-3">
-                Description
-            </th>
            
             <th scope="col" class="px-6 py-3">
                 Category
@@ -44,9 +41,7 @@ export default function Inventory() {
             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Apple MacBook Pro 17"
             </th>
-            <td class="px-6 py-4">
-                Silver
-            </td>
+   
             <td class="px-6 py-4">
                 Laptop
             </td>
@@ -69,9 +64,7 @@ export default function Inventory() {
             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Microsoft Surface Pro
             </th>
-            <td class="px-6 py-4">
-                White
-            </td>
+          
             <td class="px-6 py-4">
                 Laptop PC
             </td>
@@ -93,9 +86,7 @@ export default function Inventory() {
             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Magic Mouse 2
             </th>
-            <td class="px-6 py-4">
-                Black
-            </td>
+       
             <td class="px-6 py-4">
                 Accessories
             </td>
@@ -117,9 +108,7 @@ export default function Inventory() {
             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 Apple Watch
             </th>
-            <td class="px-6 py-4">
-                Black
-            </td>
+    
             <td class="px-6 py-4">
                 Watches
             </td>
@@ -188,10 +177,7 @@ export default function Inventory() {
         <label for="item-stock" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Stock/Quantity</label>
         <input type="number" name="item-weight" id="item-weight" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10" required="" />
       </div>
-      <div class="sm:col-span-1">
-        <label for="description" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-        <textarea id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Your description here"></textarea>
-      </div>
+   
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white" for="multiple_files">Upload file(s)</label>
         <input
@@ -208,7 +194,7 @@ export default function Inventory() {
       <div v-if="selectedFiles.length > 0">
         <h3 class="text-lg font-medium text-gray-900 dark:text-white mt-4 mb-1">Selected Files:</h3>
         <ul>
-          <li v-for="(file, index) in selectedFiles" key="index">file</li>
+          <li v-for="(file, index) in selectedFiles" key="index"></li>
         </ul>
       </div>
       <div class="mt-4 sm:mt- sm:col-span-2">
