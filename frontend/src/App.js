@@ -30,7 +30,7 @@ useEffect(() => {
 
     <div className={currentMode === "Light" ? "dark" : ""}>
       <NavBar />
-      <div className="md:w-10/12 md:ml-56 p-2 pt-20 dark:bg-gray-900  max-h-screen h-screen">
+      <div className="md:w-10/12 md:ml-56 p-2 pt-20 dark:bg-gray-900 w-full max-h-screen h-screen">
       <Routes >
           <Route index element={<Dashboard />} />
           <Route path="/inventory" element={<Inventory />} />
@@ -40,7 +40,7 @@ useEffect(() => {
           <Route path="/productform" element={<UploadForm />} />
           <Route path="/vendor" element={<VendorDetails />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/get/vendors" element={<GetVendors />} />
+          <Route path="/vendors" element={<GetVendors />} />
         </Routes>
       </div>
     </div>
