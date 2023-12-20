@@ -36,12 +36,12 @@ export default function NavBar() {
                   ></path>
                 </svg>
               </button>
-              <a href="/" class="flex ms-2 md:me-24">
+              {/* <a href="/" class="flex ms-2 md:me-24">
                 <img src={Image} class="h-8  me-3" alt="Cinab Logo" />
                 <span class="self-center text-xl font-semibold sm:text-2xl text-black whitespace-nowrap dark:text-white">
                   Cinab-Seller
                 </span>
-              </a>
+              </a> */}
             </div>
             <div class="flex items-center">
               <div class="flex items-center ms-3">
