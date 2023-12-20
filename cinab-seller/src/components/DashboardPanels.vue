@@ -57,6 +57,7 @@
         </div>
       </a>
 
+      <a href="/sales">
         <div class="max-w-sm max-h-100 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex">
           <div class="flex-1 flex items-center justify-center bg-green">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-10 h-10">
@@ -68,9 +69,10 @@
             <div>
               <span class="text-lg font-bold">10</span>
             </div>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">Products</p>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-lg">Sales</p>
           </div>
         </div>
+      </a>
 
       </div>
     </div>
