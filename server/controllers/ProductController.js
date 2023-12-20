@@ -1,5 +1,5 @@
 // controllers/productController.js
-const { Product } = require('../models');
+const { Product,User } = require('../models');
 
 const productController = {
 
@@ -12,7 +12,7 @@ getAllProducts: async (req, res) => {
   }
 },
 createProduct: async (req, res) => {
-  const { userId, name, description, price } = req.body;
+  const { userId, name, description, price, image} = req.body;
 
   try {
     const user = await User.findByPk(userId);
@@ -22,19 +22,18 @@ createProduct: async (req, res) => {
     }
 
     // Use the file upload middleware
-    upload.single('image')(req, res, async (err) => {
-      if (err) {
-        return res.status(400).json({ message: err.message });
-      }
 
-      const { filename } = req.file; // Assuming the file field is named 'image'
+  
+
+      // const { filename } = req.file; // Assuming the file field is named 'image'
 
       try {
         const newProduct = await Product.create({
+          userId,
           name,
           description,
           price,
-          image: filename, // Save the filename in the 'image' field of the product
+          image: "filename.png", // Save the filename in the 'image' field of the product
         });
 
         await user.addProduct(newProduct);
@@ -43,7 +42,7 @@ createProduct: async (req, res) => {
       } catch (error) {
         res.status(400).json({ message: error.message });
       }
-    });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

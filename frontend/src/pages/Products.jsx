@@ -2,12 +2,13 @@ import React from 'react'
 
 export default function Products() {
   return (
-       
+
     <div className="w-full h-full max-h-full overflow-y-auto">
         <div className="title text-center">
             <h3 className="text-black dark:text-white font-bold text-md md:text-3xl underline pb-3">List Of All Products</h3>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4  gap-2 mx-auto custom-grid">
+
             <div
                 className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div id="gallery" className="relative w-full" data-carousel="slide">
