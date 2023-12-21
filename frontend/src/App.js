@@ -12,9 +12,9 @@ import {
   UploadForm,
   VendorDetails,
 } from "./pages";
-// import { NavBar } from "./components";
-import { useStateContext } from "./contexts/ContextProvider";
 import { NavBar } from "./components";
+import { useStateContext } from "./contexts/ContextProvider";
+
 
 
 export default function App() {
