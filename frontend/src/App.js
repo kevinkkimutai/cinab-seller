@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Image from "./assets/cinablogo.png";
 import { Routes, Route,  } from "react-router-dom";
 import {
   Dashboard,
@@ -11,8 +12,9 @@ import {
   UploadForm,
   VendorDetails,
 } from "./pages";
-import { NavBar } from "./components";
+// import { NavBar } from "./components";
 import { useStateContext } from "./contexts/ContextProvider";
+import { NavBar } from "./components";
 
 
 export default function App() {
@@ -29,7 +31,7 @@ useEffect(() => {
   return (
 
     <div className={currentMode === "Light" ? "dark" : ""}>
-      <NavBar />
+<NavBar />
       <div className="md:w-10/12 md:ml-56 p-2 pt-16 dark:bg-gray-900 w-full max-h-screen h-screen">
       <Routes >
           <Route index element={<Dashboard />} />
