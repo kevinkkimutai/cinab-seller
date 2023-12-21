@@ -4,8 +4,45 @@ export default function Products() {
   return (
 
     <div className="w-full h-full max-h-full overflow-y-auto scrollbar-hidden">
-        <div className="title text-center">
-            <h3 className="text-black dark:text-white font-bold text-md md:text-3xl underline pb-3">List Of All Products</h3>
+          <div className="table-header p-2 mb-3 flex justify-between bg-gray-300 dark:bg-gray-800 rounded-t-lg">
+          <h1 className="dark:text-gray-50 text-gray-800 md:text-4xl font-serif">
+            List of all products
+          </h1>
+          <div className="flex gap-x-3">
+            <form className="flex items-center">
+              <label htmlFor="simple-search" className="sr-only">
+                Search
+              </label>
+              <div className="relative mb- mt-">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <svg
+                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 18 20"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 5v10M3 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 10a2 2 0 1 0 0-4 2 2 0 0 0 0-4Zm0 0V6a3 3 0 0 0-3-3H9m1.5-2-2 2 2 2"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  id="simple-search"
+                //   value={searchQuery}
+                //   onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-gray-50 border border-gray-100 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Search..."
+                  required
+                />
+              </div>
+            </form>
+          </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4  gap-2 mx-auto custom-grid">
 
