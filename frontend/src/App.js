@@ -31,7 +31,7 @@ useEffect(() => {
 
     <div className={currentMode === "Light" ? "dark" : ""}>
       <NavBar />
-      <div className="md:w-10/12 md:ml-56 p-2 pt-20 dark:bg-gray-900 w-full max-h-screen h-screen">
+      <div className="md:w-10/12 md:ml-56 p-2 pt-16 dark:bg-gray-900 w-full max-h-screen h-screen">
       <Routes >
           <Route index element={<Dashboard />} />
           <Route path="/inventory" element={<Inventory />} />
