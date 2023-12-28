@@ -5,7 +5,7 @@ export default function UploadForm() {
     <section className="bg-gray-100 dark:bg-gray-900 w-full h-full max-h-full overflow-y-auto">
      <div className="flex flex-col w-full  justify-center aligns-center items-center">
       <div className="relative max-w-2xl border  rounded-lg shadow-lg ">
-     <div className="bg-gray-200 rounded-t">
+     <div className="bg-gray-200 dark:bg-gray-500 rounded-t">
       <h2 className="mb-3 p-2 text-2xl font-bold text-gray-900 dark:text-white text-center ">Add a new product</h2>
      </div>
       <form className="mx-2">
