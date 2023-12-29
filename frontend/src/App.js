@@ -42,7 +42,7 @@ useEffect(() => {
           <Route path="/orders" element={<Orders />} />
           <Route path="/productform" element={<UploadForm />} />
           <Route path="/vendor" element={<VendorDetails />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} className="md:w-12/12"/>
           <Route path="/vendors" element={<GetVendors />} />
           <Route path="/sales" element={<Sales />} />
         </Routes>

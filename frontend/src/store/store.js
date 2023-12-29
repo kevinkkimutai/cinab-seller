@@ -6,6 +6,7 @@ import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import { apiSlice } from "../services/api";
 import AuthReducers from "../reducers/AuthReducers";
 import VendorReducer from "../reducers/VendorReducer";
+import ProductReducer from "../reducers/ProductReducers";
 
 const authPersistConfig = {
   key: "auth",
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, AuthReducers),
 
   Vendor: VendorReducer,
+  Product: ProductReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 

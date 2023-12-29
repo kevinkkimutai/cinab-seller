@@ -12,7 +12,7 @@ getAllProducts: async (req, res) => {
   }
 },
 createProduct: async (req, res) => {
-  const { userId, pname, category, stock, brand, description, price, image} = req.body;
+  const { userId, pname, category, stock, brand, description, price, approval, image} = req.body;
 
   try {
     const user = await User.findByPk(userId);
@@ -36,6 +36,7 @@ createProduct: async (req, res) => {
           brand,
           description,
           price,
+          approval,
           image: "filename.png", // Save the filename in the 'image' field of the product
         });
 

@@ -38,11 +38,15 @@ module.exports = (sequelize) => {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
+      approval: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'not approved', // Set the default value
+      },
       stock: {
         type: DataTypes.STRING,
         allowNull: false,
       }
-     
     },
     {
       sequelize,
