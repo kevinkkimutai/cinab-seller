@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import Image from "./assets/cinablogo.png";
 import { Routes, Route,  } from "react-router-dom";
 import {
   Dashboard,
