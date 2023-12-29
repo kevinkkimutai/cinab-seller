@@ -22,7 +22,7 @@ const app = express();
 // Middleware setup
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://might.vercel.app"],
+    origin: ["http://localhost:3000", "https://cinab-seller.vercel.app", "https://cinab-seller-git-kel-kevinkkimutai.vercel.app"],
     credentials: true,
   })
 );
