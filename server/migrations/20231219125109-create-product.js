@@ -30,6 +30,9 @@ module.exports = {
       image: {
         type: Sequelize.STRING
       },
+      approval: {
+        type: Sequelize.STRING
+      },
       userId: {
         type: Sequelize.INTEGER
       },
