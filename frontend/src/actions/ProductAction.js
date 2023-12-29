@@ -16,12 +16,12 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
       }),
       
       updateProduct: builder.mutation({
-        query: (id, formData) => ({
-          url: `/products/${id}`,  // Add a slash before the id
+        query: ({ id, formData }) => ({
+          url: `/products/${id}`,  // Use dynamic parameter for the product ID
           method: "PUT",
           body: formData,
         }),
-      }),
+      }),      
       
       createProduct: builder.mutation({
         query: (formData) => ({

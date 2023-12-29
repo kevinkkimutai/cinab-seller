@@ -70,7 +70,7 @@ getProductById: async (req, res) => {
 
 updateProduct: async (req, res) => {
   const productId = req.params.id;
-  const { name, price, description, image } = req.body;
+  const { pname, price, stock, category, brand, approval, description, image } = req.body;
 
   try {
     const product = await Product.findByPk(productId);
@@ -79,7 +79,7 @@ updateProduct: async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    await product.update({ name, price, description, image });
+    await product.update({ pname, price, stock, category, brand, approval, description, image });
 
     res.json(product);
   } catch (error) {
