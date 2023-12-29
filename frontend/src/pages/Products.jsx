@@ -1,13 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useGetProductsMutation } from "../actions/ProductAction";
+import {
+  useGetProductsMutation,
+  useUpdateProductMutation,
+} from "../actions/ProductAction";
 import { useDispatch, useSelector } from "react-redux";
-import { selectProducts, setProduct } from "../reducers/ProductReducers";
+import {
+  selectProducts,
+  setProduct,
+  updateProduct as updateProductAction,
+} from "../reducers/ProductReducers";
+
 
 export default function Products() {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [getProducts] = useGetProductsMutation();
+  const [updateProduct] = useUpdateProductMutation();
   // Get Products from the store
   const productData = useSelector(selectProducts);
   const dispatch = useDispatch();
@@ -34,7 +43,33 @@ export default function Products() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-  console.log(productData);
+
+  // update product
+  const handleUpdateProduct = async () => {
+    try {
+      if (selectedProduct) {
+        const { data } = await updateProduct({
+          id: selectedProduct.id,
+          formData: {
+            pname: selectedProduct.pname,
+            stock: selectedProduct.stock, // Change default value as needed
+            price: selectedProduct.price || 0, // Change default value as needed
+            brand: selectedProduct.brand || "",
+            category: selectedProduct.category || "",
+            description: selectedProduct.description || "",
+            approval: selectedProduct.approval || "",
+            image: selectedProduct.image || "",
+            // Add other fields as needed
+          },
+        });
+        dispatch(updateProductAction(data)); // Update the product in the Redux store
+        document.getElementById("crud-modal").classList.add("hidden");
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+  };
+  
 
   // Filter products based on search query
   const filteredProducts = productData.filter((product) =>
@@ -116,16 +151,16 @@ export default function Products() {
             </a>
 
             <div className="mx-2 pb-1">
-              <a href="#">
+              <span>
                 <h5 className="text-md tracking-tight text-center text-gray-900 dark:text-white">
                   {product.pname}
                 </h5>
-              </a>
+              </span>
 
               <div className="w-full flex p-1 ">
                 <div className="w-1/3 items-center text-gray-800 dark:text-white">
                   Stock:
-                  <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.2 rounded dark:bg-blue-200 dark:text-blue-800 ms-1">
+                  <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.3 rounded dark:bg-blue-200 dark:text-blue-800 ms-1">
                     {product.stock}
                   </span>
                 </div>
@@ -169,7 +204,7 @@ export default function Products() {
         id="crud-modal"
         tabIndex="-1"
         aria-hidden="true"
-        className="hidden md:pt-12 md:ml-24 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+        className="hidden md:pt-12 justify-center flex mx-auto overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
       >
         <div className="relative p-4 w-full max-w-2xl max-h-full">
           {/* <!-- Modal content --> */}
@@ -177,44 +212,88 @@ export default function Products() {
             {/* <!-- Modal header --> */}
             <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-                Update Product
+                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedProduct?.pname || ""}</span>
               </h3>
               <button
-  type="button"
-  className="text-red-600 bg-transparent hover:bg-red-200 hover:text-red-600 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-red-800"
-  onClick={() => document.getElementById("crud-modal").classList.add("hidden")}
->
-  <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-  </svg>
-  <span className="sr-only">Close modal</span>
-</button>
-
+                type="button"
+                className="text-red-600 bg-transparent hover:bg-red-200 hover:text-red-600 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-red-800"
+                onClick={() =>
+                  document.getElementById("crud-modal").classList.add("hidden")
+                }
+              >
+                <svg
+                  className="w-3 h-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+                <span className="sr-only">Close modal</span>
+              </button>
             </div>
             {/* <!-- Modal body --> */}
-            <form>
+            <form onSubmit={handleUpdateProduct}>
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">
-                <div className="sm:col-span-2">
+                 {/* <!-- Display selected files --> */}
+                 <div>
+                 <a href="/">
+              <img
+                class=" rounded-lg"
+                src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg"
+                alt="product"
+              />
+            </a>
+                </div>
+                <div className="md:pt-5">
                   <label
-                    for="pname"
+                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+                    htmlFor="multiple_files"
+                  >
+                    Upload image(s)
+                  </label>
+                  <input
+                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                    id="multiple_files"
+                    type="file"
+                    accept=".png, .jpg, .jpeg"
+                    multiple
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    PNG, JPG, or JPEG files (Max. 5MB each)
+                  </p>
+                  <div className="md:pt-6">
+                  <label
+                    htmlFor="pname"
                     className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Product Name
                   </label>
                   <input
-                  type="text"
-                  name="pname"
-                  id="pname"
-                  value={selectedProduct?.pname || ""}
-                  onChange={handleModalInputChange}
-                  className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Type product name"
-                  required=""
-                />
+                    type="text"
+                    name="pname"
+                    id="pname"
+                    value={selectedProduct?.pname || ""}
+                    onChange={handleModalInputChange}
+                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Type product name"
+                    required=""
+                  />
                 </div>
+                </div>
+
+
+               
                 <div className="w-full">
                   <label
-                    for="brand"
+                    htmlFor="brand"
                     className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Brand
@@ -232,13 +311,14 @@ export default function Products() {
                 </div>
                 <div>
                   <label
-                    for="category"
+                    htmlFor="category"
                     className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Category
                   </label>
                   <select
                     id="category"
+                    value={selectedProduct?.category || ""}
                     className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   >
                     <option>Select category</option>
@@ -250,7 +330,7 @@ export default function Products() {
                 </div>
                 <div className="w-full">
                   <label
-                    for="price"
+                    htmlFor="price"
                     className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Price (Ksh)
@@ -268,7 +348,7 @@ export default function Products() {
                 </div>
                 <div>
                   <label
-                    for="stock"
+                    htmlFor="stock"
                     className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Stock/Quantity
@@ -284,15 +364,15 @@ export default function Products() {
                     required=""
                   />
                 </div>
-                <div className="sm:col-span-1">
+                <div className="sm:col-span-2">
                   <label
-                    for="description"
+                    htmlFor="description"
                     className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Description
                   </label>
                   <textarea
-                     name="description"
+                    name="description"
                     id="description"
                     rows="4"
                     value={selectedProduct?.description || ""}
@@ -301,34 +381,9 @@ export default function Products() {
                     placeholder="Your description here"
                   ></textarea>
                 </div>
-                <div>
-                  <label
-                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    for="multiple_files"
-                  >
-                    Upload file(s)
-                  </label>
-                  <input
-                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                    id="multiple_files"
-                    type="file"
-                    accept=".png, .jpg, .jpeg"
-                    multiple
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    PNG, JPG, or JPEG files (Max. 5MB each)
-                  </p>
-                </div>
-                {/* <!-- Display selected files --> */}
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mt-4 mb-1">
-                    Selected Files:
-                  </h3>
-                  <ul>
-                    <li value={selectedProduct?.image || ""}></li>
-                  </ul>
-                </div>
-                <div className="mt-4 sm:mt- sm:col-span-2">
+           
+               
+                <div className="mt- sm:mt- sm:col-span-2">
                   <button
                     type="submit"
                     className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
