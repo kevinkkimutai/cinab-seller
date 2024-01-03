@@ -41,7 +41,7 @@ module.exports = (sequelize) => {
       approval: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'not approved', // Set the default value
+        defaultValue: false,
       },
       stock: {
         type: DataTypes.STRING,
