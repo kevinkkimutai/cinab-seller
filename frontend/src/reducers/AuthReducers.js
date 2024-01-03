@@ -113,6 +113,9 @@ export const {
 export default authSlice.reducer;
 
 export const selectEditedUsers = (state) => state.auth.editedUsers;
+
+
+
 export const selectUserProfile = (state) => state.auth.userProfile;
 export const selectIsEditing = (state) => state.auth.isEditing;
 export const selectCurrentUser = (state) => state.auth.user;
