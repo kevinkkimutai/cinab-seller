@@ -140,7 +140,7 @@ export default function Products() {
         {filteredProducts.map((product) => (
           <div
             key={product.id}
-            className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+            className="w-full max-w-sm bg-primary-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
           >
             <a href="/">
               <img
@@ -208,7 +208,7 @@ export default function Products() {
       >
         <div className="relative p-4 w-full max-w-2xl max-h-full">
           {/* <!-- Modal content --> */}
-          <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+          <div className="relative bg-primary-50 rounded-lg shadow dark:bg-gray-700">
             {/* <!-- Modal header --> */}
             <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
