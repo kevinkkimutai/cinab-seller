@@ -2,13 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   useGetProductsMutation,
   useUpdateProductMutation,
-} from "../actions/ProductAction";
+} from "../../actions/ProductAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectProducts,
   setProduct,
   updateProduct as updateProductAction,
-} from "../reducers/ProductReducers";
+} from "../../reducers/ProductReducers";
 
 
 export default function Products() {
@@ -144,9 +144,9 @@ export default function Products() {
           >
             <a href="/">
               <img
-                class="p- rounded-t-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg"
-                alt="product"
+                class=" rounded-t-lg"
+                src={`http://localhost:5000/uploads/${product.image}`}
+                alt={product.pname}
               />
             </a>
 
