@@ -1,10 +1,15 @@
-// middleware/UploadingFiles.js
 const path = require("path");
+const fs = require("fs");
 const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads"); 
+    const uploadPath = path.join(__dirname, "../uploads"); // Adjust the path accordingly
+    // Create the directory if it doesn't exist
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath);
+    }
+    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
     const ext = file.mimetype.split("/")[1];
