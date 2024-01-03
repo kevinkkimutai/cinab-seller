@@ -8,7 +8,7 @@ import {
   Orders,
   Login,
   Products,
-  UploadForm,
+  ProductsForm,
   VendorDetails,
   Sales
 } from "./pages";
@@ -39,7 +39,7 @@ useEffect(() => {
           <Route path="/products" element={<Products />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/orders" element={<Orders />} />
-          <Route path="/productform" element={<UploadForm />} />
+          <Route path="/productform" element={<ProductsForm />} />
           <Route path="/vendor" element={<VendorDetails />} />
           <Route path="/login" element={<Login />} className="md:w-12/12"/>
           <Route path="/vendors" element={<GetVendors />} />
