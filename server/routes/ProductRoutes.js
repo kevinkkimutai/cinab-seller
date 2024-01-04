@@ -17,7 +17,7 @@ router.get("/products/:id", productController.getProductById);
 /**
  * Create a new product with file upload.
  */
-router.post("/products", uploadMiddleware.array('image', 3), productController.createProduct);
+router.post("/products", uploadMiddleware.single("image"), productController.createProduct);
 
 /**
  * Update a product using dynamic parameter.
