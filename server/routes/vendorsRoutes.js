@@ -1,8 +1,12 @@
-const express = require("express")
+const express = require("express");
 const router = express.Router();
-const vendorsController = require("../controllers/VendorController");
+const vendorController = require("../controllers/vendorController");
 
-router.get("/vendors", vendorsController.getVendors)
+// Define routes for vendors
+router.get("/vendors", vendorController.getVendors);
+router.get("/vendors/:id", vendorController.getVendorById);
+router.post("/vendors", vendorController.createVendor);
+router.put("/vendors/:id", vendorController.updateVendor);
+router.delete("/vendors/:id", vendorController.deleteVendor);
 
-
-module.exports = router
+module.exports = router;
