@@ -23,7 +23,7 @@ export default function PaymentInformation({ onPrev, onNext }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted");
+    console.log(formValues);
   };
 
   useEffect(() => {
@@ -110,7 +110,7 @@ export default function PaymentInformation({ onPrev, onNext }) {
                 <input
                   type="number"
                   min="0"
-                  max="18"
+                  max="9999999999999"
                   id="MpesaNumber"
                   name="MpesaNumber"
                   value={formValues.MpesaNumber}
