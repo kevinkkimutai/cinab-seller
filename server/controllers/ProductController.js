@@ -105,6 +105,7 @@ updateProduct: async (req, res) => {
   }
 },
 
+
 deleteProduct: async (req, res) => {
   const productId = req.params.id;
 
