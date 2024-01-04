@@ -13,34 +13,73 @@ module.exports = (sequelize, DataTypes) => {
   }
   Vendor.init(
     {
-      businessName: {
+      companyName: {
         type: DataTypes.STRING,
       },
-      kraPin: {
+      companyEMail: {
         type: DataTypes.STRING,
       },
-      tradingLicense: {
+      Kra: {
         type: DataTypes.STRING,
       },
-      companyAddress: {
+      licence: {
         type: DataTypes.STRING,
       },
-      streetAddress: {
+      AddressOne: {
+        type: DataTypes.STRING,
+      },
+      AddressTwo: {
         type: DataTypes.STRING,
       },
       city: {
         type: DataTypes.STRING,
       },
-      phoneNumber: {
-        type: DataTypes.STRING,
-      },
-      companyEmail: {
+      state: {
         type: DataTypes.STRING,
       },
       website: {
         type: DataTypes.STRING,
       },
-      serviceDetails: {
+      services: {
+        type: DataTypes.STRING,
+      },
+      BankName: {
+        type: DataTypes.STRING,
+      },
+      AccountNumber: {
+        type: DataTypes.STRING,
+      },
+      MpesaNumber: {
+        type: DataTypes.STRING,
+      },
+      MpesaName: {
+        type: DataTypes.STRING,
+      },
+      SAddressOne: {
+        type: DataTypes.STRING,
+      },
+      SAddressTwo: {
+        type: DataTypes.STRING,
+      },
+      Scity: {
+        type: DataTypes.STRING,
+      },
+      Sstate: {
+        type: DataTypes.STRING,
+      },
+      country: {
+        type: DataTypes.STRING,
+      },
+      Postal_Address: {
+        type: DataTypes.STRING,
+      },
+      businessType: {
+        type: DataTypes.STRING,
+      },
+      shopName: {
+        type: DataTypes.STRING,
+      },
+      shopZone: {
         type: DataTypes.STRING,
       },
     },

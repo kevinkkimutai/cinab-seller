@@ -199,16 +199,13 @@ const handleImageChange = (e) => {
           <div
             key={product.id}
             className="w-full max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-
           >
             <a href="/">
-            <img
-  className="rounded-t-lg md:h-52 w-full"
-  src={`http://localhost:5000/uploads/${product.image.split(',')[0]}`}
-  alt={product.pname}
-
-/>
-
+              <img
+                class=" rounded-t-lg md:h-52 w-full"
+                src={product.image}
+                alt={product.pname}
+              />
             </a>
 
             <div className="mx-2 pb-1 ">

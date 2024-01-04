@@ -5,7 +5,6 @@ export { default as Offers } from "../pages/Offers";
 export { default as Orders } from "../pages/Orders";
 export { default as Products } from "../pages/products/Products";
 export { default as ProductsForm } from "../pages/products/ProductsForm";
-export { default as VendorDetails } from "../pages/Vendors/VendorDetails";
 export { default as GetVendors } from "../pages/Vendors/GetVendors";
 export { default as Sales } from "../pages/Sales";
 

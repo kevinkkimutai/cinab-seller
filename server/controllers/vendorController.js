@@ -1,5 +1,5 @@
-const { sendSecretCode } = require("../middlewares/Verification");
 const { Vendor } = require("../models");
+const { sendSecretCode } = require("../middlewares/Verification");
 
 // HELPER METHOD TO GENERATE RANDOM STRINGS
 function generateRandomString(length) {
@@ -33,7 +33,7 @@ const vendorController = {
     try {
       const vendor = await Vendor.findByPk(id);
       if (!vendor) {
-        return res.status(404).send({ error: "Vendor not found" });
+        return res.status(404).send({ error: "Vendor Not Found" });
       } else {
         return res.status(200).json(vendor);
       }
@@ -47,36 +47,16 @@ const vendorController = {
     const { companyEmail } = req.body;
 
     try {
-      // const newVendor = await Vendor.create({
-      //   kraPin: "N/A",
-      //   businessName: "N/A",
-      //   kraPin: "N/A",
-      //   secretCode:
-      //   kraPin: "N/A",
-      //   tradingLicense: "N/A",
-      //   kraPin: "N/A",
-      //   companyAddress: "N/A",
-      //   kraPin: "N/A",
-      //   streetAddress: "N/A",
-      //   kraPin: "N/A",
-      //   city: "N/A",
-      //   kraPin: "N/A",
-      //   phoneNumber: "N/A",
-      //   companyEmail,
-      //   kraPin: "N/A",
-      //   website: "N/A",
-      //   kraPin: "N/A",
-      //   serviceDetails: "N/A",
-      // });
       const randomString = generateRandomString(20);
 
       sendSecretCode({
         email: companyEmail,
-        secretCode: `http://localhost:3000/${randomString}`,
+        secretCode: `http://localhost:3000/vendors/${randomString}`,
       });
+      const createdVendor = await Vendor.create({ companyEMail: companyEmail });
 
       console.log("Send mails");
-      return res.status(201).json("newVendor");
+      return res.status(201).json(createdVendor);
     } catch (error) {
       console.error(error);
       return res.status(500).send({ error: "Internal Server Error" });
@@ -86,15 +66,12 @@ const vendorController = {
   updateVendor: async (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
-
     try {
       const vendor = await Vendor.findByPk(id);
       if (!vendor) {
-        return res.status(404).send({ error: "Vendor not found" });
+        return res.status(404).send({ error: "Vendor Not Found" });
       } else {
-        await Vendor.update(updatedData, {
-          where: { id },
-        });
+        await Vendor.update(updatedData, { where: { id } });
         const updatedVendor = await Vendor.findByPk(id);
         return res.status(200).json(updatedVendor);
       }
@@ -109,12 +86,10 @@ const vendorController = {
     try {
       const vendor = await Vendor.findByPk(id);
       if (!vendor) {
-        return res.status(404).send({ error: "Vendor not found" });
+        return res.status(404).send({ error: "Vendor Not Found" });
       } else {
-        await Vendor.destroy({
-          where: { id },
-        });
-        return res.status(204).send();
+        await Vendor.destroy({ where: { id } });
+        return res.status(204).send(); // Successful deletion, no content to return
       }
     } catch (error) {
       console.error(error);
