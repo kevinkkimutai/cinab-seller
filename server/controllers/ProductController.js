@@ -65,24 +65,6 @@ getProductById: async (req, res) => {
   }
 },
 
-// updateProduct: async (req, res) => {
-//   const productId = req.params.id;
-//   const { pname, price, stock, category, brand, approval, description, image } = req.body;
-
-//   try {
-//     const product = await Product.findByPk(productId);
-
-//     if (!product) {
-//       return res.status(404).json({ message: 'Product not found' });
-//     }
-
-//     await product.update({ pname, price, stock, category, brand, approval, description, image });
-
-//     res.json(product);
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// },
 updateProduct: async (req, res) => {
   const productId = req.params.id;
   const { pname, price, stock, category, brand, approval, description } = req.body;
