@@ -265,7 +265,7 @@ export default function ReusableTable({
           </thead>
           <tbody>
             {isLoading ? (
-              <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+              <tr className="bg-primary-50 border-b dark:bg-gray-900 dark:border-gray-700">
                 <td colSpan={columns.length + (actions ? 1 : 0)}>
                   <div className="text-center py-4">
                     <Spinner animation="border" role="status"></Spinner>
@@ -421,7 +421,7 @@ export default function ReusableTable({
           <ul className="inline-flex -space-x-px text-sm h-8">
             <li>
               <button
-                className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-primary-50 border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 onClick={() =>
                   setCurrentPage((prevPage) => Math.max(prevPage - 1, 0))
                 }
@@ -433,7 +433,7 @@ export default function ReusableTable({
             {Array.from({ length: pageCount }).map((_, page) => (
               <li key={page}>
                 <button
-                  className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 ${
+                  className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-primary-50 border border-gray-300 ${
                     page === currentPage
                       ? "text-blue-600 bg-blue-50"
                       : "hover:bg-gray-100 hover:text-gray-700"
@@ -446,7 +446,7 @@ export default function ReusableTable({
             ))}
             <li>
               <button
-                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-primary-50 border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 onClick={() =>
                   setCurrentPage((prevPage) =>
                     Math.min(prevPage + 1, pageCount - 1)
