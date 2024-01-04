@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 import {
   Dashboard,
   GetVendors,
@@ -9,7 +9,6 @@ import {
   Login,
   Products,
   ProductsForm,
-  VendorDetails,
   Sales,
 } from "./pages";
 import { NavBar } from "./components";
@@ -26,6 +25,7 @@ export default function App() {
       setCurrentMode(currentThemeMode);
     }
   }, [setCurrentColor, setCurrentMode]);
+
   return (
     <div className={currentMode === "Dark" ? "dark" : ""}>
       <NavBar />
@@ -37,12 +37,26 @@ export default function App() {
           <Route path="/offers" element={<Offers />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/productform" element={<ProductsForm />} />
-          <Route path="/vendor" element={<VendorDetails />} />
           <Route path="/login" element={<Login />} className="md:w-12/12" />
-          <Route path="/vendors" element={<Vendor />} />
+          <Route path="/vendors/:code" element={<VendorPage />} />
           <Route path="/sales" element={<Sales />} />
         </Routes>
       </div>
+    </div>
+  );
+}
+
+function VendorPage() {
+  const params = useParams();
+
+  useEffect(() => {
+    const secretCode = params.code;
+    localStorage.setItem("secretCode", secretCode);
+  }, [params]);
+
+  return (
+    <div className="md:ml-62">
+      <Vendor />
     </div>
   );
 }

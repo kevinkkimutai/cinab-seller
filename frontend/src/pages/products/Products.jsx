@@ -202,11 +202,12 @@ const handleImageChange = (e) => {
 
           >
             <a href="/">
-            <img
-  className="rounded-t-lg md:h-52 w-full"
-  src={`http://localhost:5000/uploads/${product.image.split(',')[0]}`}
-  alt={product.pname}
-/>
+
+              <img
+                class=" rounded-t-lg"
+                src={product.image}
+                alt={product.pname}
+              />
 
             </a>
 

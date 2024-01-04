@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useCreateVendorMutation } from "../../actions/VendorAction";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setVendor } from "../../reducers/VendorReducer";
 
 export default function PaymentInformation({ onPrev, onNext }) {
+  const dispatch = useDispatch();
   const [formValues, setFormValues] = useState(() => {
     const storedData = localStorage.getItem("formValues");
     return storedData
@@ -13,6 +18,8 @@ export default function PaymentInformation({ onPrev, onNext }) {
         };
   });
 
+  const [createData] = useCreateVendorMutation();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prevData) => ({
@@ -21,9 +28,26 @@ export default function PaymentInformation({ onPrev, onNext }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted");
+    const secretCode = localStorage.getItem("secretCode");
+
+    const formData = {
+      formValues,
+      // secretCode,
+    };
+    try {
+      const res = await createData(formData); // Assuming the mutation takes an object
+      if (res.data) {
+        dispatch(setVendor(res.data)); // Dispatch action to set vendor in Redux store
+        toast.success("Vendor created successfully");
+      } else {
+        toast.error("Failed to create vendor");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to create vendor");
+    }
   };
 
   useEffect(() => {
@@ -110,7 +134,7 @@ export default function PaymentInformation({ onPrev, onNext }) {
                 <input
                   type="number"
                   min="0"
-                  max="18"
+                  max="9999999999999"
                   id="MpesaNumber"
                   name="MpesaNumber"
                   value={formValues.MpesaNumber}
