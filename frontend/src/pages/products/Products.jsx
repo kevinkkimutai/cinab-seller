@@ -145,7 +145,7 @@ export default function Products() {
             <a href="/">
               <img
                 class=" rounded-t-lg"
-                src={`http://localhost:5000/uploads/${product.image}`}
+                src={product.image}
                 alt={product.pname}
               />
             </a>
