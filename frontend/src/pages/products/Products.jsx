@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   useGetProductsMutation,
   useUpdateProductMutation,
+  useDeleteProductMutation,
 } from "../../actions/ProductAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,6 +18,9 @@ export default function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [getProducts] = useGetProductsMutation();
   const [updateProduct] = useUpdateProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
+  const [selectedImage, setSelectedImage] = useState(null);
+
   // Get Products from the store
   const productData = useSelector(selectProducts);
   const dispatch = useDispatch();
@@ -45,30 +49,90 @@ export default function Products() {
   }, [fetchData]);
 
   // update product
-  const handleUpdateProduct = async () => {
+  const handleUpdateProduct = async (e) => {
+    e.preventDefault();
     try {
       if (selectedProduct) {
+        const formData = new FormData();
+  
+        formData.append("id", selectedProduct.id);
+        formData.append("pname", selectedProduct.pname);
+        formData.append("stock", selectedProduct.stock);
+        formData.append("price", selectedProduct.price || 0);
+        formData.append("brand", selectedProduct.brand || "");
+        formData.append("category", selectedProduct.category || "");
+        formData.append("description", selectedProduct.description || "");
+        formData.append("approval", selectedProduct.approval || "");
+  
+        // Handle the image based on its type
+        if (selectedImage instanceof File) {
+          formData.append("image", selectedImage);
+        } else if (typeof selectedProduct.image === 'string') {
+          // Assuming selectedProduct.image is a string representing the image path
+          // If it's something else, adjust this part accordingly
+          formData.append("image", selectedProduct.image);
+        }
+  
         const { data } = await updateProduct({
           id: selectedProduct.id,
-          formData: {
-            pname: selectedProduct.pname,
-            stock: selectedProduct.stock, // Change default value as needed
-            price: selectedProduct.price || 0, // Change default value as needed
-            brand: selectedProduct.brand || "",
-            category: selectedProduct.category || "",
-            description: selectedProduct.description || "",
-            approval: selectedProduct.approval || "",
-            image: selectedProduct.image || "",
-            // Add other fields as needed
-          },
+          formData,
         });
-        dispatch(updateProductAction(data)); // Update the product in the Redux store
+  
+        console.log('Product updated successfully:');
+        console.log("Updated Product Data:", data);
+  
+        dispatch(updateProductAction(data));
+  
+        setSelectedImage(null);
         document.getElementById("crud-modal").classList.add("hidden");
       }
     } catch (error) {
       console.error("Error updating product:", error);
     }
   };
+  
+  
+
+    // function to handle product deletion
+  const handleDeleteProduct = async (productId) => {
+  try {
+    // Call the deleteProduct mutation with the correct id parameter
+    await deleteProduct(productId);
+
+    // Fetch the latest products and update the Redux store
+    fetchData();
+  } catch (error) {
+    console.error("Error deleting product:", error);
+  }
+};
+
+const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setSelectedImage(file);
+
+    // Log the selected image
+    console.log("Selected Image:", file);
+
+    // Update selectedProduct with the new image
+    setSelectedProduct({
+      ...selectedProduct,
+      image: file,
+    });
+  } else {
+    setSelectedImage(null); // Reset the state when no file is selected
+  }
+};
+
+
+
+    const handleModalInputChange = (e) => {
+      setSelectedProduct({
+        ...selectedProduct,
+        [e.target.name]: e.target.value,
+      });
+    };
+    
   
 
   // Filter products based on search query
@@ -87,12 +151,6 @@ export default function Products() {
     document.getElementById("crud-modal").classList.remove("hidden");
   };
 
-  const handleModalInputChange = (e) => {
-    setSelectedProduct({
-      ...selectedProduct,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   return (
     <div className="w-full h-full max-h-full overflow-y-auto scrollbar-hidden">
@@ -140,17 +198,20 @@ export default function Products() {
         {filteredProducts.map((product) => (
           <div
             key={product.id}
-            className="w-full max-w-sm bg-primary-50 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+            className="w-full max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+
           >
             <a href="/">
+
               <img
                 class=" rounded-t-lg"
                 src={product.image}
                 alt={product.pname}
               />
+
             </a>
 
-            <div className="mx-2 pb-1">
+            <div className="mx-2 pb-1 ">
               <span>
                 <h5 className="text-md tracking-tight text-center text-gray-900 dark:text-white">
                   {product.pname}
@@ -186,7 +247,7 @@ export default function Products() {
                     Edit
                   </button>
                   <button
-                    //   onClick={() => handleDelete(product.id)}
+                    onClick={() => handleDeleteProduct(product.id)}
                     className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px- py-1 text-xs text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
                   >
                     Delete
@@ -243,15 +304,26 @@ export default function Products() {
             <form onSubmit={handleUpdateProduct}>
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">
                  {/* <!-- Display selected files --> */}
-                 <div>
-                 <a href="/">
-              <img
-                class=" rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg"
-                alt="product"
-              />
-            </a>
-                </div>
+                 {selectedImage ? (
+  <img
+    className="rounded-lg"
+    src={URL.createObjectURL(selectedImage)}
+    alt="Selected Img"
+  />
+) : selectedProduct?.image && typeof selectedProduct.image === 'string' ? (
+  <img
+    className="rounded-lg"
+    src={`http://localhost:5000/uploads/${selectedProduct.image.split(',')[0]}`}
+    alt={selectedProduct.pname}
+  />
+) : selectedProduct?.image instanceof File ? (
+  <img
+    className="rounded-lg"
+    src={URL.createObjectURL(selectedProduct.image)}
+    alt={selectedProduct.pname}
+  />
+) : null}
+
                 <div className="md:pt-5">
                   <label
                     className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
@@ -260,12 +332,14 @@ export default function Products() {
                     Upload image(s)
                   </label>
                   <input
-                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                    id="multiple_files"
-                    type="file"
-                    accept=".png, .jpg, .jpeg"
-                    multiple
-                  />
+  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+  id="multiple_files"
+  type="file"
+  accept=".png, .jpg, .jpeg"
+  multiple
+  onChange={handleImageChange}
+/>
+
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     PNG, JPG, or JPEG files (Max. 5MB each)
                   </p>
@@ -319,6 +393,7 @@ export default function Products() {
                   <select
                     id="category"
                     value={selectedProduct?.category || ""}
+                    onChange={(e) => handleModalInputChange(e)}
                     className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   >
                     <option>Select category</option>
@@ -399,3 +474,5 @@ export default function Products() {
     </div>
   );
 }
+  
+
