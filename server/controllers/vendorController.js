@@ -51,9 +51,9 @@ const vendorController = {
 
       sendSecretCode({
         email: companyEmail,
-        secretCode: `http://localhost:3000/${randomString}`,
+        secretCode: `http://localhost:3000/vendors/${randomString}`,
       });
-      const createdVendor = await Vendor.create(companyEmail);
+      const createdVendor = await Vendor.create({ companyEMail: companyEmail });
 
       console.log("Send mails");
       return res.status(201).json(createdVendor);
