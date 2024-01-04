@@ -87,6 +87,7 @@ const productController = {
   //       return res.status(404).json({ message: 'Product not found' });
   //     }
 
+
   //     await product.update({ pname, price, stock, category, brand, approval, description, image });
 
   //     res.json(product);
