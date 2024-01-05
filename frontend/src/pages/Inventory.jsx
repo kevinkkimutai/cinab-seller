@@ -34,7 +34,7 @@ export default function Products() {
       if (!res.data) {
         console.log("Failed to get Products");
       } else {
-        // Dispatch the Products to store them in the store
+        // Dispatch the Products to store them in the store.
         dispatch(setProduct(res.data));
       }
     } catch (err) {

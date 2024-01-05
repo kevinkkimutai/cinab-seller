@@ -1,6 +1,155 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  useGetOrdersMutation,
+  useUpdateOrderMutation,
+  useDeleteOrderMutation,
+} from "../actions/OrderAction";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectOrders,
+  setOrder,
+  updateOrder as updateOrderAction,
+} from "../reducers/OrderReducers";
+
 
 export default function Orders() {
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [getOrders] = useGetOrdersMutation();
+  const [updateOrder] = useUpdateOrderMutation();
+  const [deleteOrder] = useDeleteOrderMutation();
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // Get Orders from the store
+  const OrderData = useSelector(selectOrders);
+  const dispatch = useDispatch();
+
+  // FUNCTION TO FETCH DATA
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await getOrders();
+      console.log(res);
+      if (!res.data) {
+        console.log("Failed to get Orders");
+      } else {
+        // Dispatch the Orders to store them in the store.
+        dispatch(setOrder(res.data));
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [dispatch, getOrders]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // update Order
+  const handleUpdateOrder = async (e) => {
+    e.preventDefault();
+    try {
+      if (selectedOrder) {
+        const formData = new FormData();
+  
+        formData.append("id", selectedOrder.id);
+        formData.append("pname", selectedOrder.pname);
+        formData.append("stock", selectedOrder.stock);
+        formData.append("price", selectedOrder.price || 0);
+        formData.append("brand", selectedOrder.brand || "");
+        formData.append("category", selectedOrder.category || "");
+        formData.append("description", selectedOrder.description || "");
+        formData.append("approval", selectedOrder.approval || "");
+  
+        // Handle the image based on its type
+        if (selectedImage instanceof File) {
+          formData.append("image", selectedImage);
+        } else if (typeof selectedOrder.image === 'string') {
+          // Assuming selectedOrder.image is a string representing the image path
+          // If it's something else, adjust this part accordingly
+          formData.append("image", selectedOrder.image);
+        }
+  
+        const { data } = await updateOrder({
+          id: selectedOrder.id,
+          formData,
+        });
+  
+        console.log('Order updated successfully:');
+        console.log("Updated Order Data:", data);
+  
+        dispatch(updateOrderAction(data));
+  
+        setSelectedImage(null);
+        document.getElementById("crud-modal").classList.add("hidden");
+      }
+    } catch (error) {
+      console.error("Error updating Order:", error);
+    }
+  };
+  
+  
+
+    // function to handle Order deletion
+  const handleDeleteOrder = async (OrderId) => {
+  try {
+    // Call the deleteOrder mutation with the correct id parameter
+    await deleteOrder(OrderId);
+
+    // Fetch the latest Orders and update the Redux store
+    fetchData();
+  } catch (error) {
+    console.error("Error deleting Order:", error);
+  }
+};
+
+const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setSelectedImage(file);
+
+    // Log the selected image
+    console.log("Selected Image:", file);
+
+    // Update selectedOrder with the new image
+    setSelectedOrder({
+      ...selectedOrder,
+      image: file,
+    });
+  } else {
+    setSelectedImage(null); // Reset the state when no file is selected
+  }
+};
+
+
+
+    const handleModalInputChange = (e) => {
+      setSelectedOrder({
+        ...selectedOrder,
+        [e.target.name]: e.target.value,
+      });
+    };
+    
+  
+
+  // Filter Orders based on search query
+  const filteredOrders = OrderData.filter((Order) =>
+    Order.productName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleEdit = (OrderId) => {
+    // Find the selected Order for editing
+    const OrderToEdit = OrderData.find(
+      (Order) => Order.id === OrderId
+    );
+    setSelectedOrder(OrderToEdit);
+
+    // Open the modal
+    document.getElementById("crud-modal").classList.remove("hidden");
+  };
   return (
     <div>
 
@@ -14,8 +163,7 @@ export default function Orders() {
 </div>
 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 
-
-    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
             
             <th scope="col" className="px-6 py-3">
@@ -50,144 +198,33 @@ export default function Orders() {
             </th>
         </tr>
     </thead>
-    <tbody>
-        <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-            
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Apple MacBook Pro 17"
-            </th>
-            <td className="px-6 py-4">
-                Silver
-            </td>
-            <td className="px-6 py-4">
-                Laptop
-            </td>
-            <td className="px-6 py-4">
-                Yes
-            </td>
-          
-            <td className="px-6 py-4">
-                $2999
-            </td>
-            <td className="px-6 py-4">
-                4
-            </td>
-            <td className="px-6 py-4">
-                12-12-23
-            </td>
-            <td className="px-6 py-4">
-                Delivered
-            </td>
-           
-           
-           
-            <td className="flex items-center px-6 py-4">
-                <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-                
-            </td>
-        </tr>
-        <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-           
-            
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Microsoft Surface Pro
-            </th>
-            <td className="px-6 py-4">
-                White
-            </td>
-            <td className="px-6 py-4">
-                Laptop PC
-            </td>
-            <td className="px-6 py-4">
-                No
-            </td>
-           
-            <td className="px-6 py-4">
-                $1999
-            </td>
-            <td className="px-6 py-4">
-                4
-            </td>
-            <td className="px-6 py-4">
-                12-12-23
-            </td>
-            <td className="px-6 py-4">
-                Delivered
-            </td>
-           
-            <td className="flex items-center px-6 py-4">
-                <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-               
-            </td>
-        </tr>
-        <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-         
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Magic Mouse 2
-            </th>
-            <td className="px-6 py-4">
-                Black
-            </td>
-            <td className="px-6 py-4">
-                Accessories
-            </td>
-            <td className="px-6 py-4">
-                Yes
-            </td>
-          
-            <td className="px-6 py-4">
-                $99
-            </td>
-            <td className="px-6 py-4">
-                4
-            </td>
-            <td className="px-6 py-4">
-                12-12-23
-            </td>
-            <td className="px-6 py-4">
-                Delivered
-            </td>
-          
-            <td className="flex items-center px-6 py-4">
-                <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-             
-            </td>
-        </tr>
-        <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Apple Watch
-            </th>
-            <td className="px-6 py-4">
-                Black
-            </td>
-            <td className="px-6 py-4">
-                Watches
-            </td>
-            <td className="px-6 py-4">
-                Yes
-            </td>
-           
-            <td className="px-6 py-4">
-                $199
-            </td>
-            <td className="px-6 py-4">
-                4
-            </td>
-            <td className="px-6 py-4">
-                12-12-23
-            </td>
-            <td className="px-6 py-4">
-                Delivered
-            </td>
-           
-            <td className="flex items-center px-6 py-4">
-                <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-               
-            </td>
-        </tr>
-     
-    </tbody>
+
+
+{filteredOrders.map((order) => (
+              <tr
+                key={order.id} // Assuming your order objects have a unique id
+                className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              >
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  {order.productName}
+                </th>
+
+                <td className="px-6 py-4">{order.description}</td>
+                <td className="px-6 py-4">{order.category}</td>
+                <td className="px-6 py-4">{order.inStock ? 'Yes' : 'No'}</td>
+                <td className="px-6 py-4">{order.price}</td>
+                <td className="px-6 py-4">{order.unitsBought}</td>
+                <td className="px-6 py-4">{order.purchaseDate}</td>
+                <td className="px-6 py-4">{order.status}</td>
+                <td className="flex items-center px-6 py-4">
+                  <a href="#"    onClick={() => handleEdit(order.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                    View
+                  </a>
+                
+                </td>
+              </tr>
+            ))}
 </table>
 </div>
 
@@ -198,7 +235,7 @@ export default function Orders() {
         {/* <!-- Modal header -->- */}
         <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
             <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-               Update Product
+               Update Order
             </h3>
             <button type="button" className="text-red-600 bg-transparent hover:bg-red-200 hover:text-red-600 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-red-800" data-modal-toggle="crud-modal">
                 <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -211,8 +248,8 @@ export default function Orders() {
         <form >
     <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">
       <div className="sm:col-span-2">
-        <label for="name" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Product Name</label>
-        <input type="text" name="name" id="name" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Type product name" required=""/>
+        <label for="name" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Order Name</label>
+        <input type="text" name="name" id="name" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Type Order name" required=""/>
       </div>
      
       <div>
@@ -266,7 +303,7 @@ export default function Orders() {
           type="submit"
           className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
         >
-          Update Product
+          Update Order
         </button>
       </div>
     </div>

@@ -12,6 +12,7 @@ const UserRoutes = require("./routes/UserRoutes");
 const VendorsRoutes = require("./routes/vendorsRoutes")
 
 const ProductRoutes = require("./routes/ProductRoutes");
+const OrdersRoutes = require("./routes/OrdersRoutes");
 
 
 // const verifyJWT = require("./middlewares/verifyJWT");
@@ -44,6 +45,9 @@ app.use("/v2", VendorsRoutes);
 
 // put here product routes
 app.use("/v2", ProductRoutes);
+
+//orders routes
+app.use("/v2", OrdersRoutes);
 
 // Enter All protected routes Below VerifyJWT
 // app.use(verifyJWT);
