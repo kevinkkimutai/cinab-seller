@@ -10,7 +10,7 @@ const VendorSlice = createSlice({
       state.vendors = action.payload;
     },
 
-    addVendor: (state, action) => {
+    createVendor: (state, action) => {
       state.vendors.push(action.payload);
     },
     updateVendors: (state, action) => {
@@ -29,7 +29,7 @@ const VendorSlice = createSlice({
   },
 });
 
-export const { setVendor, addVendor, updateVendors, deleteVendor } =
+export const { setVendor, createVendor, updateVendors, deleteVendor } =
   VendorSlice.actions;
 
 export default VendorSlice.reducer;

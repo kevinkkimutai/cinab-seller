@@ -1,34 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
+import { StepperContext } from "../../../contexts/StepperContext";
 
-const ProfileComponent = ({ onNext }) => {
-  const [formValues, setFormValues] = useState(() => {
-    const storedData = localStorage.getItem("formValues");
-    return storedData
-      ? JSON.parse(storedData)
-      : {
-          businessType: "",
-          shopName: "",
-          country: "",
-          shopZone: "",
-          Kra: "",
-        };
-  });
+const ProfileComponent = ({ handleClick }) => {
+  const { userData, setUserData } = useContext(StepperContext);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
+
+    setUserData({ ...userData, [name]: value });
   };
-
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
-      onNext(formValues);
+    handleClick("next");
   };
 
-  useEffect(() => {
-    localStorage.setItem("formValues", JSON.stringify(formValues));
-  }, [formValues]);
   return (
     <div className="w-full me-4 pshadow-lg rounded-lg mt-2 bg-gray-50 dark:bg-gray-500">
       <div className="py-5">
@@ -56,7 +42,7 @@ const ProfileComponent = ({ onNext }) => {
               className="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={handleInputChange}
               name="businessType"
-              value={formValues.businessType}
+              value={userData["businessType"] || ""}
             >
               <option value="">Choose Business</option>
               <option value="Individual">Individual</option>
@@ -77,7 +63,7 @@ const ProfileComponent = ({ onNext }) => {
               placeholder="Cinab"
               onChange={handleInputChange}
               name="shopName"
-              value={formValues.shopName}
+              value={userData["shopName"] || ""}
               required
             />
           </div>
@@ -93,7 +79,7 @@ const ProfileComponent = ({ onNext }) => {
               className="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={handleInputChange}
               name="country"
-              value={formValues.country}
+              value={userData["country"] || ""}
             >
               <option value="">Choose a country</option>
               <option value="Kenya">Kenya</option>
@@ -113,18 +99,26 @@ const ProfileComponent = ({ onNext }) => {
               placeholder="Nairobi"
               onChange={handleInputChange}
               name="shopZone"
-              value={formValues.shopZone}
+              value={userData["shopZone"] || ""}
               required
             />
           </div>
         </div>
-        <button
-          type="submit"
-          // disabled={!isFormValid}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Next
-        </button>
+        <div className="flex justify-between py-6">
+          <button
+            type="button"
+            onClick={() => handleClick()}
+            className=" px-6 py-2 bg-gray-600 text-white rounded-md"
+          >
+            Previous{" "}
+          </button>
+          <button
+            type="submit"
+            className=" px-6 py-2 bg-blue-600 text-white rounded-md"
+          >
+            Next{" "}
+          </button>
+        </div>
       </form>
     </div>
   );

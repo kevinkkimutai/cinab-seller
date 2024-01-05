@@ -43,7 +43,7 @@ const vendorController = {
     }
   },
 
-  createVendor: async (req, res) => {
+  createVendxor: async (req, res) => {
     const { companyEmail } = req.body;
 
     try {
@@ -63,16 +63,36 @@ const vendorController = {
     }
   },
 
-  updateVendor: async (req, res) => {
-    const { id } = req.params;
-    const updatedData = req.body;
+  createVendor: async (req, res) => {
+    const { companyEmail } = req.body;
+    console.log(req.body);
     try {
-      const vendor = await Vendor.findByPk(id);
+      const randomString = generateRandomString(20);
+      sendSecretCode({
+        email: companyEmail,
+        secretCode: `http://localhost:3000/vendors/${randomString}`,
+      });
+      const createdVendor = await Vendor.create({
+        companyEMail: companyEmail,
+        secretCode: randomString,
+      });
+
+      console.log("Send mails");
+      return res.status(201).json(createdVendor);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: "Internal Server Error" });
+    }
+  },
+
+  updateVendor: async (req, res) => {
+    const { userData, secretCode } = req.body;
+    try {
+      const vendor = await Vendor.findOne({ where: { secretCode } });
       if (!vendor) {
         return res.status(404).send({ error: "Vendor Not Found" });
       } else {
-        await Vendor.update(updatedData, { where: { id } });
-        const updatedVendor = await Vendor.findByPk(id);
+        const updatedVendor = await vendor.update(userData);
         return res.status(200).json(updatedVendor);
       }
     } catch (error) {
