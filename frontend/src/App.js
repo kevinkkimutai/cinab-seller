@@ -10,6 +10,7 @@ import {
   Products,
   ProductsForm,
   Sales,
+  Settings,
 } from "./pages";
 import { NavBar } from "./components";
 import { useStateContext } from "./contexts/ContextProvider";
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/login" element={<Login />} className="md:w-12/12" />
           <Route path="/vendors/:code" element={<VendorPage />} />
           <Route path="/sales" element={<Sales />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
     </div>

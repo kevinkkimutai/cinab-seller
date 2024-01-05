@@ -7,6 +7,7 @@ export { default as Products } from "../pages/products/Products";
 export { default as ProductsForm } from "../pages/products/ProductsForm";
 export { default as GetVendors } from "../pages/Vendors/GetVendors";
 export { default as Sales } from "../pages/Sales";
+export {default as Settings} from "../pages/Settings";
 
 
 
