@@ -48,6 +48,9 @@ module.exports = {
       MpesaNumber: {
         type: Sequelize.STRING,
       },
+      secretCode: {
+        type: Sequelize.STRING,
+      },
       MpesaName: {
         type: Sequelize.STRING,
       },
