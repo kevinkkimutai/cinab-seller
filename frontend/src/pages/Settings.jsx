@@ -63,46 +63,52 @@ export default function Settings () {
                 <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="user-profile" role="tabpanel" aria-labelledby="user-profile-tab">
                     <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">User Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
                 </div>
-                {/* <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="business-info" role="tabpanel" aria-labelledby="business-info-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Business-Info tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
-                </div> */}
                 <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="business-info" role="tabpanel" aria-labelledby="business-info-tab">
-                    <div class="text-center">
-                        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Business Information</h2>
-
-                        <div class="mb-4">
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-400">Company Name:</label>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">[companyName Value]</p>
+                    <form class="p-2">
+                        <div class="py-5">
+                            <h1 class="text-semibold text-gray-700 dark:text-gray-50 text-xl">Business Information</h1>
+                            <p class="mt-1 text-sm text-gray-800 dark:text-gray-50" id="user_avatar_help">Please provide the following details:</p>
                         </div>
-
-                        <div class="mb-4">
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-400">KRA:</label>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">[Kra Value]</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 gap-y-7 ">
+                            <div>
+                                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company Name</label>
+                                <input type="text" id="name" name="companyName" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cinab" required />
+                            </div>
+                            <div>
+                                <label for="Kra_Pin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">KRA PIN</label>
+                                <input type="text" name="Kra" value="" id="Kra_Pin" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="CR07115544O7KE" required />
+                            </div>
+                            <div>
+                                <label for="licence" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trading license No. (optional)</label>
+                                <input type="text" id="licence" name="licence" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="KBLC254" />
+                            </div>
+                            <div>
+                                <label for="addressOne" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address Line 1</label>
+                                <input type="address_line_one" id="addressOne" name="AddressOne" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="PO BOX. 50-20245" />
+                            </div>
+                            <div>
+                                <label for="AddressTwo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address Line 2</label>
+                                <input type="address_line_two" id="AddressTwo" name="AddressTwo" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Eastleigh Ibgaro Plaza 1 Building" required />
+                            </div>
+                            <div>
+                                <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City/Town</label>
+                                <input type="city" id="city" name="city" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nairobi" required />
+                            </div>
+                            <div>
+                                <label for="state" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">State/Region</label>
+                                <input type="state" id="state" value="" name="state" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="state" required />
+                            </div>
+                            <div>
+                                <label for="website" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website</label>
+                                <input type="url" id="website" name="website" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="cinab.co.ke" required />
+                            </div>
+                            <div>
+                            <label for="services" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">General details of service/Goods</label>
+                                <input type="textarea" id="services" name="services" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="E-Commerce Company" required />
+                            </div>
                         </div>
-
-                        <div class="mb-4">
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-400">License:</label>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">[licence Value]</p>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-400">Address:</label>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">[AddressOne Value]</p>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">[AddressTwo Value]</p>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">[city, state Value]</p>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-400">Website:</label>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">[Website name]</p>
-                        </div>
-
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-400">Services:</label>
-                            <p class="text-lg font-semibold text-gray-900 dark:text-white">[services Value]</p>
-                        </div>
-                    </div>
-                </div>
+                    </form>
+                </div>            
                 <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="payment-info" role="tabpanel" aria-labelledby="payment-info-tab">
                     <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Payment-Info tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
                 </div>
@@ -113,7 +119,6 @@ export default function Settings () {
                     <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Shopping Info tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
                 </div>
             </div>
-
         </div>
     )
 }
