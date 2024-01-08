@@ -15,7 +15,7 @@ const productController = {
 
   createProduct: async (req, res) => {
     const {
-      userId,
+      vendorId,
       pname,
       category,
       stock,
@@ -26,7 +26,7 @@ const productController = {
     } = req.body;
 
     try {
-      const user = await User.findByPk(userId);
+      const user = await User.findByPk(vendorId);
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -37,7 +37,7 @@ const productController = {
       const imagePath = `${API}/uploads/${imageFile.filename}`;
       try {
         const newProduct = await Product.create({
-          userId,
+          vendorId,
           pname,
           category,
           stock,

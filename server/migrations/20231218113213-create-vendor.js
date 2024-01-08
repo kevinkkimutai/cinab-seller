@@ -39,6 +39,12 @@ module.exports = {
       services: {
         type: Sequelize.STRING,
       },
+      userId: {
+        type: Sequelize.INTEGER,
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+        references: { model: "Users", key: "id" },
+      },
       BankName: {
         type: Sequelize.STRING,
       },
