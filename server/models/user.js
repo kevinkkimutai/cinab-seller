@@ -4,8 +4,10 @@ const bcrypt = require("bcrypt");
 module.exports = (sequelize) => {
   class User extends Model {
     static associate(models) {
-      // Insert here Associations
-      User.hasMany(models.Product, { foreignKey: 'userId', as: 'products' });
+      User.hasOne(models.Vendor, {
+        foreignKey: "userId",
+        as: "vendor",
+      });
     }
   }
 
@@ -18,7 +20,7 @@ module.exports = (sequelize) => {
       otp: {
         type: DataTypes.STRING,
       },
-        email: {
+      email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
@@ -28,21 +30,19 @@ module.exports = (sequelize) => {
           },
         },
       },
-
       role: {
         type: DataTypes.STRING,
       },
       refreshToken: {
         type: DataTypes.TEXT,
       },
-
       password: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           len: {
-            args: [6, 100],
-            msg: "Password must be at least 6 characters long",
+            args: [4, 100],
+            err: "Password must be at least 6 characters long",
           },
         },
       },
