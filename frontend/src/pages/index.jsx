@@ -9,4 +9,3 @@ export { default as GetVendors } from "../pages/Vendors/GetVendors";
 export { default as Sales } from "../pages/Sales";
 
 
-
