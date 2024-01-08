@@ -5,8 +5,12 @@ export { default as Offers } from "../pages/Offers";
 export { default as Orders } from "../pages/Orders";
 export { default as Products } from "../pages/products/Products";
 export { default as ProductsForm } from "../pages/products/ProductsForm";
-export { default as GetVendors } from "../pages/Vendors/GetVendors";
+export { default as GetVendors } from "./Vendors/GetVendors";
 export { default as Sales } from "../pages/Sales";
+export {default as Stepper} from "../pages/Vendors/Stepper"
+export {default as StepperController} from "../pages/Vendors/StepperController"
+export {default as Vendor} from "../pages/Vendors/Vendor"
+
 
 
 

@@ -9,27 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      productName: {
-        type: Sequelize.STRING
-      },
-      description: {
-        type: Sequelize.STRING
-      },
-      category: {
-        type: Sequelize.STRING
-      },
-      inStock: {
-        type: Sequelize.INTEGER
-      },
-      previousPrice: {
-        type: Sequelize.FLOAT
-      },
-      offerPrice: {
-        type: Sequelize.FLOAT
-      },
-      endDate: {
-        type: Sequelize.DATE
-      },
+    
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -39,6 +19,12 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+
+    //     productId: DataTypes.STRING,
+    // offerPrice: DataTypes.FLOAT,
+    // fromDate: DataTypes.DATE,
+    // toDate: DataTypes.DATE,
+
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Offers');

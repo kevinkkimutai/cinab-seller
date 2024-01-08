@@ -1,31 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useCreateVendorMutation } from "../../actions/VendorAction";
+import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
+import { StepperContext } from "../../../contexts/StepperContext";
 import { useDispatch } from "react-redux";
-import { setVendor } from "../../reducers/VendorReducer";
+import { useUpdateVendorMutation } from "../../../actions/VendorAction";
+import { createVendor } from "../../../reducers/VendorReducer";
 
-export default function PaymentInformation({ onPrev, onNext }) {
+export default function PaymentInformation({ currentStep, handleClick }) {
   const dispatch = useDispatch();
-  const [formValues, setFormValues] = useState(() => {
-    const storedData = localStorage.getItem("formValues");
-    return storedData
-      ? JSON.parse(storedData)
-      : {
-          BankName: "",
-          AccountNumber: "",
-          MpesaNumber: "",
-          MpesaName: "",
-        };
-  });
-
-  const [createData] = useCreateVendorMutation();
+  const { userData, setUserData } = useContext(StepperContext);
+  const [createVendorRequest] = useUpdateVendorMutation();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+
+    setUserData({ ...userData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -33,13 +21,17 @@ export default function PaymentInformation({ onPrev, onNext }) {
     const secretCode = localStorage.getItem("secretCode");
 
     const formData = {
-      formValues,
-      // secretCode,
+      userData,
+      secretCode,
     };
+
+    console.log(userData);
+
     try {
-      const res = await createData(formData); // Assuming the mutation takes an object
-      if (res.data) {
-        dispatch(setVendor(res.data)); // Dispatch action to set vendor in Redux store
+      const data = await createVendorRequest(formData).unwrap();
+
+      if (data) {
+        dispatch(createVendor(data)); // Dispatch action to set vendor in Redux store
         toast.success("Vendor created successfully");
       } else {
         toast.error("Failed to create vendor");
@@ -49,10 +41,6 @@ export default function PaymentInformation({ onPrev, onNext }) {
       toast.error("Failed to create vendor");
     }
   };
-
-  useEffect(() => {
-    localStorage.setItem("formValues", JSON.stringify(formValues));
-  }, [formValues]);
 
   return (
     <div className="flex flex-col w-full h-full   ">
@@ -91,7 +79,7 @@ export default function PaymentInformation({ onPrev, onNext }) {
                   id="AccountNumber"
                   min="0"
                   name="AccountNumber"
-                  value={formValues.AccountNumber}
+                  value={userData["AccountNumber"] || ""}
                   onChange={handleInputChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="02275656597565"
@@ -109,7 +97,7 @@ export default function PaymentInformation({ onPrev, onNext }) {
                   type="text"
                   id="BankName"
                   name="BankName"
-                  value={formValues.BankName}
+                  value={userData["BankName"] || ""}
                   onChange={handleInputChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Equity"
@@ -137,7 +125,7 @@ export default function PaymentInformation({ onPrev, onNext }) {
                   max="9999999999999"
                   id="MpesaNumber"
                   name="MpesaNumber"
-                  value={formValues.MpesaNumber}
+                  value={userData["MpesaNumber"] || ""}
                   onChange={handleInputChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="+2547825888565"
@@ -155,7 +143,7 @@ export default function PaymentInformation({ onPrev, onNext }) {
                   type="text"
                   id="MpesaName"
                   name="MpesaName"
-                  value={formValues.MpesaName}
+                  value={userData["MpesaName"] || ""}
                   onChange={handleInputChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="John Doe"
@@ -167,7 +155,9 @@ export default function PaymentInformation({ onPrev, onNext }) {
 
           <div className="flex justify-between py-6">
             <button
-              onClick={onPrev}
+              onClick={() => {
+                handleClick();
+              }}
               type="button"
               className="mt-4 px-4 py-2 bg-gray-400 text-white rounded-md"
             >
