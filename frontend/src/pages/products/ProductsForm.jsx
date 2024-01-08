@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCreateProductMutation } from '../../actions/ProductAction';
 import { useDispatch } from 'react-redux';
 import { addProduct } from '../../reducers/ProductReducers';
+import { toast } from "react-toastify";
 export default function UploadForm() {
 
   const [formData, setFormData] = useState({
@@ -57,15 +58,19 @@ export default function UploadForm() {
   
     try {
       const { data } = await createProduct(formDataToSend);
-  
-      dispatch(addProduct(data));
-      console.log('formData after:', formData);
-      // Optionally, reset the form or perform other actions after successful submission
+      if (data) {
+        dispatch(addProduct(data));
+        console.log('formData after:', formData);
+        toast.success(`${formData.pname} added to Products successfully`);
+      } else {
+        toast.error("Failed to create product");
+      }
     } catch (error) {
-      console.error('Error adding product:', error);
+      console.error(error);
+      toast.error("Failed to create product");
     }
   };
-  
+
 
   return (
     <section className="bg-gray-100 dark:bg-gray-900 w-full h-full max-h-full overflow-y-auto">
@@ -78,33 +83,40 @@ export default function UploadForm() {
         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 mb-2">
           <div className="sm:col-span-2">
             <label htmlFor="name" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Product Name</label>
-            <input type="text" name="pname" id="pname" value={formData.pname} onChange={handleInputChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type product name" required=""/>
+            <input type="text" name="pname" id="pname" value={formData.pname} onChange={handleInputChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type product name" required />
           </div>
           <div className="w-full">
             <label htmlFor="brand" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Brand</label>
-            <input type="text" name="brand" id="brand" value={formData.brand} onChange={handleInputChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Product brand" required=""/>
+            <input type="text" name="brand" id="brand" value={formData.brand} onChange={handleInputChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Product brand" required/>
           </div>
           <div>
             <label htmlFor="category" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-            <select id="category" value={formData.category} onChange={handleInputChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-              <option >Select category</option>
-              <option value="TV">TV/Monitors</option>
-              <option value="PC">PC</option>
-              <option value="GA">Gaming/Console</option>
-              <option value="PH">Phones</option>
-            </select>
+            <select
+  id="category"
+  name="category"
+  value={formData.category}
+  onChange={handleInputChange}
+  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required
+>
+  <option value="">Select category</option>
+  <option value="TV/Monitors">TV/Monitors</option>
+  <option value="PC">PC</option>
+  <option value="Gaming/Console">Gaming/Console</option>
+  <option value="Phones">Phones</option>
+</select>
+
           </div>
           <div className="w-full">
             <label htmlFor="price" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Price (Ksh)</label>
-            <input type="number" name="price" id="price" value={formData.price} onChange={handleInputChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="3000" required=""/>
+            <input type="number" name="price" id="price" value={formData.price} onChange={handleInputChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="3000" required/>
           </div>
           <div>
             <label htmlFor="stock" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Stock/Quantity</label>
-            <input type="number" name="stock" id="stock" value={formData.stock} onChange={handleInputChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="10" required=""/>
+            <input type="number" name="stock" id="stock" value={formData.stock} onChange={handleInputChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="10" required/>
           </div>
           <div className="sm:col-span-2">
             <label htmlFor="description" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-            <textarea id="description" name="description" rows="5" value={formData.description} onChange={handleInputChange} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Your description here"></textarea>
+            <textarea id="description" name="description" rows="5" value={formData.description} onChange={handleInputChange} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Your description here" required></textarea>
           </div>
           <div>
   <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-white" htmlFor="image">
@@ -118,6 +130,7 @@ export default function UploadForm() {
   onChange={handleFileChange}
   accept=".png, .jpg, .jpeg"
   multiple
+  required
 />
 
   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
