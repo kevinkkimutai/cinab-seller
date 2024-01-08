@@ -12,7 +12,8 @@ module.exports = {
         category: `Category ${i}`,
         vendorId: i % 2 === 0 ? 2 : 1, // Alternating vendorIds for diversity
         image: `https://picsum.photos/200/300?random=${i}`, // Placeholder image URL from Lorem Picsum
-        price: parseFloat((Math.random() * 100).toFixed(2)), // Random price between 0 and 100
+        price: parseFloat((Math.random() * 1000).toFixed(2)), // Random price between 0 and 1000
+        Rprice: parseFloat((Math.random() * 1000).toFixed(2)), // Random price between 0 and 1000
         approval: i % 3 === 0 ? "approved" : "pending", // 'approved' for every third product
         stock: `125${i}`,
         createdAt: new Date(),

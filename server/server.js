@@ -8,6 +8,7 @@ const http = require("http");
 const socketIo = require("socket.io");
 const unprotectRoutes = require("./routes/Upprotectedroutes");
 const UserRoutes = require("./routes/UserRoutes");
+const offerRoutes = require("./routes/OffersRoute");
 
 const VendorsRoutes = require("./routes/vendorsRoutes")
 
@@ -42,6 +43,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/v2", UserRoutes);
 app.use("/v2", unprotectRoutes);
 app.use("/v2", VendorsRoutes);
+app.use("/v2", offerRoutes);
 
 // put here product routes
 app.use("/v2", ProductRoutes);

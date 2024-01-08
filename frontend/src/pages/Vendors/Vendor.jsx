@@ -14,7 +14,7 @@ export default function Vendor() {
     "Shopcenter  Information",
     "Shipping Information",
     "Payment Information",
-    "Complete",
+    // "Complete",??
   ];
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -25,7 +25,7 @@ export default function Vendor() {
   const handleClick = (direction) => {
     let newStep = currentStep;
     direction === "next" ? newStep++ : newStep--;
-    newStep > 0 && newStep < steps.length && setCurrentStep(newStep);
+    newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
   };
   //   Dertemines the omponent to display on the current step
   const displayStep = (step) => {
