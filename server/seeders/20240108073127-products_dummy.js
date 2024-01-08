@@ -4,7 +4,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const dummyProducts = [];
 
-    for (let i = 1; i <= 30; i++) {
+    for (let i = 1; i <= 40; i++) {
       const productData = {
         pname: `Product ${i}`,
         description: `Description for Product ${i}`,
