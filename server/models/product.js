@@ -10,6 +10,12 @@ module.exports = (sequelize) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+      Product.hasMany(models.Offer, {
+        foreignKey: "productId",
+        as: "offers",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
 
@@ -43,6 +49,10 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       price: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
+      Rprice: {
         type: DataTypes.FLOAT,
         allowNull: false,
       },

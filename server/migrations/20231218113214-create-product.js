@@ -30,6 +30,9 @@ module.exports = {
       price: {
         type: Sequelize.FLOAT,
       },
+      Rprice: {
+        type: Sequelize.FLOAT,
+      },
       description: {
         type: Sequelize.STRING,
       },
