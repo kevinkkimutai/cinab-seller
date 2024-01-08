@@ -41,7 +41,7 @@ const userController = {
         name,
         password: hashedPassword,
         refreshToken: null,
-        role: "Supplier",
+        role: null,
       });
       return res.status(201).send(user);
     } catch (error) {
