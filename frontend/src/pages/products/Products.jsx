@@ -10,7 +10,8 @@ import {
   setProduct,
   updateProduct as updateProductAction,
 } from "../../reducers/ProductReducers";
-
+import { toast } from "react-toastify";
+import{ ThreeDots} from 'react-loader-spinner';
 
 export default function Products() {
   const [loading, setLoading] = useState(false);
@@ -77,14 +78,15 @@ export default function Products() {
           id: selectedProduct.id,
           formData,
         });
+        if (data) {
+          dispatch(updateProductAction(data));
   
-        console.log('Product updated successfully:');
-        console.log("Updated Product Data:", data);
-  
-        dispatch(updateProductAction(data));
-  
-        setSelectedImage(null);
-        document.getElementById("crud-modal").classList.add("hidden");
+          setSelectedImage(null);
+          document.getElementById("crud-modal").classList.add("hidden");
+          toast.success(`${data.pname} updated successfully`);
+        } else {
+          toast.error("Failed to update product");
+        } 
       }
     } catch (error) {
       console.error("Error updating product:", error);
@@ -92,13 +94,17 @@ export default function Products() {
   };
   
   
-
     // function to handle product deletion
   const handleDeleteProduct = async (productId) => {
   try {
     // Call the deleteProduct mutation with the correct id parameter
-    await deleteProduct(productId);
-
+    const { data } = await deleteProduct(productId);
+    if (data) {
+     
+      toast.success(`Product deleted successfully`);
+    } else {
+      toast.error("Failed to update product");
+    } 
     // Fetch the latest products and update the Redux store
     fetchData();
   } catch (error) {
@@ -151,6 +157,17 @@ const handleImageChange = (e) => {
     document.getElementById("crud-modal").classList.remove("hidden");
   };
 
+  const handleDelete = (productId) => {
+    // Find the selected product for editing
+    const productToDelete = productData.find(
+      (product) => product.id === productId
+    );
+    setSelectedProduct(productToDelete);
+
+    // Open the modal
+    document.getElementById("popup-modal").classList.remove("hidden");
+  };
+
 
   return (
     <div className="w-full h-full max-h-full overflow-y-auto scrollbar-hidden">
@@ -194,12 +211,28 @@ const handleImageChange = (e) => {
           </form>
         </div>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto custom-grid">
+      {loading ? (
+        // Render spinner while loading
+        <div className="flex justify-center items-center h-[80%]">
+          <div className="loader">
+      <ThreeDots className="bg-red-500" />
+          </div>
+        </div>
+      ) : (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto custom-grid" loading>
         {filteredProducts.map((product) => (
           <div
             key={product.id}
             className="w-full max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
           >
+             {loading ? (
+        // Render spinner while loading
+        <div className="flex justify-center items-center h-[80%]">
+          <div className="loader">
+      <ThreeDots className="bg-red-500" />
+          </div>
+        </div>
+      ) : (
             <a href="/">
               <img
                 class=" rounded-t-lg md:h-52 w-full"
@@ -207,7 +240,7 @@ const handleImageChange = (e) => {
                 alt={product.pname}
               />
             </a>
-
+      )}
             <div className="mx-2 pb-1 ">
               <span>
                 <h5 className="text-md tracking-tight text-center text-gray-900 dark:text-white">
@@ -244,7 +277,7 @@ const handleImageChange = (e) => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDeleteProduct(product.id)}
+                    onClick={() => handleDelete(product.id)}
                     className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px- py-1 text-xs text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
                   >
                     Delete
@@ -252,10 +285,43 @@ const handleImageChange = (e) => {
                 </div>
               </div>
               {/* end of price and buttons */}
+
+              {/* start delete modal */}
+              <div id="popup-modal" tabindex="-1" class="hidden justify-center bg-gray-900/80 h-full flex mx-auto overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative  p-4 w-full max-w-lg max-h-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 ">
+            <button type="button" 
+            onClick={() =>
+              document.getElementById("popup-modal").classList.add("hidden")
+            }
+            class="absolute top-3 end-2.5 text-gray-800 bg-red-200 dark:bg-red-400 hover:bg-red-300 hover:text-red-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-4 md:p-5 text-center">
+                <svg class="mx-auto mb-4 text-red-700 w-12 h-12 dark:text-red-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+                <h3 class="mb-5 text-lg font-normal text-gray-700 dark:text-gray-400">Are you sure you want to delete <span className="underline text-red-700 dark:text-red-500 font-bold uppercase"> {selectedProduct?.pname || ""}</span> ?</h3>
+                <button  onClick={() => handleDeleteProduct(product.id)} type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2">
+                    Yes, I'm sure
+                </button>
+                <button onClick={() =>
+              document.getElementById("popup-modal").classList.add("hidden")} 
+            type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
           </div>
+
+          // end of delete modal
         ))}
       </div>
+      )}  
 
       {/* <!-- Main modal --> */}
       <div
@@ -297,6 +363,7 @@ const handleImageChange = (e) => {
                 <span className="sr-only">Close modal</span>
               </button>
             </div>
+
             {/* <!-- Modal body --> */}
             <form onSubmit={handleUpdateProduct}>
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">

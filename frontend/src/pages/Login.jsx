@@ -112,10 +112,10 @@ const Login = () => {
   return (
     <section className="bg-gray-100 dark:bg-gray-900 w-full max-h-full overflow-y-auto">
       <div className="flex flex-col items-center justify-between px-6 py-20">
-        <div className="w-full bg-primary-50 rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full bg-primary-50 rounded-lg shadow-lg  dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to your account
+              Sign in to Vendor account
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
@@ -135,10 +135,18 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
+             
               <div className="relative">
-                <ContactInputBox
+              <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Your password
+                </label>
+               <div>
+               <ContactInputBox
                   type={showPassword ? "text" : "password"}
-                  name="password"
+                  name="password"w
                   ref={passwordRef}
                   placeholder="*****************"
                   value={password}
@@ -148,10 +156,11 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-2 text-gray-600 hover:text-gray-800 cursor-pointer"
+                  className="absolute right-2 top-10 text-gray-600 hover:text-gray-800 cursor-pointer"
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
+               </div>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-start">
