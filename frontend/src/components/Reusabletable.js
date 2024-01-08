@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Spinner, Alert } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { TiTickOutline } from "react-icons/ti";
 import { GrRevert } from "react-icons/gr";
 import { RiChatQuoteFill, RiDeleteBinLine } from "react-icons/ri";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import { BsFillEmojiDizzyFill, BsViewStacked } from "react-icons/bs";
+import { BsFillEmojiDizzyFill, BsViewStacked ,BsCaretDownFill, BsCaretUpFill} from "react-icons/bs";
 
 export default function ReusableTable({
   columns,
@@ -14,6 +14,7 @@ export default function ReusableTable({
   columnMapping,
   isLoading,
   isError,
+  editProduct,
   onEdit,
   onView,
   header,
@@ -25,34 +26,28 @@ export default function ReusableTable({
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredData, setFilteredData] = useState(data);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [selectAll, setSelectAll] = useState(false);
+  const [filteredData, setFilteredData] = useState(data || []);
   const [editStates, setEditStates] = useState({});
   const [editedData, setEditedData] = useState({});
   const [savingRows, setSavingRows] = useState(new Set()); // To track rows being saved
 
-  useEffect(() => {
-    const filtered = data.filter((row) =>
-      columns.some((column) => {
-        const cellValue = String(row[column]);
-        return (
-          cellValue &&
-          cellValue.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      })
-    );
-
-    setFilteredData(filtered);
-  }, [searchQuery, data, columns]);
 
   useEffect(() => {
-    if (selectAll) {
-      setSelectedRows(filteredData);
-    } else {
-      setSelectedRows([]);
+    if (Array.isArray(data)) {
+      const filtered = data.filter((row) =>
+        columns.some((column) => {
+          const cellValue = String(row[column]);
+          return (
+            cellValue &&
+            cellValue.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+        })
+      );
+ 
+      setFilteredData(filtered);
     }
-  }, [selectAll, filteredData]);
+  }, [searchQuery, data, columns]);
+ 
 
   function handleSort(column) {
     if (sortBy === column) {
@@ -75,23 +70,6 @@ export default function ReusableTable({
     }
     return dataToSort;
   }
-
-  const offset = currentPage * itemsPerPage;
-  const pageCount = Math.ceil(filteredData.length / itemsPerPage);
-
-  const handleRowSelect = (row) => {
-    if (selectedRows.includes(row)) {
-      setSelectedRows(
-        selectedRows.filter((selectedRow) => selectedRow !== row)
-      );
-    } else {
-      setSelectedRows([...selectedRows, row]);
-    }
-  };
-
-  const handleSelectAll = () => {
-    setSelectAll(!selectAll);
-  };
 
   const handleDelete = (row) => {
     if (onDelete) {
@@ -117,6 +95,12 @@ export default function ReusableTable({
       onQuote(row);
     }
   };
+
+  const handleEditInventory=(row)=>{
+    if (onEdit) {
+      onEdit(row)
+    }
+  }
 
   const handleEditFieldChange = (rowId, column, value) => {
     setEditedData((prevEditedData) => ({
@@ -167,298 +151,266 @@ export default function ReusableTable({
     }));
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page - 1);
+  };
+
+  const offset = currentPage * itemsPerPage;
+  const pageCount = Math.ceil(filteredData.length / itemsPerPage);
+
   return (
     <>
-      <div className=" dark:bg-slate-800 bg-slate-200 mt">
-        <div className="table-header flex justify-between pt-4">
-          <h1 className="dark:text-gray-50 text-gray-800 md:text-4xl font-serif">
-            {header}
-          </h1>
-          <div className="flex gap-x-3">
-            <form className="flex items-center">
-              <label htmlFor="simple-search" className="sr-only">
-                Search
-              </label>
-              <div className="relative mb-2 mt-2">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <svg
-                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 20"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 5v10M3 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 10a2 2 0 1 0 0-4 2 2 0 0 0 0-4Zm0 0V6a3 3 0 0 0-3-3H9m1.5-2-2 2 2 2"
-                    />
-                  </svg>
+   
+    
+
+      <div className="mx-auto max-w-screen-xl px-2 lg:px-6 h-full overflow-auto scrollbar-hidden">
+      
+        <div className="bg-primary-50 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+          {header}
+          <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+            <div className="w-full md:w-1/2">
+              <form className="flex items-center">
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    id="simple-search"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Search"
+                    required=""
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
                 </div>
-                <input
-                  type="text"
-                  id="simple-search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-gray-50 border border-gray-100 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search..."
-                  required
-                />
-              </div>
-            </form>
-            <div className="justify-center mr-2">
-              {onButton && (
-                <button
-                  onClick={onButton}
-                  className="py-auto text-base md:text-sm md:py-2 rounded-lg bg-blue-700 hover:bg-blue-600 px-4 items-center mt-2 "
-                  type="button"
+              </form>
+            </div>
+            <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+              <button
+                type="button"
+                className="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+              >
+                <svg
+                  className="h-3.5 w-3.5 mr-2"
+                  fill="currentColor"
+                  viewbox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
                 >
-                  Add Admin
-                </button>
-              )}
+                  <path
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                  />
+                </svg>
+                Add product
+              </button>
             </div>
           </div>
-        </div>
-        <div>
-          {isError && (
-            <Alert variant="danger" className="mt-2 text-red-700">
-              {isError}
-            </Alert>
-          )}
-        </div>
-      </div>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th>
-                <input
-                  type="checkbox"
-                  checked={selectAll}
-                  onChange={handleSelectAll}
-                />
-              </th>
-              {columns.map((column) => (
-                <th
-                  key={column}
-                  scope="col"
-                  className={`cursor-pointer px-2 py-3 mr-4${
-                    column === "name" ? " text-bold" : ""
-                  }`}
-                  style={{ width: "300px" }}
-                  onClick={() => handleSort(column)}
-                >
-                  {columnMapping[column] || column}{" "}
-                  <span className="ml-1">
-                    {sortBy === column && sortOrder === "asc" ? "↑" : "↓"}
-                  </span>
-                </th>
-              ))}
-              {actions && (
-                <th scope="col" className="cursor-pointer px-2 py-3 mr-4">
-                  Actions
-                </th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading ? (
-              <tr className="bg-primary-50 border-b dark:bg-gray-900 dark:border-gray-700">
-                <td colSpan={columns.length + (actions ? 1 : 0)}>
-                  <div className="text-center py-4">
-                    <Spinner animation="border" role="status"></Spinner>
-                  </div>
-                </td>
+
+          <div className="overflow-x-auto  scrollbar-hidden px-4">
+          {filteredData.length === 0 ? (
+            <div className="text-center p-4">
+              <p className="text-gray-500 dark:text-gray-400">
+                No data found.
+              </p>
+            </div>
+          ) : (
+            <table className="w-full text-sm text-left border border-gray-500 text-gray-500  dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                {columns.map((column) => (
+              <th
+              key={column}
+              scope="col"
+              className={`px-4 py-3 whitespace-nowrap${column === "name" ? " text-bold" : ""}`}
+              onClick={() => handleSort(column)}
+            >
+              <div className="flex items-center">
+                <span>{columnMapping[column] || column}</span>
+                {sortBy === column && sortOrder === "asc" ? (
+                  <BsCaretUpFill className="ml-1" />
+                ) : (
+                  <BsCaretDownFill className="ml-1" />
+                )}
+              </div>
+            </th>
+           
+                ))}
+                {actions && (
+                  <th scope="col" className="cursor-pointer px-2 py-3 mr-4">
+                    <span className="">Actions</span>
+                  </th>
+                )}
               </tr>
-            ) : (
-              sortData(filteredData)
-                .slice(offset, offset + itemsPerPage)
-                .map((row) => (
-                  <tr
-                    key={row.id}
-                    className="border-b dark:bg-gray-800 dark:border-gray-700"
-                  >
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={selectedRows.includes(row)}
-                        onChange={() => handleRowSelect(row)}
-                      />
-                    </td>
-                    {columns.map((column) => (
-                      <td
-                        key={column}
-                        className={`px-2 py-2${
-                          column === "dueDate" ? " text-xs text-semibold" : ""
-                        }`}
-                        style={{ width: "250px" }}
-                      >
-                        {editStates[row.id] ? (
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr className="bg-primary-50  border-b  dark:bg-gray-900 dark:border-gray-700">
+                  <td colSpan={columns.length + (actions ? 1 : 0)}>
+                    <div className="text-center py-4">
+                      <Spinner animation="border" role="status" variant="blue"></Spinner>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                sortData(filteredData)
+                  .slice(offset, offset + itemsPerPage)
+                  .map((row) => (
+                    <tr key={row.id} className="border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-700 odd:bg-primary-50 odd:dark:bg-gray-900 even:bg-gray-100 even:dark:bg-gray-800">
+                      {/* <td>
                           <input
-                            type="text"
-                            className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            value={editedData[row.id]?.[column] || row[column]}
-                            onChange={(e) =>
-                              handleEditFieldChange(
-                                row.id,
-                                column,
-                                e.target.value
-                              )
-                            }
+                            type="checkbox"
+                            checked={selectedRows.includes(row)}
+                            onChange={() => handleRowSelect(row)}
                           />
-                        ) : column === "Image" ? (
-                          <img
-                            src={row[column]}
-                            alt=""
-                            className="rounded-full w-12 h-12"
-                          />
-                        ) : (
-                          row[column]
-                        )}
-                      </td>
-                    ))}
-                    {actions && (
-                      <td className="flex-1 justify-between m-auto px-2">
-                        {editStates[row.id] ? (
-                          savingRows.has(row.id) ? (
-                            <div className="text-center">
-                              <Spinner
-                                animation="border"
-                                role="status"
-                              ></Spinner>
-                            </div>
+                        </td> */}
+                      {columns.map((column) => (
+                        <td
+                          key={column}
+                          className={`px-4 py-2 whitespace-nowrap ${
+                            column === "email"
+                              ? " "
+                              : ""
+                          }`}
+                        >
+                          {editStates[row.id] ? (
+                            <input
+                              type="text"
+                              className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                              value={
+                                editedData[row.id]?.[column] || row[column]
+                              }
+                              onChange={(e) =>
+                                handleEditFieldChange(
+                                  row.id,
+                                  column,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          ) : column === "image" ? (
+                            <img
+                              src={row[column]}
+                              alt=""
+                              className="rounded-full w-8 h-8"
+                            />
+                          ) : (
+                            row[column]
+                          )}
+                        </td>
+                      ))}
+                      {actions && (
+                        <td className="flex-1 justify-between m-auto px-2">
+                          {editStates[row.id] ? (
+                            savingRows.has(row.id) ? (
+                              <div className="text-center">
+                                <Spinner
+                                  animation="border"
+                                  role="status"
+                                ></Spinner>
+                              </div>
+                            ) : (
+                              <div className="flex justify-start items-center space-x-2">
+                                <button
+                                  onClick={() => handleSaveEdit(row)}
+                                  className="text-green-500"
+                                >
+                                  <TooltipComponent title="Save">
+                                    <TiTickOutline className="text-xl" />
+                                  </TooltipComponent>
+                                </button>
+                                <button
+                                  onClick={() => handleCancelEdit(row)}
+                                  className="text-red-500"
+                                >
+                                  <TooltipComponent title="Cancel">
+                                    <GrRevert className="text-xl" />
+                                  </TooltipComponent>
+                                </button>
+                              </div>
+                            )
                           ) : (
                             <div className="flex justify-start items-center space-x-2">
-                              <button
-                                onClick={() => handleSaveEdit(row)}
-                                className="text-green-500"
-                              >
-                                <TooltipComponent title="Save">
-                                  <TiTickOutline className="text-xl" />
-                                </TooltipComponent>
-                              </button>
-                              <button
-                                onClick={() => handleCancelEdit(row)}
-                                className="text-red-500"
-                              >
-                                <TooltipComponent title="Cancel">
-                                  <GrRevert className="text-xl" />
-                                </TooltipComponent>
-                              </button>
+                              {onQuote && (
+                                <button
+                                  onClick={() => handleQuote(row)}
+                                  className="text"
+                                >
+                                  <TooltipComponent title="Quote">
+                                    <RiChatQuoteFill className="text-xl text-green-600" />
+                                  </TooltipComponent>
+                                </button>
+                              )}
+
+                              {onEdit && (
+                                <button
+                                  onClick={() => handleEditInventory(row)}
+                                  className="text-blue-500"
+                                >
+                                 <span>Edit</span>
+                                </button>
+                              )}
+
+
+
+                              {onDelete && (
+                                <button
+                                  onClick={() => handleDelete(row)}
+                                  className="text-orange-500"
+                                >
+                                  <TooltipComponent title="Delete">
+                                    <RiDeleteBinLine className="text-xl" />
+                                  </TooltipComponent>
+                                </button>
+                              )}
+                           
+                              
+                              
                             </div>
-                          )
-                        ) : (
-                          <div className="flex justify-start items-center space-x-2">
-                            {onQuote && (
-                              <button
-                                onClick={() => handleQuote(row)}
-                                className="text"
-                              >
-                                <TooltipComponent title="Quote">
-                                  <RiChatQuoteFill className="text-xl text-green-600" />
-                                </TooltipComponent>
-                              </button>
-                            )}
-                            {onDelete && (
-                              <button
-                                onClick={() => handleDelete(row)}
-                                className="text-orange-500"
-                              >
-                                <TooltipComponent title="Delete">
-                                  <RiDeleteBinLine className="text-xl" />
-                                </TooltipComponent>
-                              </button>
-                            )}
-                            {onView && (
-                              <button
-                                onClick={() => handleView(row)}
-                                className="text-yellow-500"
-                              >
-                                <TooltipComponent title="View">
-                                  <BsViewStacked className=" text-xl" />
-                                </TooltipComponent>
-                              </button>
-                            )}
-                            {onEdit && (
-                              <button
-                                onClick={() => handleEdit(row)}
-                                className="text-yellow-500"
-                              >
-                                <TooltipComponent title="Edit">
-                                  <BsFillEmojiDizzyFill className="text-xl" />
-                                </TooltipComponent>
-                              </button>
-                            )}
-                          </div>
-                        )}
-                      </td>
-                    )}
-                  </tr>
-                ))
-            )}
-          </tbody> 
-        </table>
-        <nav
-          className="flex items-center dark:bg-slate-800 justify-between pt-4"
-          aria-label="Table navigation"
-        >
-          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-            Showing{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {offset + 1}
-            </span>{" "}
-            -{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {Math.min(offset + itemsPerPage, filteredData.length)}
-            </span>{" "}
-            of{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {filteredData.length}
+                          )}
+                        </td>
+                      )}
+                    </tr>
+                  ))
+              )}
+            </tbody>
+          </table>
+          )}
+        </div>
+
+     
+          <nav
+            className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+            aria-label="Table navigation"
+          >
+            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+              Showing
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {offset + 1}-
+                {Math.min(offset + itemsPerPage, filteredData.length)}
+              </span>
+              of
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {filteredData.length}
+              </span>
             </span>
-          </span>
-          <ul className="inline-flex -space-x-px text-sm h-8">
-            <li>
-              <button
-                className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-primary-50 border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                onClick={() =>
-                  setCurrentPage((prevPage) => Math.max(prevPage - 1, 0))
-                }
-                disabled={currentPage === 0}
-              >
-                Previous
-              </button>
-            </li>
-            {Array.from({ length: pageCount }).map((_, page) => (
-              <li key={page}>
-                <button
-                  className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-primary-50 border border-gray-300 ${
-                    page === currentPage
-                      ? "text-blue-600 bg-blue-50"
-                      : "hover:bg-gray-100 hover:text-gray-700"
-                  } dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-                  onClick={() => setCurrentPage(page)}
-                >
-                  {page + 1}
-                </button>
-              </li>
-            ))}
-            <li>
-              <button
-                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-primary-50 border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                onClick={() =>
-                  setCurrentPage((prevPage) =>
-                    Math.min(prevPage + 1, pageCount - 1)
-                  )
-                }
-                disabled={currentPage === pageCount - 1}
-              >
-                Next
-              </button>
-            </li>
-          </ul>
-        </nav>{" "}
+            <ul className="inline-flex items-stretch -space-x-px">
+              {Array.from({ length: pageCount }).map((_, index) => (
+                <li key={index}>
+                  <span
+                    onClick={() => handlePageChange(index + 1)}
+                    className={`flex items-center justify-center text-sm py-2 px-3 leading-tight ${
+                      currentPage === index
+                        ? "text-primary-600 bg-yellow-400 border-1 mr-1 hover:bg-primary-100 "
+                        : "text-gray-500  border-1 border-yellow-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    }`}
+                  >
+                    {index + 1}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
     </>
   );
