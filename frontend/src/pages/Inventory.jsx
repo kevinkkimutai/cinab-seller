@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { ReusableTable } from "../components";
 import {
   useGetProductsMutation,
   useUpdateProductMutation,
@@ -10,6 +11,7 @@ import {
   setProduct,
   updateProduct as updateProductAction,
 } from "../reducers/ProductReducers";
+import { Spinner } from "react-bootstrap";
 
 
 export default function Products() {
@@ -51,10 +53,11 @@ export default function Products() {
   // update product
   const handleUpdateProduct = async (e) => {
     e.preventDefault();
+    setLoading(true)
     try {
       if (selectedProduct) {
         const formData = new FormData();
-  
+
         formData.append("id", selectedProduct.id);
         formData.append("pname", selectedProduct.pname);
         formData.append("stock", selectedProduct.stock);
@@ -63,7 +66,7 @@ export default function Products() {
         formData.append("category", selectedProduct.category || "");
         formData.append("description", selectedProduct.description || "");
         formData.append("approval", selectedProduct.approval || "");
-  
+
         // Handle the image based on its type
         if (selectedImage instanceof File) {
           formData.append("image", selectedImage);
@@ -72,138 +75,161 @@ export default function Products() {
           // If it's something else, adjust this part accordingly
           formData.append("image", selectedProduct.image);
         }
-  
+
         const { data } = await updateProduct({
           id: selectedProduct.id,
           formData,
         });
-  
+
         console.log('Product updated successfully:');
         console.log("Updated Product Data:", data);
-  
+
         dispatch(updateProductAction(data));
-  
+
         setSelectedImage(null);
         document.getElementById("crud-modal").classList.add("hidden");
       }
     } catch (error) {
       console.error("Error updating product:", error);
+    } finally {
+      setLoading(false)
     }
   };
-  
-  
 
-    // function to handle product deletion
+
+
+  // function to handle product deletion
   const handleDeleteProduct = async (productId) => {
-  try {
-    // Call the deleteProduct mutation with the correct id parameter
-    await deleteProduct(productId);
+    try {
+      // Call the deleteProduct mutation with the correct id parameter
+      await deleteProduct(productId);
 
-    // Fetch the latest products and update the Redux store
-    fetchData();
-  } catch (error) {
-    console.error("Error deleting product:", error);
-  }
-};
+      // Fetch the latest products and update the Redux store
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
 
-const handleImageChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    setSelectedImage(file);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
 
-    // Log the selected image
-    console.log("Selected Image:", file);
+      // Log the selected image
+      console.log("Selected Image:", file);
 
-    // Update selectedProduct with the new image
-    setSelectedProduct({
-      ...selectedProduct,
-      image: file,
-    });
-  } else {
-    setSelectedImage(null); // Reset the state when no file is selected
-  }
-};
-
-
-
-    const handleModalInputChange = (e) => {
+      // Update selectedProduct with the new image
       setSelectedProduct({
         ...selectedProduct,
-        [e.target.name]: e.target.value,
+        image: file,
       });
-    };
-    
-  
+    } else {
+      setSelectedImage(null); // Reset the state when no file is selected
+    }
+  };
+
+
+
+  const handleModalInputChange = (e) => {
+    setSelectedProduct({
+      ...selectedProduct,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+
 
   // Filter products based on search query
   const filteredProducts = productData.filter((product) =>
     product.pname.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleEdit = (productId) => {
-    // Find the selected product for editing
-    const productToEdit = productData.find(
-      (product) => product.id === productId
-    );
-    setSelectedProduct(productToEdit);
+  const handleEdit = (row) => {
+    console.log(row.id);
+    setSelectedProduct(row)
+    // // Find the selected product for editing
+    // const productToEdit = row.find(
+    //   (product) => product.id === productId
+    // );
+    // setSelectedProduct(productToEdit);
 
-    // Open the modal
+    // // Open the modal
     document.getElementById("crud-modal").classList.remove("hidden");
   };
 
- 
-  return (
-    <div>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
-        <div className="bg-purple h-10">
-          <h1 className="font-bold text-xl ml-3 ">Stock Inventory</h1>
-        </div>
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Product name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Category
-              </th>
-              <th scope="col" className="px-6 py-3">
-                In-Stock
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Units Left
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-          {filteredProducts.map((product) => (
-              <tr
-                key={product.id} // Assuming your product objects have a unique id
-                className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-              >
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {product.pname}
-                </th>
-                <td className="px-6 py-4">{product.category}</td>
-                <td className="px-6 py-4">{product.inStock ? 'Yes' : 'No'}</td>
-                <td className="px-6 py-4">{product.stock}</td>
-                <td className="flex items-center px-6 py-4">
-                  <a href="#"    onClick={() => handleEdit(product.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    Edit
-                  </a>
-                  <a href="#"     onClick={() => handleDeleteProduct(product.id)}   className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">
-                    Remove
-                  </a>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  const handleDeleteClick = async (rowIndex, id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete Suppliers?"
+    );
+    if (confirmDelete) {
+      const supplierId = rowIndex.id; // Renamed to avoid naming conflicts
+      try {
+        await deleteProduct(supplierId);
 
+        // dispatch(deleteSupplier(res.data));
+        fetchData();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+  const heading = (
+
+    <div className="bg-purple h-10">
+      <h1 className="font-bold text-xl ml-3 ">Your Inventory</h1>
+    </div>
+
+  )
+
+
+  return (
+    <>
+
+
+
+      <ReusableTable
+
+        columns={[
+          "id",
+          "pname",
+          "stock",
+          "price",
+          "brand",
+          "category",
+          "description",
+
+        ]}
+        data={productData}
+        header={heading}
+        itemsPerPage={10}
+        isLoading={loading}
+        actions={[
+          {
+            label: "Edit",
+            onClick: handleEdit,
+          },
+          {
+            label: "Delete",
+            onClick: handleDeleteClick
+            ,
+          },
+
+        ]}
+        // isError={errMsg}
+        onEdit={handleEdit}
+        onDelete={handleDeleteClick}
+        columnMapping={{
+          id: "ID",
+          name: "Company Name",
+          status: "Status",
+          Image: "Company Logo",
+          email: "Company Email",
+          KRA: "KRA Pin",
+          contact: "Phone No.",
+          location: "Address",
+        }}
+      />
 
       {/* <!-- Main modal --> */}
       <div
@@ -248,26 +274,26 @@ const handleImageChange = (e) => {
             {/* <!-- Modal body --> */}
             <form onSubmit={handleUpdateProduct}>
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">
-                 {/* <!-- Display selected files --> */}
-                 {selectedImage ? (
-  <img
-    className="rounded-lg"
-    src={URL.createObjectURL(selectedImage)}
-    alt="Selected Img"
-  />
-) : selectedProduct?.image && typeof selectedProduct.image === 'string' ? (
-  <img
-    className="rounded-lg"
-    src={`${selectedProduct.image.split(',')[0]}`}
-    alt={selectedProduct.pname}
-  />
-) : selectedProduct?.image instanceof File ? (
-  <img
-    className="rounded-lg"
-    src={URL.createObjectURL(selectedProduct.image)}
-    alt={selectedProduct.pname}
-  />
-) : null}
+                {/* <!-- Display selected files --> */}
+                {selectedImage ? (
+                  <img
+                    className="rounded-lg"
+                    src={URL.createObjectURL(selectedImage)}
+                    alt="Selected Img"
+                  />
+                ) : selectedProduct?.image && typeof selectedProduct.image === 'string' ? (
+                  <img
+                    className="rounded-lg"
+                    src={selectedProduct.image}
+                    alt={selectedProduct.pname}
+                  />
+                ) : selectedProduct?.image instanceof File ? (
+                  <img
+                    className="rounded-lg"
+                    src={URL.createObjectURL(selectedProduct.image)}
+                    alt={selectedProduct.pname}
+                  />
+                ) : null}
 
                 <div className="md:pt-5">
                   <label
@@ -277,39 +303,39 @@ const handleImageChange = (e) => {
                     Upload image(s)
                   </label>
                   <input
-  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-  id="multiple_files"
-  type="file"
-  accept=".png, .jpg, .jpeg"
-  multiple
-  onChange={handleImageChange}
-/>
+                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                    id="multiple_files"
+                    type="file"
+                    accept=".png, .jpg, .jpeg"
+                    multiple
+                    onChange={handleImageChange}
+                  />
 
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     PNG, JPG, or JPEG files (Max. 5MB each)
                   </p>
                   <div className="md:pt-6">
-                  <label
-                    htmlFor="pname"
-                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Product Name
-                  </label>
-                  <input
-                    type="text"
-                    name="pname"
-                    id="pname"
-                    value={selectedProduct?.pname || ""}
-                    onChange={handleModalInputChange}
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Type product name"
-                    required=""
-                  />
-                </div>
+                    <label
+                      htmlFor="pname"
+                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Product Name
+                    </label>
+                    <input
+                      type="text"
+                      name="pname"
+                      id="pname"
+                      value={selectedProduct?.pname || ""}
+                      onChange={handleModalInputChange}
+                      className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Type product name"
+                      required=""
+                    />
+                  </div>
                 </div>
 
 
-               
+
                 <div className="w-full">
                   <label
                     htmlFor="brand"
@@ -401,14 +427,21 @@ const handleImageChange = (e) => {
                     placeholder="Your description here"
                   ></textarea>
                 </div>
-           
-               
+
+
                 <div className="mt- sm:mt- sm:col-span-2">
                   <button
                     type="submit"
                     className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
                   >
-                    Update Product
+                    {loading ? (<div role="status">
+
+                      <span className="">updating...</span>
+                    </div>) : (
+
+                      "Update Product"
+
+                    )}
                   </button>
                 </div>
               </div>
@@ -416,7 +449,6 @@ const handleImageChange = (e) => {
           </div>
         </div>
       </div>
-
-</div>
+    </>
   )
 }
