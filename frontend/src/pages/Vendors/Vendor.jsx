@@ -48,30 +48,24 @@ export default function Vendor() {
   };
 
   return (
-    <div className="md:w-1/1 shadow-xl rounded-2xl pb-2 bg-primary-50">
-      {/* stepper */}
-      <div className="container horizontal mt-5">
-        <Stepper steps={steps} currentStep={currentStep} />
-      </div>{" "}
-      {/* Display COmponents */}
-      <div className="my-10 p-10">
-        <StepperContext.Provider
-          value={{
-            userData,
-            setUserData,
-            finalData,
-            setFinalData,
-          }}
-        >
-          {displayStep(currentStep)}
-        </StepperContext.Provider>
+    <div class="p-4 bg-slate-100 h-full">
+      <div class="p-4 border-2  border-gray-200 bg-white  rounded-lg shadow-lg dark:border-gray-700 ">
+        <div className="mb-4 mx-auto max-w-screen">
+          <Stepper steps={steps} currentStep={currentStep} />
+        </div>
+        <div className="md:my-10 ">
+          <StepperContext.Provider
+            value={{
+              userData,
+              setUserData,
+              finalData,
+              setFinalData,
+            }}
+          >
+            {displayStep(currentStep)}
+          </StepperContext.Provider>
+        </div>
       </div>
-      {/* stepper Controller
-      <StepperController
-        handleClick={handleClick}
-        currentStep={currentStep}
-        steps={steps}
-      /> */}
     </div>
   );
 }
