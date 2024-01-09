@@ -9,6 +9,7 @@ import {
   Login,
   Products,
   ProductsForm,
+  Error,
   Sales,
 } from "./pages";
 import { NavBar } from "./components";
@@ -40,6 +41,8 @@ export default function App() {
           <Route path="/login" element={<Login />} className="md:w-12/12" />
           <Route path="/vendors/:code" element={<VendorPage />} />
           <Route path="/sales" element={<Sales />} />
+          <Route path="/*" element={<Error />} />
+         
         </Routes>
       </div>
     </div>
