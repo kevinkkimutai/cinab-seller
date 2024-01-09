@@ -59,7 +59,7 @@ export default function Orders() {
         const formData = new FormData();
 
         formData.append("id", selectedOrder.id);
-        formData.append("pname", selectedOrder.pname);
+        formData.append("pname", selectedOrder.productName);
         formData.append("stock", selectedOrder.stock);
         formData.append("price", selectedOrder.price || 0);
         formData.append("brand", selectedOrder.brand || "");
@@ -160,14 +160,14 @@ export default function Orders() {
 
   const handleDeleteClick = async (rowIndex, id) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete Suppliers?"
+      "Are you sure you want to delete products?"
     );
     if (confirmDelete) {
-      const supplierId = rowIndex.id; // Renamed to avoid naming conflicts
+      const orderId = rowIndex.id; // Renamed to avoid naming conflicts
       try {
-        await deleteOrder(supplierId);
+        await deleteOrder(orderId);
 
-        // dispatch(deleteSupplier(res.data));
+        // dispatch(deleteproduct(res.data));
         fetchData();
       } catch (error) {
         console.error(error);
