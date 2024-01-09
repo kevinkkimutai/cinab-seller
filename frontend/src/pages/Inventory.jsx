@@ -160,14 +160,14 @@ export default function Products() {
 
   const handleDeleteClick = async (rowIndex, id) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete Suppliers?"
+      "Are you sure you want to delete products?"
     );
     if (confirmDelete) {
-      const supplierId = rowIndex.id; // Renamed to avoid naming conflicts
+      const productId = rowIndex.id; // Renamed to avoid naming conflicts
       try {
-        await deleteProduct(supplierId);
+        await deleteProduct(productId);
 
-        // dispatch(deleteSupplier(res.data));
+        // dispatch(deleteproduct(res.data));
         fetchData();
       } catch (error) {
         console.error(error);
