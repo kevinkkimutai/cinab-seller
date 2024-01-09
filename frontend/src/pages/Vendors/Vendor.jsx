@@ -14,7 +14,7 @@ export default function Vendor() {
     "Shopcenter  Information",
     "Shipping Information",
     "Payment Information",
-    // "Complete",??
+    "Complete",
   ];
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -40,6 +40,9 @@ export default function Vendor() {
         return <PaymentInformation handleClick={handleClick} />;
       case 5:
         return <Complete handleClick={handleClick} />;
+      case 6:
+        return <Complete handleClick={handleClick} />;
+
       default:
     }
   };

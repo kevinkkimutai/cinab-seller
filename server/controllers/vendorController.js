@@ -1,10 +1,13 @@
-const { Vendor } = require("../models");
+const { Vendor, User } = require("../models");
 const { sendSecretCode } = require("../middlewares/Verification");
+const API = "http://localhost:5000";
+const bcrypt = require("bcrypt");
+const { newUser } = require("./UserController");
 
 // HELPER METHOD TO GENERATE RANDOM STRINGS
 function generateRandomString(length) {
   const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$&";
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!&";
   let result = "";
   const charactersLength = characters.length;
   for (let i = 0; i < length; i++) {
@@ -43,26 +46,6 @@ const vendorController = {
     }
   },
 
-  createVendxor: async (req, res) => {
-    const { companyEmail } = req.body;
-
-    try {
-      const randomString = generateRandomString(20);
-
-      sendSecretCode({
-        email: companyEmail,
-        secretCode: `http://localhost:3000/vendors/${randomString}`,
-      });
-      const createdVendor = await Vendor.create({ companyEMail: companyEmail });
-
-      console.log("Send mails");
-      return res.status(201).json(createdVendor);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send({ error: "Internal Server Error" });
-    }
-  },
-
   createVendor: async (req, res) => {
     const { companyEmail } = req.body;
     console.log(req.body);
@@ -86,14 +69,94 @@ const vendorController = {
   },
 
   updateVendor: async (req, res) => {
-    const { userData, secretCode } = req.body;
+    const {
+      companyName,
+      Kra,
+      licence,
+      AddressOne,
+      AddressTwo,
+      city,
+      state,
+      website,
+      services,
+      BankName,
+      AccountNumber,
+      MpesaNumber,
+      MpesaName,
+      SAddressOne,
+      SAddressTwo,
+      Scity,
+      Sstate,
+      password,
+      country,
+      Postal_Address,
+      businessType,
+      shopName,
+      shopZone,
+      username,
+      secretCode,
+    } = req.body;
+    console.log(req.body);
+    const imageFile = req.file;
     try {
       const vendor = await Vendor.findOne({ where: { secretCode } });
+      const imagePath = `${API}/uploads/${imageFile.filename}`;
       if (!vendor) {
         return res.status(404).send({ error: "Vendor Not Found" });
       } else {
-        const updatedVendor = await vendor.update(userData);
-        return res.status(200).json(updatedVendor);
+        // Create an object A with only the authData (password and email)
+
+        // find the id of the last user
+        const lastUser = await User.findOne({
+          order: [["id", "DESC"]],
+        });
+
+        // hashpassword
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const userDataInfo = {
+          name: username,
+          email: vendor.companyEMail,
+          role: "Vendor",
+          refreshToken: null,
+          password: hashedPassword,
+          id: lastUser ? lastUser.id + 1 : 1,
+        };
+        await newUser(userDataInfo, password);
+
+        // Create a separate object called vendorData with all fields except password and email
+        const vendorData = {
+          secretCode: null,
+          companyName,
+          Kra,
+          licence,
+          AddressOne,
+          userId: lastUser ? lastUser.id + 1 : 1,
+          AddressTwo,
+          city,
+          state,
+          website,
+          services,
+          BankName,
+          AccountNumber,
+          MpesaNumber,
+          MpesaName,
+          SAddressOne,
+          SAddressTwo,
+          Scity,
+          Sstate,
+          country,
+          Postal_Address,
+          businessType,
+          shopName,
+          shopZone,
+          username,
+          image: imagePath,
+        };
+
+        const updatedVendor = await vendor.update(vendorData);
+
+        return res.status(200).json({ updatedVendor});
       }
     } catch (error) {
       console.error(error);
