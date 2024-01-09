@@ -10,7 +10,7 @@ import {
   selectOffers,
   setOffer,
   updateOffer as updateOfferAction,
-} from "../reducers/OfferReducers";
+} from "../reducers/OfferReducer";
 import { Spinner } from "react-bootstrap";
 
 

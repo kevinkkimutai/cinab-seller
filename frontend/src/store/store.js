@@ -8,7 +8,7 @@ import AuthReducers from "../reducers/AuthReducers";
 import VendorReducer from "../reducers/VendorReducer";
 import ProductReducer from "../reducers/ProductReducers";
 import OrderReducers from "../reducers/OrderReducers";
-import OfferReducers from "../reducers/OfferReducers";
+import OfferReducers from "../reducers/OfferReducer";
 
 const authPersistConfig = {
   key: "auth",
