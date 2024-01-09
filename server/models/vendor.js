@@ -93,6 +93,12 @@ module.exports = (sequelize, DataTypes) => {
       shopZone: {
         type: DataTypes.STRING,
       },
+      username: {
+        type: DataTypes.STRING,
+      },
+      image: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,
