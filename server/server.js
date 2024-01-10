@@ -54,7 +54,7 @@ const port = process.env.PORT || 5000;
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://cinab-seller.vercel.app/"],
+    origin: ["http://localhost:3000", "https://cinab-seller.vercel.app/", "http://localhost:5000"],
     credentials: true,
   },
 });
