@@ -22,7 +22,7 @@ router.post("/products", uploadMiddleware.single("image"), productController.cre
 /**
  * Update a product using dynamic parameter.
  */
-router.put("/products/:id", uploadMiddleware.array('image', 3), productController.updateProduct);
+router.put("/products/:id", uploadMiddleware.single("image"), productController.updateProduct);
 
 /**
  * Delete a product by ID.

@@ -1,116 +1,71 @@
 import React, { useState } from "react";
-import ProfileComponent from "./ShopInfomation";
-import ShippingInformation from "./ShippingInfoamation";
-import PaymentInformation from "./PaymentInformation";
-import BusinessInformation from "./BusinessInformation";
+import { StepperController, Stepper } from "../../pages";
+import { StepperContext } from "../../contexts/StepperContext";
+import BusinessInformation from "./steps/BusinessInformation";
+import ShippingInformation from "./steps/ShippingInfoamation";
+import ProfileComponent from "./steps/ShopInfomation";
+import Complete from "./steps/Complete";
+import PaymentInformation from "./steps/PaymentInformation";
 
-const App = () => {
-  const [progress, setProgress] = useState(0); // Progress state tracker
-
-  const nextStep = (data) => {
-    setProgress((prevProgress) => prevProgress + 1); // Move to the next step
-    // if (data) {
-    //   localStorage.setItem(`formValues_step_${progress}`, JSON.stringify(data)); // Save form data for the current step
-    // }
-  };
-
-  const prevStep = () => {
-    setProgress((prevProgress) => prevProgress - 1); // Move to the previous step
-    // const storedData = localStorage.getItem(`formValues_step_${progress - 1}`);
-    // const previousFormValues = storedData ? JSON.parse(storedData) : null;
-    // if (previousFormValues) {
-    //   setFormValues(previousFormValues); // Update the formValues state with the previous data
-    // }
-  };
-
+export default function Vendor() {
+  // STEPS DESCRIPTION
   const steps = [
-    {
-      title: "Shopcenter  Information",
-      status: progress > 0 ? "Done" : "Pending",
-    },
-    {
-      title: "Business Information",
-      status: progress > 1 ? "Done" : "Pending",
-    },
-    {
-      title: "Shipping Information",
-      status: progress > 2 ? "Done" : "Pending",
-    },
-    { title: "Payment Information", status: progress > 3 ? "Done" : "Pending" },
+    "Business Information",
+    "Shopcenter  Information",
+    "Shipping Information",
+    "Payment Information",
+    "Complete",
   ];
 
-  const renderStep = (stepIndex) => {
-    switch (stepIndex) {
-      case 0:
-        return (
-          <ProfileComponent
-            onNext={nextStep}
-            // data={formValues} // Pass form data to the first step
-          />
-        );
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const [userData, setUserData] = useState("");
+  const [finalData, setFinalData] = useState([]);
+
+  const handleClick = (direction) => {
+    let newStep = currentStep;
+    direction === "next" ? newStep++ : newStep--;
+    newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
+  };
+  //   Dertemines the omponent to display on the current step
+  const displayStep = (step) => {
+    switch (step) {
       case 1:
-        return (
-          <BusinessInformation
-            onNext={nextStep}
-            onPrev={prevStep}
-            // data={formValues}
-          />
-        );
+        return <BusinessInformation handleClick={handleClick} />;
       case 2:
-        return (
-          <ShippingInformation
-            onNext={nextStep}
-            onPrev={prevStep}
-            // data={formValues}
-          />
-        );
+        return <ProfileComponent handleClick={handleClick} />;
       case 3:
-        return (
-          <PaymentInformation
-            onNext={nextStep}
-            onPrev={prevStep}
-            // data={formValues}
-          />
-        );
+        return <ShippingInformation handleClick={handleClick} />;
+      case 4:
+        return <PaymentInformation handleClick={handleClick} />;
+      case 5:
+        return <Complete handleClick={handleClick} />;
+      case 6:
+        return <Complete handleClick={handleClick} />;
+
       default:
-        return null;
     }
   };
 
   return (
-    <div className="w-full bg-primary-50 dark:bg-slate-700 overflow-auto h-full rounded-lg shadow-lg">
-      {/* Rendering steps tracker */}
-      <div className="w-full flex justify-center md:gap-28 gap-2 px-4 mt-4">
-        {steps.map((step, index) => (
-          <div
-            key={index}
-            className="bg-gray-100 rounded-lg p-4 flex items-center justify-between w-64"
+    <div class="p-4 bg-slate-100 h-full">
+      <div class="p-4 border-2  border-gray-200 bg-white  rounded-lg shadow-lg dark:border-gray-700 ">
+        <div className="mb-4 mx-auto max-w-screen">
+          <Stepper steps={steps} currentStep={currentStep} />
+        </div>
+        <div className="md:my-10 ">
+          <StepperContext.Provider
+            value={{
+              userData,
+              setUserData,
+              finalData,
+              setFinalData,
+            }}
           >
-            <div>
-              <h3>{step.title}</h3>
-              <div
-                className={`text-sm rounded-full ${
-                  step.status === "Done" ? "bg-blue-500" : "bg-gray-500"
-                } w-full h-2 mt-2`}
-              ></div>
-              <span
-                className={`text-sm ${
-                  step.status === "Done" ? "text-green-500" : "text-gray-500"
-                }`}
-              >
-                {step.status}
-              </span>
-            </div>
-            {index !== steps.length - 1 && (
-              <div className="w-px h-6 bg-gray-300"></div>
-            )}
-          </div>
-        ))}
+            {displayStep(currentStep)}
+          </StepperContext.Provider>
+        </div>
       </div>
-      {/* Rendering current step */}
-      <div className="w-full p-4 h-full ">{renderStep(progress)}</div>
     </div>
   );
-};
-
-export default App;
+}
