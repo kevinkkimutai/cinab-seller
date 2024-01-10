@@ -424,9 +424,7 @@ export default function Products() {
                   typeof selectedProduct.image === "string" ? (
                   <img
                     className="rounded-lg"
-                    src={`http://localhost:5000/uploads/${
-                      selectedProduct.image.split(",")[0]
-                    }`}
+                    src={selectedProduct.image}
                     alt={selectedProduct.pname}
                   />
                 ) : selectedProduct?.image instanceof File ? (
@@ -435,7 +433,7 @@ export default function Products() {
                     src={URL.createObjectURL(selectedProduct.image)}
                     alt={selectedProduct.pname}
                   />
-                ) : null}
+                ) : selectProducts.image}
 
                 <div className="md:pt-5">
                   <label
