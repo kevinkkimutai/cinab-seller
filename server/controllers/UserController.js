@@ -41,11 +41,49 @@ const userController = {
         name,
         password: hashedPassword,
         refreshToken: null,
-        role: "Supplier",
+        role: null,
       });
       return res.status(201).send(user);
     } catch (error) {
       return res.status(500).send({ error: "Failed to create user" });
+    }
+  },
+
+  newUser: async (userDataInfo, password) => {
+    console.log(userDataInfo);
+    try {
+      // Create the account'
+      const expirationTime = new Date();
+      expirationTime.setMinutes(expirationTime.getMinutes() + 5);
+      const user = await User.create(userDataInfo);
+      const expirationTimeISO = expirationTime.toISOString();
+      if (user) {
+        const setToken = await Token.create({
+          userId: user.id,
+          expiresAt: expirationTimeISO,
+          token: crypto.randomBytes(16).toString("hex"),
+        });
+
+        if (setToken) {
+          await sendEmails({
+            from: "no-reply@example.com",
+            to: `${user.email}`,
+            username: `${user.name}`,
+            subject: "Account Verification Link",
+            verificationLink: `localhost:3000/v1/verify-email/${user.id}/${setToken.token}`,
+          });
+
+          // Return the created user
+          return user;
+        } else {
+          throw new Error("Token not created");
+        }
+      } else {
+        throw new Error("User not created");
+      }
+    } catch (error) {
+      console.error("Error creating account:", error);
+      throw new Error("Error creating account");
     }
   },
 
@@ -123,13 +161,9 @@ const userController = {
       } else {
         const user = await User.findOne({ where: { id } });
         if (!user) {
-          return res
-            .status(401)
-            .redirect("https://mightyflexs.vercel.app/register");
+          return res.status(401).redirect("localhost:3000/register");
         } else if (user.isVerified) {
-          return res
-            .status(200)
-            .redirect("https://mightyflexs.vercel.app/login");
+          return res.status(200).redirect("https/login");
         } else {
           user.isVerified = true;
           await user.save();
@@ -137,9 +171,7 @@ const userController = {
           // Remove the verification token from the database after successful verification
           await usertoken.destroy();
 
-          return res
-            .status(200)
-            .redirect("https://mightyflexs.vercel.app/login");
+          return res.status(200).redirect("localhost:3000/login");
         }
       }
     } catch (error) {
@@ -164,8 +196,6 @@ const userController = {
       return res.status(500).send({ error: "Failed to verified OTP" });
     }
   },
-
-
 
   // Function to reset password using OTP
 

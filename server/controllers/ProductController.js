@@ -1,13 +1,15 @@
 // controllers/productController.js
 const { Product, User } = require("../models");
 
-const API = "https://cinab-seller-2m51.onrender.com";
+const API = "http://localhost:5000";
 
 const productController = {
   getAllProducts: async (req, res) => {
     try {
-      const products = await Product.findAll();
-      res.status(201).json(products);
+      const products = await Product.findAll({
+        order: [["createdAt", "ASC"]],
+      });
+      res.status(200).json(products);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -15,7 +17,7 @@ const productController = {
 
   createProduct: async (req, res) => {
     const {
-      userId,
+      vendorId,
       pname,
       category,
       stock,
@@ -26,7 +28,7 @@ const productController = {
     } = req.body;
 
     try {
-      const user = await User.findByPk(userId);
+      const user = await User.findByPk(vendorId);
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -37,7 +39,7 @@ const productController = {
       const imagePath = `${API}/uploads/${imageFile.filename}`;
       try {
         const newProduct = await Product.create({
-          userId,
+          vendorId,
           pname,
           category,
           stock,
@@ -76,54 +78,41 @@ const productController = {
     }
   },
 
-  // updateProduct: async (req, res) => {
-  //   const productId = req.params.id;
-  //   const { pname, price, stock, category, brand, approval, description, image } = req.body;
-
-  //   try {
-  //     const product = await Product.findByPk(productId);
-
-  //     if (!product) {
-  //       return res.status(404).json({ message: 'Product not found' });
-  //     }
-
-
-  //     await product.update({ pname, price, stock, category, brand, approval, description, image });
-
-  //     res.json(product);
-  //   } catch (error) {
-  //     res.status(400).json({ message: error.message });
-  //   }
-  // },
   updateProduct: async (req, res) => {
-    const productId = req.params.id;
-    const { pname, price, stock, category, brand, approval, description } =
+    const { id } = req.params;
+    const { pname, category, stock, brand, description, price, approval } =
       req.body;
 
     try {
-      const product = await Product.findByPk(productId);
+      // Check if a file was uploaded
+      const imageFile = req.file;
+      const imagePath = imageFile
+        ? `${API}/uploads/${imageFile.filename}`
+        : null;
+
+      // Check if the product with the given ID exists
+      const product = await Product.findByPk(id);
 
       if (!product) {
-        return res.status(404).json({ message: "Product not found" });
+        return res.status(404).json({ error: "Product Not Found" });
       }
 
-      // Check if an image was uploaded
-      const image = req.file ? req.file.filename : product.image;
-
-      await product.update({
+      // Update the product with the new information
+      const updatedProduct = await product.update({
         pname,
-        price,
-        stock,
         category,
+        stock,
         brand,
-        approval,
         description,
-        image,
+        price,
+        approval,
+        image: imagePath,
       });
 
-      res.json(product);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
+      return res.status(200).json(updatedProduct);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 

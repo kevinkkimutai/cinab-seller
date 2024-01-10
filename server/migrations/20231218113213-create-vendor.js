@@ -39,6 +39,12 @@ module.exports = {
       services: {
         type: Sequelize.STRING,
       },
+      userId: {
+        type: Sequelize.INTEGER,
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+        references: { model: "Users", key: "id" },
+      },
       BankName: {
         type: Sequelize.STRING,
       },
@@ -46,6 +52,9 @@ module.exports = {
         type: Sequelize.STRING,
       },
       MpesaNumber: {
+        type: Sequelize.STRING,
+      },
+      secretCode: {
         type: Sequelize.STRING,
       },
       MpesaName: {
@@ -76,6 +85,12 @@ module.exports = {
         type: Sequelize.STRING,
       },
       shopZone: {
+        type: Sequelize.STRING,
+      },
+      username: {
+        type: Sequelize.STRING,
+      },
+      image: {
         type: Sequelize.STRING,
       },
       createdAt: {

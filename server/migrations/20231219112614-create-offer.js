@@ -1,46 +1,44 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Offers', {
+    await queryInterface.createTable("Offers", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
-      productName: {
-        type: Sequelize.STRING
-      },
-      description: {
-        type: Sequelize.STRING
-      },
-      category: {
-        type: Sequelize.STRING
-      },
-      inStock: {
-        type: Sequelize.INTEGER
-      },
-      previousPrice: {
-        type: Sequelize.FLOAT
+      productId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+        references: { model: "Products", key: "id" },
       },
       offerPrice: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
       },
-      endDate: {
-        type: Sequelize.DATE
+      fromDate: {
+        type: Sequelize.DATEONLY,
+      },
+      status: {
+        type: Sequelize.STRING,
+      },
+      toDate: {
+        type: Sequelize.DATEONLY,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Offers');
-  }
+    await queryInterface.dropTable("Offers");
+  },
 };
