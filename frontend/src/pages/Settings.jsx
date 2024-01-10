@@ -109,6 +109,12 @@ export default function Settings () {
                             </div>
                         </div>
                     </form>
+                        <button
+                        type="button"
+                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+                        >
+                            Submit
+                        </button>
                 </div> 
 
                 {/* Payment Details */}
@@ -243,10 +249,82 @@ export default function Settings () {
                         </div>
                     </form>
                 </div>
-
-
+                {/* ShoppingiNFO */}
                 <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="shopping-info" role="tabpanel" aria-labelledby="shopping-info-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Shopping Info tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                    <form className="p-2">
+                        <div className="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
+                            <label
+                            htmlFor="business_type"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                            Business Type
+                            </label>
+                            <select
+                            id="business_type"
+                            className="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            name="businessType"
+                            >
+                            <option value="">Choose Business</option>
+                            <option value="Individual">Individual</option>
+                            <option value="Business">Business</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                            htmlFor="shop_name"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                            Shop Name
+                            </label>
+                            <input
+                            type="text"
+                            id="shop_name"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Cinab"
+                            name="shopName"
+                            required
+                            />
+                        </div>
+                        <div>
+                            <label
+                            htmlFor="country"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                            Country
+                            </label>
+                            <select
+                            id="country"
+                            className="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            name="country"
+                            >
+                            <option value="Kenya">Kenya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                            htmlFor="shop_zone"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                            Shop Zone
+                            </label>
+                            <input
+                            type="text"
+                            id="shop_zone"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Nairobi"
+                            name="shopZone"
+                            required
+                            />
+                        </div>
+                        </div>
+                            <button
+                            type="button"
+                            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+                            >
+                            Submit
+                            </button>
+                    </form>
                 </div>
             </div>
         </div>
