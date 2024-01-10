@@ -109,11 +109,9 @@ export default function Settings () {
                             </div>
                         </div>
                     </form>
-                </div>            
-                {/* <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="payment-info" role="tabpanel" aria-labelledby="payment-info-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Payment-Info tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
-                </div> */}
+                </div> 
 
+                {/* Payment Details */}
                 <div className="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="payment-info" role="tabpanel" aria-labelledby="payment-info-tab">
                     <div className="py-5">
                         <h1 className="text-semibold text-gray-700 dark:text-gray-50 text-xl">
@@ -209,21 +207,44 @@ export default function Settings () {
                         </div>
                     </div>
                 </div>
-
-                <div className="flex justify-between py-6">
-                    <button
-                    type="submit"
-                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
-                    >
-                    Submit{" "}
-                    </button>
+                    <div className="flex justify-between py-6">
+                        <button
+                        type="submit"
+                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+                        >
+                        Submit{" "}
+                        </button>
+                    </div>
                 </div>
-                </div>
-
-
+                {/* Shipping iNFO */}
                 <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="shipping-info" role="tabpanel" aria-labelledby="shipping-info-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Shipping-Info tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                    <form className="p-2">
+                        <div className="py-5">
+                            <h1 className="text-semibold text-gray-700 dark:text-gray-50 text-xl">
+                                Shipping Address{" "}
+                            </h1>
+                            <p
+                            className="mt-1 text-sm text-gray-800 dark:text-gray-50"
+                            id="user_avatar_help"
+                            >
+                                Please provide the address you prefer to ship your products{" "}
+                            </p>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 gap-y-7 ">
+                        {/* Your form input fields go here */}
+                        </div>
+                        <div className="flex justify-between py-6">
+                        <button
+                            type="button"
+                            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+                        >
+                            Submit{" "}
+                        </button>
+                        </div>
+                    </form>
                 </div>
+
+
                 <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="shopping-info" role="tabpanel" aria-labelledby="shopping-info-tab">
                     <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Shopping Info tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
                 </div>
