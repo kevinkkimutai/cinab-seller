@@ -15,6 +15,8 @@ import {
 import { NavBar } from "./components";
 import { useStateContext } from "./contexts/ContextProvider";
 import Vendor from "./pages/Vendors/Vendor";
+import Layout from "./components/Layout";
+import NotFound from "./components/NotFound";
 
 export default function App() {
   const { setCurrentColor, setCurrentMode, currentMode } = useStateContext();
@@ -29,20 +31,20 @@ export default function App() {
 
   return (
     <div className={currentMode === "Dark" ? "dark" : ""}>
-      <NavBar />
-      <div className="md:w-10/12 md:ml-56 p-2 pt-20 overflow-auto scrollbar-hidden dark:bg-gray-900 w-full max-h-screen h-screen bg-slate-100">
+      <div className="h-screen bg-slate-100">
         <Routes>
-          <Route index element={<Dashboard />} />
-          <Route path="/inventory" element={<Inventory />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/offers" element={<Offers />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/productform" element={<ProductsForm />} />
           <Route path="/login" element={<Login />} className="md:w-12/12" />
           <Route path="/vendors/:code" element={<VendorPage />} />
           <Route path="/sales" element={<Sales />} />
           <Route path="/*" element={<Error />} />
-         
+          <Route path="/dashboard/" element={<Layout />}>
+          <Route path="products" element={<Products />} />
+          <Route path="inventory" element={<Inventory />} />
+          <Route path="offers" element={<Offers />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="productform" element={<ProductsForm />} />
+          <Route path="sales" element={<Sales />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>

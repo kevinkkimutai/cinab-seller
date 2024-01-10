@@ -42,11 +42,11 @@ module.exports = (sequelize) => {
         allowNull: false,
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        references: { model: "vendorss", key: "id" },
+        references: { model: "vendors", key: "id" },
       },
       image: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       price: {
         type: DataTypes.FLOAT,
