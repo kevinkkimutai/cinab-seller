@@ -208,49 +208,43 @@ export default function Products() {
           </div>
         </div>
       ) : (
-        <div
-          className="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto custom-grid"
-          loading
-        >
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="w-full max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-            >
-              {loading ? (
-                // Render spinner while loading
-                <div className="flex justify-center items-center h-[80%]">
-                  <div className="loader">
-                    <ThreeDots className="bg-red-500" />
-                  </div>
-                </div>
-              ) : (
-                <a href="/">
-                  <img
-                    class=" rounded-t-lg md:h-52 w-full"
-                    src={product.image}
-                    alt={product.pname}
-                  />
-                </a>
-              )}
-              <div className="mx-2 pb-1 ">
-                <span>
-                  <h5 className="text-md tracking-tight text-center text-gray-900 dark:text-white">
-                    {product.pname}
-                  </h5>
-                </span>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto custom-grid" loading>
+        {filteredProducts.map((product) => (
+          <div
+            key={product.id}
+            className="w-full max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+          >
+             {loading ? (
+        // Render spinner while loading
+        <div className="flex justify-center items-center h-[8
+        0%]">
+          <div className="loader ">
+      <ThreeDots className="bg-red-500" />
+          </div>
+        </div>
+      ) : (
+            <a href="/">
+              <img
+                class=" rounded-t-lg md:h-52 w-full"
+                src={product.image}
+                alt={product.pname}
+              />
+            </a>
+      )}
+            <div className="mx-2 pb-1 ">
+              <span>
+                <h5 className="text-md tracking-tight text-center text-gray-900 dark:text-white">
+                  {product.pname}
+                </h5>
+              </span>
 
-                <div className="w-full flex p-1 ">
-                  <div className="w-1/3 items-center text-gray-800 dark:text-white">
-                    Stock:
-                    <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.3 rounded dark:bg-blue-200 dark:text-blue-800 ms-1">
-                      {product.stock}
-                    </span>
-                  </div>
-                  <div className="w-2/3 flex justify-center text-gray-800 dark:text-white">
-                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {product.category}
-                    </span>
+              <div className="w-full flex p-1 ">
+                <div className="w-1/3 items-center text-gray-800 dark:text-white">
+                  Stock:
+                  <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.3 rounded dark:bg-blue-200 dark:text-blue-800 ms-1">
+                    {product.stock}
+                  </span>
+
                   </div>
                 </div>
 
