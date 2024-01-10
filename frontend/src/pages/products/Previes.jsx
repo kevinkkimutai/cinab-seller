@@ -169,12 +169,12 @@ export default function Products() {
   };
 
   return (
-    <div className="h-full  ">
-      <h1 className="dark:text-gray-50 text-gray-800 md:text-4xl font-serif">
-        List of all products
-      </h1>{" "}
-      <div class="px-2 border-2 border-gray-200 bg-primary-50 dark:bg-slate-700 rounded-lg dark:border-gray-700 h-full max-h-full">
-        <div className="flex justify-end m-4">
+    <div className="w-full h-full max-h-full overflow-y-auto scrollbar-hidden">
+      <div className="table-header p-2 mb-3 flex justify-between bg-gray-300 dark:bg-gray-800 rounded-t-lg">
+        <h1 className="dark:text-gray-50 text-gray-800 md:text-4xl font-serif">
+          List of all products
+        </h1>
+        <div className="flex gap-x-3">
           <form className="flex items-center">
             <label htmlFor="simple-search" className="sr-only">
               Search
@@ -202,174 +202,198 @@ export default function Products() {
                 id="simple-search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-100 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search..."
                 required
               />
             </div>
           </form>
         </div>
-        <div class="h-full max-h-full overflow-auto scrollbar-hidden">
-          {loading ? ( // Render spinner while loading
-            <div className="flex justify-center items-center h-[80%]">
-              <div className="loader">
-                <ThreeDots className="bg-red-500" />
-              </div>
-            </div>
-          ) : (
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-4 ">
-              {filteredProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="max-w-sm h-64 transition duration-300 ease-in-out mt-4 transform hover:scale-105 bg-gray-50 border border-gray-400 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden"
-                >
-                  {product.image ? ( // Check if product has an image
-                    <a href="/">
-                      <img
-                        className="w-full h-32 object-cover border-b-2 bg-white rounded-t-lg"
-                        src={product.image}
-                        alt=""
-                      />
-                    </a>
-                  ) : (
-                    // Show loading spinner when image is not available
-                    <div className="loader w-full h-32 object-cover flex justify-center items-center border-b-2 bg-white rounded-t-lg">
-                      <ThreeDots className="bg-red-500" />
-                    </div>
-                  )}
-                  <div class=" h-32 overflow-hidden">
-                    <a href="/">
-                      <h5 class="mb-2 text-sm md:text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                        {product.pname}(
-                        <span className="text-md font-light">
-                          {product.category}
-                        </span>
-                        )
-                      </h5>
-                    </a>
-                    <div className="w-full  justify-center items-center">
-                      <span className="text-sm text-black dark:text-white ms-1 font-semibold">
-                        <span>Ksh:</span> {product.price}
-                      </span>
-                    </div>
-                    <div className="w-full flex justify-center ">
-                      <span className="text-sm font-medium border-b-4 border-gray-500 border-rounded-lg ">
-                        {product.stock} remaining
-                      </span>
-                    </div>
+      </div>
+      {loading ? (
+        // Render spinner while loading
+        <div className="flex justify-center items-center h-[80%]">
+          <div className="loader">
+            <ThreeDots className="bg-red-500" />
+          </div>
+        </div>
+      ) : (
+        <div
+          className="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto custom-grid"
+          loading
+        >
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="w-full max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 hover:scal dark:border-gray-700 transition duration-300 ease-out transform hover:scale-105 peer-hover:scale-150"
+            >
+              {loading ? (
+                // Render spinner while loading
+                <div className="flex justify-center items-center h-[80%]">
+                  <div className="loader">
+                    <ThreeDots className="bg-red-500" />
+                  </div>
+                </div>
+              ) : (
+                <a href="/">
+                  <img
+                    class=" rounded-t-lg md:h-52 w-full"
+                    src={product.image}
+                    alt={product.pname}
+                  />
+                </a>
+              )}
+              <div className="mx-2 pb-1 ">
+                <span>
+                  <h5 className="text-md tracking-tight text-center text-gray-900 dark:text-white">
+                    {product.pname}
+                  </h5>
+                </span>
 
-                    <div className="grid justify-center grid-cols-2 gap-2 mx-2 md:mx-0 pt-2 md:pt-1">
-                      <button
-                        onClick={() => handleEdit(product.id)}
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-3 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(product.id)}
-                        className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px- py-1 text-xs text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                <div className="w-full flex p-1 ">
+                  <div className="w-1/3 items-center text-gray-800 dark:text-white">
+                    Stock:
+                    <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.3 rounded dark:bg-blue-200 dark:text-blue-800 ms-1">
+                      {product.stock}
+                    </span>
+                  </div>
+                  <div className="w-2/3 flex justify-center text-gray-800 dark:text-white">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {product.category}
+                    </span>
+                  </div>
+                </div>
 
-                    {/* start delete modal */}
-                    <div
-                      id="popup-modal"
-                      tabindex="-1"
-                      class="hidden justify-center bg-gray-900/80 h-full flex mx-auto overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                {/* price and buttons */}
+                <div className="flex items-center grid md:grid-cols-2">
+                  <div>
+                    <span className="text-sm text-blue-500 dark:text-white ms-1 font-semibold">
+                      <span>Ksh:</span> {product.price}
+                    </span>
+                  </div>
+                  <div className="grid justify-center grid-cols-2 gap-2 mx-2 md:mx-0 pt-2 md:pt-1">
+                    <button
+                      onClick={() => handleEdit(product.id)}
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-3 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
-                      <div class="relative  p-4 w-full max-w-lg max-h-full">
-                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 ">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              document
-                                .getElementById("popup-modal")
-                                .classList.add("hidden")
-                            }
-                            class="absolute top-3 end-2.5 text-gray-800 bg-red-200 dark:bg-red-400 hover:bg-red-300 hover:text-red-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white"
-                          >
-                            <svg
-                              class="w-3 h-3"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 14 14"
-                            >
-                              <path
-                                stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(product.id)}
+                      className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px- py-1 text-xs text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+                {/* end of price and buttons */}
+
+                {/* start delete modal */}
+                <div
+                  id="popup-modal"
+                  tabindex="-1"
+                  class="hidden justify-center bg-gray-900/80 h-full flex mx-auto overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                >
+                  <div class="relative  p-4 w-full max-w-lg max-h-full">
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 ">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          document
+                            .getElementById("popup-modal")
+                            .classList.add("hidden")
+                        }
+                        class="absolute top-3 end-2.5 text-gray-800 bg-red-200 dark:bg-red-400 hover:bg-red-300 hover:text-red-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white"
+                      >
+                        <svg
+                          class="w-3 h-3"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 14 14"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                          />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                      </button>
+                      <div class="p-4 md:p-5 text-center">
+                        <svg
+                          class="mx-auto mb-4 text-red-700 w-12 h-12 dark:text-red-400"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                          />
+                        </svg>
+                        <h3 class="mb-5 text-lg font-normal text-gray-700 dark:text-gray-400">
+                          Are you sure you want to delete{" "}
+                          <span className="underline text-red-700 dark:text-red-500 font-bold uppercase">
+                            {" "}
+                            {selectedProduct?.pname || ""}
+                          </span>{" "}
+                          ?
+                        </h3>
+                        <button
+                          onClick={() => handleDeleteProduct(product.id)}
+                          type="button"
+                          class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
+                        >
+                          Yes, I'm sure
+                        </button>
+                        <Button
+                          type="button"
+                          onClick={() => handleDeleteProduct(product.id)}
+                          class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2.5 text-center me-2"
+                        >
+                          {isDeleting ? (
+                            <div className="flex flex-row gap-3">
+                              <Spinner
+                                aria-label="Spinner button example"
+                                size="sm"
                               />
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                          </button>
-                          <div class="p-4 md:p-5 text-center">
-                            <svg
-                              class="mx-auto mb-4 text-red-700 w-12 h-12 dark:text-red-400"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                              />
-                            </svg>
-                            <h3 class="mb-5 text-lg font-normal text-gray-700 dark:text-gray-400">
-                              Are you sure you want to delete{" "}
-                              <span className="underline text-red-700 dark:text-red-500 font-bold uppercase">
-                                {" "}
-                                {selectedProduct?.pname || ""}
-                              </span>{" "}
-                              ?
-                            </h3>
-                        
-                            <Button
-                              type="button"
-                              onClick={() => handleDeleteProduct(product.id)}
-                              class="text-white bg-red-600 py-1 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-3  text-center me-2"
-                            >
-                              {isDeleting ? (
-                                <div className="flex flex-row gap-3">
-                                  <Spinner
-                                    aria-label="Spinner button example"
-                                    size="sm"
-                                  />
-                                  <span className="pl-3">Deleting...</span>
-                                </div>
-                              ) : (
-                                "Yes!"
-                              )}
-                            </Button>
-                            <button
-                              onClick={() =>
-                                document
-                                  .getElementById("popup-modal")
-                                  .classList.add("hidden")
-                              }
-                              type="button"
-                              class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-                            >
-                              No?
-                            </button>
-                          </div>
-                        </div>
+                              <span className="pl-3">Deleting...</span>
+                            </div>
+                          ) : (
+                            "Ok"
+                          )}
+                        </Button>
+                        <button
+                          onClick={() =>
+                            document
+                              .getElementById("popup-modal")
+                              .classList.add("hidden")
+                          }
+                          type="button"
+                          class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                        >
+                          No, cancel
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
-          )}
-           {/* <!-- Main modal --> */}
+
+            // end of delete modal
+          ))}
+        </div>
+      )}
+
+      {/* <!-- Main modal --> */}
       <div
         id="crud-modal"
         tabIndex="-1"
@@ -589,8 +613,6 @@ export default function Products() {
               </div>
             </form>
           </div>
-        </div>
-      </div>
         </div>
       </div>
     </div>
