@@ -5,72 +5,72 @@ export default function Settings () {
     return(
         <div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 
-            <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <div class="flex flex-col md:flex-row">
+            <div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div className="flex flex-col md:flex-row">
                     {/* Leftmost column */}
                     <div class="md:w-1/3 flex items-center justify-center">
-                        <img class="w-50 h-50 mb-3 rounded-full pt-2 pb-2"
+                        <img className="w-50 h-50 mb-3 rounded-full pt-2 pb-2"
                             src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" 
                             alt="Profile"/>
                     </div>
 
                     {/* Center column */}
-                    <div class="md:w-1/3 mx-2 my-4">
-                    <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                        <p class="text-sm font-medium text-gray-700">Company name:</p>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white">[Company name Prop]</p>
+                    <div className="md:w-1/3 mx-2 my-4">
+                    <div className ="bg-gray-100 p-4 rounded-lg mb-4">
+                        <p className="text-sm font-medium text-gray-700">Company name:</p>
+                        <p className="text-lg font-semibold text-gray-900 dark:text-white">[Company name Prop]</p>
                     </div>
-                    <div class="bg-gray-100 p-4 rounded-lg">
-                        <p class="text-sm font-medium text-gray-700">Email:</p>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white">[Email Prop]</p>
+                    <div className="bg-gray-100 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-gray-700">Email:</p>
+                        <p className="text-lg font-semibold text-gray-900 dark:text-white">[Email Prop]</p>
                     </div>
                     </div>
 
                     {/*  Rightmost column */}
-                    <div class="md:w-1/3 mx-2 my-4">
-                    <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                        <p class="text-sm font-medium text-gray-700">Phone No:</p>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white">[Phone Prop]</p>
+                    <div className="md:w-1/3 mx-2 my-4">
+                    <div className="bg-gray-100 p-4 rounded-lg mb-4">
+                        <p className="text-sm font-medium text-gray-700">Phone No:</p>
+                        <p className="text-lg font-semibold text-gray-900 dark:text-white">[Phone Prop]</p>
                     </div>
-                    <div class="bg-gray-100 p-4 rounded-lg">
-                        <p class="text-sm font-medium text-gray-700">Business Type:</p>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white">[Business-type Prop]</p>
+                    <div className="bg-gray-100 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-gray-700">Business Type:</p>
+                        <p className="text-lg font-semibold text-gray-900 dark:text-white">[Business-type Prop]</p>
                     </div>
                     </div>
                 </div>
             </div>
 
-            <div class="w-full border-b border-gray-200 dark:border-gray-700">
-                <ul class="w-full flex flex-wrap -mb-px text-lg font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
-                    <li class="me-2 flex-grow" role="presentation">
-                        <button class="inline-block p-4 border-b-2 rounded-t-lg" id="user-profile-tab" data-tabs-target="#user-profile" type="button" role="tab" aria-controls="user-profile" aria-selected="false"> User Profile</button>
+            <div className="w-full border-b border-gray-200 dark:border-gray-700">
+                <ul className="w-full flex flex-wrap -mb-px text-lg font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+                    <li className="me-2 flex-grow" role="presentation">
+                        <button className="inline-block p-4 border-b-2 rounded-t-lg" id="user-profile-tab" data-tabs-target="#user-profile" type="button" role="tab" aria-controls="user-profile" aria-selected="false"> User Profile</button>
                     </li>
-                    <li class="me-2 flex-grow" role="presentation">
-                        <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="business-info-tab" data-tabs-target="#business-info" type="button" role="tab" aria-controls="business-info" aria-selected="false">Business Information</button>
+                    <li className="me-2 flex-grow" role="presentation">
+                        <button className="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="business-info-tab" data-tabs-target="#business-info" type="button" role="tab" aria-controls="business-info" aria-selected="false">Business Information</button>
                     </li>
-                    <li class="me-2 flex-grow" role="presentation">
-                        <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="payment-info-tab" data-tabs-target="#payment-info" type="button" role="tab" aria-controls="payment-info" aria-selected="false">Payment Details</button>
+                    <li className="me-2 flex-grow" role="presentation">
+                        <button className="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="payment-info-tab" data-tabs-target="#payment-info" type="button" role="tab" aria-controls="payment-info" aria-selected="false">Payment Details</button>
                     </li>
-                    <li class="me-2 flex-grow" role="presentation">
-                        <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="shipping-info-tab" data-tabs-target="#shipping-info" type="button" role="tab" aria-controls="shipping-info" aria-selected="false">Shipping Information</button>
+                    <li className="me-2 flex-grow" role="presentation">
+                        <button className="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="shipping-info-tab" data-tabs-target="#shipping-info" type="button" role="tab" aria-controls="shipping-info" aria-selected="false">Shipping Information</button>
                     </li>
-                    <li class="me-2 flex-grow" role="presentation">
-                        <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="shopping-info-tab" data-tabs-target="#shopping-info" type="button" role="tab" aria-controls="shpping-info" aria-selected="false">Shopping Information</button>
+                    <li className="me-2 flex-grow" role="presentation">
+                        <button className="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="shopping-info-tab" data-tabs-target="#shopping-info" type="button" role="tab" aria-controls="shpping-info" aria-selected="false">Shopping Information</button>
                     </li>
                 </ul>
             </div>
             <div id="default-tab-content">
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="user-profile" role="tabpanel" aria-labelledby="user-profile-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">User Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+                <div className="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="user-profile" role="tabpanel" aria-labelledby="user-profile-tab">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">User Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
                 </div>
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="business-info" role="tabpanel" aria-labelledby="business-info-tab">
+                <div className="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="business-info" role="tabpanel" aria-labelledby="business-info-tab">
                     {/* Business iNFO div */}
-                    <form class="p-2">
-                        <div class="py-5">
-                            <h1 class="text-semibold text-gray-700 dark:text-gray-50 text-xl">Business Information</h1>
-                            <p class="mt-1 text-sm text-gray-800 dark:text-gray-50" id="user_avatar_help">Please provide the following details:</p>
+                    <form className="p-2">
+                        <div className="py-5">Name
+                            <h1 className="text-semibold text-gray-700 dark:text-gray-50 text-xl">Business Information</h1>
+                            <p className="mt-1 text-sm text-gray-800 dark:text-gray-50" id="user_avatar_help">Please provide the following details:</p>
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 gap-y-7 ">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 gap-y-7 ">
                             <div>
                                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company Name</label>
                                 <input type="text" id="name" name="companyName" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cinab" required />
