@@ -9,6 +9,7 @@ import {
   Login,
   Products,
   ProductsForm,
+  Error,
   Sales,
 } from "./pages";
 import { NavBar } from "./components";
@@ -34,15 +35,15 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} className="md:w-12/12" />
           <Route path="/vendors/:code" element={<VendorPage />} />
-
+          <Route path="/sales" element={<Sales />} />
+          <Route path="/*" element={<Error />} />
           <Route path="/dashboard/" element={<Layout />}>
-            <Route path="products" element={<Products />} />
-            <Route path="inventory" element={<Inventory />} />
-            <Route path="offers" element={<Offers />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="productform" element={<ProductsForm />} />
-            <Route path="sales" element={<Sales />} />
-          </Route>
+          <Route path="products" element={<Products />} />
+          <Route path="inventory" element={<Inventory />} />
+          <Route path="offers" element={<Offers />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="productform" element={<ProductsForm />} />
+          <Route path="sales" element={<Sales />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
