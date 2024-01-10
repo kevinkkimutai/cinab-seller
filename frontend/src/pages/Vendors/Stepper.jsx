@@ -60,7 +60,7 @@ export default function Stepper({ steps, currentStep }) {
     >
       <div className=" relative  flex flex-col items-center text-teal-600">
         <div
-          className={`rounded-full transition ease-in-out border-2 border-gray-300 h-12 w-12 flex items-center justify-center py-3 ${
+          className={`rounded-full transition ease-in-out border-2 border-gray-300 h-6 w-6 md:w-12 md:h-12  flex items-center justify-center py-3 ${
             step.selected
               ? "bg-green-500 text-white font-bold border border-green-600"
               : ""
@@ -73,21 +73,27 @@ export default function Stepper({ steps, currentStep }) {
           )}{" "}
         </div>
         <div
-          className={`absolute top-0 text-center mt-16 w-32 text-xs font-medium uppercase ${
+          className={`absolute top-0 text-center hidden md:block mt-16 w-32 text-xs  font-medium uppercase ${
             step.highlighted ? "text-gray-900" : "text-gray-400"
           }`}
         >
           {step.description}{" "}
         </div>
       </div>
-      <div className={`flex-auto border-t-2  transition duration-500 ease-in-out ${step.completed || step.selected  ? "border-green-600" : "border-gray-300"}`}>
+      <div
+        className={`flex-auto border-t-2  transition duration-500 ease-in-out ${
+          step.completed || step.selected
+            ? "border-green-600"
+            : "border-gray-300"
+        }`}
+      >
         {/* Display line */}
       </div>{" "}
     </div>
   ));
 
   return (
-    <div className="mx-4 p-4 flex justify-between items-center">
+    <div className="nd:mx-4 md:p-4 flex justify-between items-center">
       {displaySteps}
     </div>
   );
