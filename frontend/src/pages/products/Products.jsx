@@ -227,8 +227,9 @@ const handleImageChange = (e) => {
           >
              {loading ? (
         // Render spinner while loading
-        <div className="flex justify-center items-center h-[80%]">
-          <div className="loader">
+        <div className="flex justify-center items-center h-[8
+        0%]">
+          <div className="loader ">
       <ThreeDots className="bg-red-500" />
           </div>
         </div>
