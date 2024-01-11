@@ -30,20 +30,23 @@ export default function App() {
   }, [setCurrentColor, setCurrentMode]);
 
   return (
-    <div className={currentMode === "Dark" ? "dark" : ""}>
-      <div className="h-screen bg-slate-100">
+    <div className={currentMode === "Dark" ? "dark h-full" : " h-full"}>
+      <div className="h-full bg-slate-100">
         <Routes>
           <Route path="/login" element={<Login />} className="md:w-12/12" />
+          <Route index element={<Login />} className="md:w-12/12" />
           <Route path="/vendors/:code" element={<VendorPage />} />
-          <Route path="/sales" element={<Sales />} />
-          <Route path="/*" element={<Error />} />
+
           <Route path="/dashboard/" element={<Layout />}>
-          <Route path="products" element={<Products />} />
-          <Route path="inventory" element={<Inventory />} />
-          <Route path="offers" element={<Offers />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="productform" element={<ProductsForm />} />
-          <Route path="sales" element={<Sales />} />
+            <Route path="vendor" element={<Dashboard />} />
+            <Route path="products" element={<Products />} />
+            <Route path="inventory" element={<Inventory />} />
+            <Route path="offers" element={<Offers />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="productform" element={<ProductsForm />} />
+            <Route path="sales" element={<Sales />} />
+          </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
