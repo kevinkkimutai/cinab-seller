@@ -18,6 +18,7 @@ export default function Dashboard() {
   const productData = useSelector(selectProducts);
   const offerData = useSelector(selectOffers);
   const orderData = useSelector(selectOrders);
+  const totalStock = productData.reduce((sum, product) => sum + product.stock, 0);
 
   return (
     <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 h-full overflow-auto scrollbar-hidden">
@@ -45,7 +46,7 @@ export default function Dashboard() {
                   Inventory
                 </span>{" "}
               </div>
-              <span className="text-gray-950 text-md md:text-2xl">{productData.length}</span>{" "}
+              <span className="text-gray-950 text-md md:text-xl">{totalStock}</span>{" "}
             </div>
           </button>
         </div>
@@ -73,7 +74,7 @@ export default function Dashboard() {
                   Offers{" "}
                 </span>{" "}
               </div>
-              <span className="text-gray-950 text-md md:text-2xl">{offerData.length}</span>{" "}
+              <span className="text-gray-950 text-md md:text-xl">{totalStock}</span>{" "}
             </div>
           </button>
         </div>
@@ -101,7 +102,7 @@ export default function Dashboard() {
                   Orders{" "}
                 </span>{" "}
               </div>
-              <span className="text-gray-950 text-md md:text-2xl">{orderData.length}</span>{" "}
+              <span className="text-gray-950 text-md md:text-xl">{totalStock}</span>{" "}
             </div>
           </button>
         </div>
