@@ -14,6 +14,7 @@ import {
 import { Spinner } from "react-bootstrap";
 
 
+
 export default function Offers() {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

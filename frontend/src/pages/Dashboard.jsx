@@ -6,10 +6,18 @@ import { BiSolidOffer } from "react-icons/bi";
 import { FcSalesPerformance } from "react-icons/fc";
 import { FaCartShopping } from "react-icons/fa6";
 import { BiStoreAlt } from "react-icons/bi";
+import { useSelector } from "react-redux";
+import { selectProducts } from "../reducers/ProductReducers";
+import { selectOffers } from "../reducers/OfferReducer";
+import { selectOrders } from "../reducers/OrderReducers";
+
 
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const productData = useSelector(selectProducts);
+  const offerData = useSelector(selectOffers);
+  const orderData = useSelector(selectOrders);
 
   return (
     <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 h-full overflow-auto scrollbar-hidden">
@@ -37,7 +45,7 @@ export default function Dashboard() {
                   Inventory
                 </span>{" "}
               </div>
-              <span className="text-gray-950 text-md md:text-2xl">1000</span>{" "}
+              <span className="text-gray-950 text-md md:text-2xl">{productData.length}</span>{" "}
             </div>
           </button>
         </div>
@@ -65,7 +73,7 @@ export default function Dashboard() {
                   Offers{" "}
                 </span>{" "}
               </div>
-              <span className="text-gray-950 text-md md:text-2xl">1000</span>{" "}
+              <span className="text-gray-950 text-md md:text-2xl">{offerData.length}</span>{" "}
             </div>
           </button>
         </div>
@@ -93,7 +101,7 @@ export default function Dashboard() {
                   Orders{" "}
                 </span>{" "}
               </div>
-              <span className="text-gray-950 text-md md:text-2xl">1000</span>{" "}
+              <span className="text-gray-950 text-md md:text-2xl">{orderData.length}</span>{" "}
             </div>
           </button>
         </div>
