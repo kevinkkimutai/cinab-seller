@@ -32,7 +32,7 @@ export default function Dashboard() {
             className="h-full w-full rounded-lg grid grid-cols-3 gap-1 md:gap-4 items-center"
           >
             {/* Left grid (narrower) */}
-            <div className="col-span-1 bg-pink-100 h-14 w-14 flex rounded-full items-center justify-center p-4 md:p-10 md:ml-10">
+            <div className="col-span-1 bg-pink-100 h-14 w-14 flex rounded-full items-center justify-center p-4 md:p-10 md:ml-4">
               <span>
                 <BiStoreAlt className="text-pink-500 text-bold text-5xl" />
               </span>
@@ -60,7 +60,7 @@ export default function Dashboard() {
             className="h-full w-full rounded-lg grid grid-cols-3 gap-1 md:gap-4 items-center"
           >
             {/* Left grid (narrower) */}
-            <div className="col-span-1 bg-yellow-100 h-14 w-14 flex rounded-full items-center justify-center p-4 md:p-10 md:ml-10">
+            <div className="col-span-1 bg-yellow-100 h-14 w-14 flex rounded-full items-center justify-center p-4 md:p-10 md:ml-4">
               <span>
                 <BiSolidOffer className="text-yellow-300 text-bold text-5xl" />
               </span>
@@ -88,7 +88,7 @@ export default function Dashboard() {
             className="h-full w-full rounded-lg grid grid-cols-3 gap-1 md:gap-4 items-center"
           >
             {/* Left grid (narrower) */}
-            <div className="col-span-1 bg-purple-100 h-14 w-14 flex rounded-full items-center justify-center p-4 md:p-10 md:ml-10">
+            <div className="col-span-1 bg-purple-100 h-14 w-14 flex rounded-full items-center justify-center p-4 md:p-10 md:ml-4">
               <span>
                 <FaCartShopping className="text-pink-500 text-bold text-5xl" />
               </span>
@@ -116,7 +116,7 @@ export default function Dashboard() {
             className="h-full w-full rounded-lg grid grid-cols-3 gap-1 md:gap-4 items-center"
           >
             {/* Left grid (narrower) */}
-            <div className="col-span-1 bg-pink-100 h-14 w-14 flex rounded-full items-center justify-center p-4 md:p-10 md:ml-10">
+            <div className="col-span-1 bg-pink-100 h-14 w-14 flex rounded-full items-center justify-center p-4 md:p-10 md:ml-4">
               <span>
                 <FcSalesPerformance className="text-black text-bold text-5xl" />
               </span>
