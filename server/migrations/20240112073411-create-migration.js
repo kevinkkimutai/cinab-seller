@@ -9,9 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id: {
-        type: Sequelize.INTEGER
-      },
+     
       migration: {
         type: Sequelize.STRING
       },
