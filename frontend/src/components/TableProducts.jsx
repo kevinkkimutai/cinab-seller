@@ -35,48 +35,46 @@ export default function Products() {
   }, [fetchData]);
 
   return (
-    <div>
-      <div className="relative  shadow-md sm:rounded-lg bg-black">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-primary-50 dark:text-white dark:bg-gray-800">
-            Recently Added Products
-          </caption>
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Product name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Category
-              </th>
-              <th scope="col" className="px-6 py-3">
-                In-Stock
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Units Left
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {productData.map((product) => (
-              <tr
-                key={product.id} // Assuming your product objects have a unique id
-                className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+    <div className="h-full">
+      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 h-full overflow-auto">
+        <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-primary-50 dark:text-white dark:bg-gray-800">
+          Recently Added Products
+        </caption>
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" className="px-6 py-3">
+              Product name
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Category
+            </th>
+            <th scope="col" className="px-6 py-3">
+              In-Stock
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Units Left
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {productData.slice(-10).map((product) => (
+            <tr
+              key={product.id} // Assuming your product objects have a unique id
+              className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            >
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  {product.pname}
-                </th>
-                <td className="px-6 py-4">{product.category}</td>
-                <td className="px-6 py-4">{product.inStock ? "Yes" : "No"}</td>
-                <td className="px-6 py-4">{product.stock}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                {product.pname}
+              </th>
+              <td className="px-6 py-4">{product.category}</td>
+              <td className="px-6 py-4">{product.inStock ? "Yes" : "No"}</td>
+              <td className="px-6 py-4">{product.stock}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

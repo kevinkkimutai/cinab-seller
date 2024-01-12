@@ -6,12 +6,12 @@ import { useStateContext } from "../contexts/ContextProvider";
 import { Dashboard } from "../pages";
 import { RxDashboard } from "react-icons/rx";
 
-import { BiStore, BiShoppingBag, BiPlus, BiLogIn } from 'react-icons/bi'; // Import the icons you need from react-icons
-
+import { BiStore, BiShoppingBag, BiPlus, BiLogIn } from "react-icons/bi"; // Import the icons you need from react-icons
+import { useNavigate } from "react-router-dom";
 
 export default function NavBar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const navigate = useNavigate();
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -21,19 +21,25 @@ export default function NavBar() {
     setMode, // Function to toggle mode
   } = useStateContext();
 
-
-  const MenuItem = ({ href, icon, label }) => (
+  const MenuItem = ({ to, icon, label }) => (
     <li className="mt-4 px-2 ">
-      <a
-        href={href}
+      <button
+        onClick={() => {
+          navigate(to);
+        }}
         className="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700"
       >
-        {icon && React.cloneElement(icon, { className: "flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400  group-hover:text-gray-900 dark:group-hover:text-white" })}
-        <span className="flex-1 ms-3 whitespace-nowrap text-gray-900 font-medium text-lg dark:text-primary-50">{label}</span>
-      </a>
+        {icon &&
+          React.cloneElement(icon, {
+            className:
+              "flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400  group-hover:text-gray-900 dark:group-hover:text-white",
+          })}
+        <span className="flex-1 ms-3 whitespace-nowrap text-gray-900 font-medium text-lg dark:text-primary-50">
+          {label}
+        </span>
+      </button>
     </li>
   );
-  
 
   return (
     <>
@@ -156,19 +162,27 @@ export default function NavBar() {
         aria-label="Sidebar"
       >
         <div className="flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-      <ul className="pb-2 space-y-2">
-        <MenuItem href="/dashboard" icon={<RxDashboard/>} label="Dashboard" />
-        <MenuItem href="/dashboard/vendors" icon={<BiStore />} label="Vendors" />
-        <MenuItem href="/products" icon={<BiShoppingBag />} label="Products" />
-        <MenuItem href="/dashboard/productform" icon={<BiPlus />} label="Add Product" />
-        <MenuItem href="/login" icon={<BiLogIn />} label="Sign In" />
-      </ul>
-    </div>
+          <ul className="pb-2 space-y-2">
+            <MenuItem
+              to="/dashboard/vendor"
+              icon={<RxDashboard />}
+              label="Dashboard"
+            />
+
+            <MenuItem
+              to="/dashboard/products"
+              icon={<BiShoppingBag />}
+              label="Products"
+            />
+            <MenuItem
+              to="/dashboard/productform"
+              icon={<BiPlus />}
+              label="Add Product"
+            />
+            <MenuItem to="/login" icon={<BiLogIn />} label="Sign In" />
+          </ul>
+        </div>
       </aside>
-      {/* dashhbord */}
-      <div className="md:w-10/12 md:ml-56 p-2 pt-20 overflow-auto scrollbar-hidden dark:bg-gray-900 w-full max-h-screen h-screen bg-slate-100">
-        <Dashboard />
-      </div>
     </>
   );
 }

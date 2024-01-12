@@ -1,4 +1,5 @@
 // controllers/productController.js
+
 const { Product, User, item } = require("../models");
 
 const API = "http://localhost:5000";
@@ -27,30 +28,19 @@ const productController = {
   },
 
   createProduct: async (req, res) => {
-    const {
-      vendorId,
-      pname,
-      category,
-      stock,
-      brand,
-      description,
-      price,
-      approval,
-    } = req.body;
-
     try {
-      const user = await User.findByPk(vendorId);
+      // const user = await User.findByPk(vendorId);
 
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
+      // if (!user) {
+      //   return res.status(404).json({ message: "User not found" });
+      // }
 
       // Check if files were uploaded
       const imageFile = req.file;
       const imagePath = `${API}/uploads/${imageFile.filename}`;
       try {
         const newProduct = await Product.create({
-          vendorId,
+          vendorId: 1,
           pname,
           category,
           stock,
@@ -70,6 +60,39 @@ const productController = {
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: error.message });
+    }
+  },
+
+  createProduct: async (req, res) => {
+    const { pname, category, stock, brand, description, price, approval } =
+      req.body;
+
+    const vendorId = 1;
+
+    const vendor = await Vendor.findByPk(vendorId);
+
+    if (!vendor) {
+      return res.status(404).json({ error: "Vendor Not Found" });
+    }
+    const imageFile = req.file;
+    const imagePath = `${API}/uploads/${imageFile.filename}`;
+    try {
+      const newProduct = await Product.create({
+        vendorId: vendor.id,
+        pname,
+        category,
+        stock,
+        brand,
+        description,
+        price,
+        approval,
+        image: imagePath,
+      });
+
+      return res.status(201).json(newProduct);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json("Internal Server Error");
     }
   },
 
@@ -109,7 +132,7 @@ const productController = {
       }
 
       // Update the product with the new information
-      const updatedProduct = await product.update({
+      const updatedProductData = {
         pname,
         category,
         stock,
@@ -117,8 +140,14 @@ const productController = {
         description,
         price,
         approval,
-        image: imagePath,
-      });
+      };
+
+      // Only update the image if a file was uploaded
+      if (imageFile) {
+        updatedProductData.image = imagePath;
+      }
+
+      const updatedProduct = await product.update(updatedProductData);
 
       return res.status(200).json(updatedProduct);
     } catch (err) {
