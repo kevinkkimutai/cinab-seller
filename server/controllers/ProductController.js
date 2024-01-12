@@ -1,16 +1,27 @@
 // controllers/productController.js
-const { Product, User } = require("../models");
+const { Product, User, item } = require("../models");
 
 const API = "http://localhost:5000";
 
 const productController = {
+  // getAllProducts: async (req, res) => {
+  //   try {
+  //     const products = await Product.findAll({
+  //       order: [["createdAt", "ASC"]],
+  //     });
+  //     res.status(200).json(products);
+  //   } catch (error) {
+  //     res.status(500).json({ message: error.message });
+  //   }
+  // },
+
   getAllProducts: async (req, res) => {
     try {
-      const products = await Product.findAll({
-        order: [["createdAt", "ASC"]],
-      });
-      res.status(200).json(products);
+      const items = await item.findAll();
+      res.status(200).json(items);
+
     } catch (error) {
+      console.log(error)
       res.status(500).json({ message: error.message });
     }
   },
