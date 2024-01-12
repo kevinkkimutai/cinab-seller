@@ -1,33 +1,21 @@
-// controllers/productController.js
-
-const { Product, User, item } = require("../models");
+// controllers/itemsController.js
+const { items, Vendor } = require("../models");
 
 const API = "http://localhost:5000";
 
-const productController = {
-  // getAllProducts: async (req, res) => {
-  //   try {
-  //     const products = await Product.findAll({
-  //       order: [["createdAt", "ASC"]],
-  //     });
-  //     res.status(200).json(products);
-  //   } catch (error) {
-  //     res.status(500).json({ message: error.message });
-  //   }
-  // },
-
-  getAllProducts: async (req, res) => {
+const itemsController = {
+  getAllitemss: async (req, res) => {
     try {
-      const items = await item.findAll();
-      res.status(200).json(items);
-
+      const itemss = await items.findAll({
+        order: [["created_at", "ASC"]],
+      });
+      res.status(200).json(itemss);
     } catch (error) {
-      console.log(error)
       res.status(500).json({ message: error.message });
     }
   },
 
-  createProduct: async (req, res) => {
+  createitems: async (req, res) => {
     try {
       // const user = await User.findByPk(vendorId);
 
@@ -39,7 +27,7 @@ const productController = {
       const imageFile = req.file;
       const imagePath = `${API}/uploads/${imageFile.filename}`;
       try {
-        const newProduct = await Product.create({
+        const newitems = await items.create({
           vendorId: 1,
           pname,
           category,
@@ -51,9 +39,9 @@ const productController = {
           image: imagePath, // Assuming image is a string field in the database
         });
 
-        await user.addProduct(newProduct);
+        await user.additems(newitems);
 
-        res.status(201).json(newProduct);
+        res.status(201).json(newitems);
       } catch (error) {
         res.status(400).json({ message: error.message });
       }
@@ -63,7 +51,7 @@ const productController = {
     }
   },
 
-  createProduct: async (req, res) => {
+  createitems: async (req, res) => {
     const { pname, category, stock, brand, description, price, approval } =
       req.body;
 
@@ -77,7 +65,7 @@ const productController = {
     const imageFile = req.file;
     const imagePath = `${API}/uploads/${imageFile.filename}`;
     try {
-      const newProduct = await Product.create({
+      const newitems = await items.create({
         vendorId: vendor.id,
         pname,
         category,
@@ -89,30 +77,30 @@ const productController = {
         image: imagePath,
       });
 
-      return res.status(201).json(newProduct);
+      return res.status(201).json(newitems);
     } catch (error) {
       console.log(error);
       res.status(500).json("Internal Server Error");
     }
   },
 
-  getProductById: async (req, res) => {
-    const productId = req.params.id;
+  getitemsById: async (req, res) => {
+    const itemsId = req.params.id;
 
     try {
-      const product = await Product.findByPk(productId);
+      const items = await items.findByPk(itemsId);
 
-      if (!product) {
-        return res.status(404).json({ message: "Product not found" });
+      if (!items) {
+        return res.status(404).json({ message: "items not found" });
       }
 
-      res.json(product);
+      res.json(items);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   },
 
-  updateProduct: async (req, res) => {
+  updateitems: async (req, res) => {
     const { id } = req.params;
     const { pname, category, stock, brand, description, price, approval } =
       req.body;
@@ -124,15 +112,15 @@ const productController = {
         ? `${API}/uploads/${imageFile.filename}`
         : null;
 
-      // Check if the product with the given ID exists
-      const product = await Product.findByPk(id);
+      // Check if the items with the given ID exists
+      const items = await items.findByPk(id);
 
-      if (!product) {
-        return res.status(404).json({ error: "Product Not Found" });
+      if (!items) {
+        return res.status(404).json({ error: "items Not Found" });
       }
 
-      // Update the product with the new information
-      const updatedProductData = {
+      // Update the items with the new information
+      const updateditemsData = {
         pname,
         category,
         stock,
@@ -144,34 +132,34 @@ const productController = {
 
       // Only update the image if a file was uploaded
       if (imageFile) {
-        updatedProductData.image = imagePath;
+        updateditemsData.image = imagePath;
       }
 
-      const updatedProduct = await product.update(updatedProductData);
+      const updateditems = await items.update(updateditemsData);
 
-      return res.status(200).json(updatedProduct);
+      return res.status(200).json(updateditems);
     } catch (err) {
       console.error(err);
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
-  deleteProduct: async (req, res) => {
-    const productId = req.params.id;
+  deleteitems: async (req, res) => {
+    const itemsId = req.params.id;
 
     try {
-      const product = await Product.findByPk(productId);
+      const items = await items.findByPk(itemsId);
 
-      if (!product) {
-        return res.status(404).json({ message: "Product not found" });
+      if (!items) {
+        return res.status(404).json({ message: "items not found" });
       }
 
-      await product.destroy();
+      await items.destroy();
 
-      res.json({ message: "Product deleted successfully" });
+      res.json({ message: "items deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   },
 };
-module.exports = productController;
+module.exports = itemsController;

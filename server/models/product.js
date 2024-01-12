@@ -54,7 +54,7 @@ module.exports = (sequelize) => {
       },
       Rprice: {
         type: DataTypes.FLOAT,
-        allowNull: false,
+        allowNull: true,
       },
       approval: {
         type: DataTypes.STRING,
