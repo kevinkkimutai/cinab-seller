@@ -2,6 +2,7 @@ export { default as Dashboard} from "../pages//Dashboard";
 export { default as Inventory } from "../pages/Inventory";
 export { default as Login } from "../pages/Login";
 export { default as Offers } from "../pages/Offers";
+export {default as Error} from "../pages/Error";
 export { default as Orders } from "../pages/Orders";
 export { default as Products } from "../pages/products/Products";
 export { default as ProductsForm } from "../pages/products/ProductsForm";
