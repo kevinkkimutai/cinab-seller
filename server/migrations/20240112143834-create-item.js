@@ -111,14 +111,6 @@ module.exports = {
       affiliate_link: {
         type: Sequelize.TEXT
       },
-      created_at: {
-        allowNull: true,
-        type: Sequelize.DATE
-      },
-      updated_at: {
-        allowNull: true,
-        type: Sequelize.DATE
-      },
       createdAt: {
         allowNull: true,
         type: Sequelize.DATE
