@@ -5,16 +5,16 @@ import {
   useDeleteProductMutation,
 } from "../../actions/ProductAction";
 import { useDispatch, useSelector } from "react-redux";
-import { selectProducts, setProduct } from "../../reducers/ProductReducers";
+import {
+  selectProducts,
+  setProduct,
+  updateProduct as updateProductAction,
+} from "../../reducers/ProductReducers";
 import { toast } from "react-toastify";
-import { ThreeDots } from "react-loader-spinner";
-import { MdDelete } from "react-icons/md";
-import { FaRegEdit } from "react-icons/fa";
+import{ ThreeDots} from 'react-loader-spinner';
 
 export default function Products() {
   const [loading, setLoading] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [getProducts] = useGetProductsMutation();
@@ -52,98 +52,98 @@ export default function Products() {
   // update product
   const handleUpdateProduct = async (e) => {
     e.preventDefault();
-    setIsUpdating(true);
     try {
       if (selectedProduct) {
         const formData = new FormData();
-
+  
         formData.append("id", selectedProduct.id);
-        formData.append("pname", selectedProduct.pname);
+        formData.append("name", selectedProduct.name);
         formData.append("stock", selectedProduct.stock);
         formData.append("price", selectedProduct.price || 0);
         formData.append("brand", selectedProduct.brand || "");
         formData.append("category", selectedProduct.category || "");
         formData.append("description", selectedProduct.description || "");
         formData.append("approval", selectedProduct.approval || "");
-
+  
         // Handle the image based on its type
         if (selectedImage instanceof File) {
           formData.append("image", selectedImage);
-        } else if (typeof selectedProduct.image === "string") {
+        } else if (typeof selectedProduct.image === 'string') {
           // Assuming selectedProduct.image is a string representing the image path
           // If it's something else, adjust this part accordingly
           formData.append("image", selectedProduct.image);
         }
-
-        const res = await updateProduct({
+  
+        const { data } = await updateProduct({
           id: selectedProduct.id,
           formData,
         });
-        console.log(res);
-        if (res.data) {
-          // dispatch(updateProduct(res.data));
+        if (data) {
+          dispatch(updateProductAction(data));
+  
           setSelectedImage(null);
           document.getElementById("crud-modal").classList.add("hidden");
-          toast.success(`${res.data.pname} updated successfully`);
+          toast.success(`${data.name} updated successfully`);
         } else {
           toast.error("Failed to update product");
-        }
+        } 
       }
     } catch (error) {
       console.error("Error updating product:", error);
-    } finally {
-      setIsUpdating(false);
     }
   };
-
-  // function to handle product deletion
+  
+  
+    // function to handle product deletion
   const handleDeleteProduct = async (productId) => {
-    setIsDeleting(true);
-    try {
-      // Call the deleteProduct mutation with the correct id parameter
-      const { data } = await deleteProduct(productId);
-      if (data) {
-        toast.success(`Product deleted successfully`);
-      } else {
-        toast.error("Failed to update product");
-      }
-      // Fetch the latest products and update the Redux store
-      fetchData();
-    } catch (error) {
-      console.error("Error deleting product:", error);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedImage(file);
-
-      // Log the selected image
-      console.log("Selected Image:", file);
-
-      // Update selectedProduct with the new image
-      setSelectedProduct({
-        ...selectedProduct,
-        image: file,
-      });
+  try {
+    // Call the deleteProduct mutation with the correct id parameter
+    const { data } = await deleteProduct(productId);
+    if (data) {
+     
+      toast.success(`Product deleted successfully`);
     } else {
-      setSelectedImage(null); // Reset the state when no file is selected
-    }
-  };
+      toast.error("Failed to update product");
+    } 
+    // Fetch the latest products and update the Redux store
+    fetchData();
+  } catch (error) {
+    console.error("Error deleting product:", error);
+  }
+};
 
-  const handleModalInputChange = (e) => {
+const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setSelectedImage(file);
+
+    // Log the selected image
+    console.log("Selected Image:", file);
+
+    // Update selectedProduct with the new image
     setSelectedProduct({
       ...selectedProduct,
-      [e.target.name]: e.target.value,
+      image: file,
     });
-  };
+  } else {
+    setSelectedImage(null); // Reset the state when no file is selected
+  }
+};
+
+
+
+    const handleModalInputChange = (e) => {
+      setSelectedProduct({
+        ...selectedProduct,
+        [e.target.name]: e.target.value,
+      });
+    };
+    
+  
 
   // Filter products based on search query
   const filteredProducts = productData.filter((product) =>
-    product.pname.toLowerCase().includes(searchQuery.toLowerCase())
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleEdit = (productId) => {
@@ -167,6 +167,7 @@ export default function Products() {
     // Open the modal
     document.getElementById("popup-modal").classList.remove("hidden");
   };
+
 
   return (
     <div className="w-full h-full max-h-full overflow-y-auto scrollbar-hidden">
@@ -214,158 +215,113 @@ export default function Products() {
         // Render spinner while loading
         <div className="flex justify-center items-center h-[80%]">
           <div className="loader">
-            <ThreeDots className="bg-red-500" />
+      <ThreeDots className="bg-red-500" />
           </div>
         </div>
       ) : (
-        <div
-          className="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto custom-grid"
-          loading
-        >
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="w-full max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-            >
-              {product.image ? ( // Check if product has an image
-                <a href="/">
-                  <img
-                    className="w-full h-32 object-cover border-b-2 bg-white rounded-t-lg"
-                    src={product.image}
-                    alt="productimage"
-                  />
-                </a>
-              ) : (
-                // Show loading spinner when image is not available
-                <div className="loader w-full h-32 object-cover flex justify-center items-center border-b-2 bg-white rounded-t-lg">
-                  <ThreeDots className="bg-red-500" />
-                </div>
-              )}
-              <div className="mx-2 pb-1 ">
-                <span>
-                  <h5 className="text-md tracking-tight text-center text-gray-900 dark:text-white">
-                    {product.pname}
-                  </h5>
-                </span>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto custom-grid" loading>
+        {filteredProducts.map((product) => (
+          <div
+            key={product.id}
+            className="w-full max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+          >
+             {loading ? (
+        // Render spinner while loading
+        <div className="flex justify-center items-center h-[80%]">
+          <div className="loader ">
+      <ThreeDots className="bg-red-500" />
+          </div>
+        </div>
+      ) : (
+            <a href="/">
+              <img
+                class=" rounded-t-lg md:h-52 w-full"
+                src={product.image}
+                alt={product.name}
+              />
+            </a>
+      )}
+            <div className="mx-2 pb-1 ">
+              <span>
+                <h5 className="text-md tracking-tight text-center text-gray-900 dark:text-white">
+                  {product.name}
+                </h5>
+              </span>
 
-                <div className="w-full flex p-1 ">
-                  <div className="w-1/3 items-center text-gray-800 dark:text-white">
-                    Stock:
-                    <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.3 rounded dark:bg-blue-200 dark:text-blue-800 ms-1">
-                      {product.stock}
-                    </span>
-                  </div>
+              <div className="w-full flex p-1 ">
+                <div className="w-1/3 items-center text-gray-800 dark:text-white">
+                  Stock:
+                  <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.3 rounded dark:bg-blue-200 dark:text-blue-800 ms-1">
+                    {product.stock}
+                  </span>
                 </div>
-
-                {/* price and buttons */}
-                <div className="flex items-center grid md:grid-cols-2">
-                  <div>
-                    <span className="text-sm text-blue-500 dark:text-white ms-1 font-semibold">
-                      <span>Ksh:</span> {product.price}
-                    </span>
-                  </div>
-                  <div className="flex justify-end">
-                    <button onClick={() => handleEdit(product.id)} className="">
-                      <FaRegEdit className="text-3xl text-blue-500" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(product.id)}
-                      className=""
-                    >
-                      <MdDelete className="text-3xl text-red-500" />
-                    </button>
-                  </div>
-                </div>
-                {/* end of price and buttons */}
-
-                {/* start delete modal */}
-                <div
-                  id="popup-modal"
-                  tabindex="-1"
-                  class="hidden justify-center bg-gray-900/80 h-full flex mx-auto overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
-                >
-                  <div class="relative  p-4 w-full max-w-lg max-h-full">
-                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 ">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          document
-                            .getElementById("popup-modal")
-                            .classList.add("hidden")
-                        }
-                        class="absolute top-3 end-2.5 text-gray-800 bg-red-200 dark:bg-red-400 hover:bg-red-300 hover:text-red-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white"
-                      >
-                        <svg
-                          class="w-3 h-3"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 14 14"
-                        >
-                          <path
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                          />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                      </button>
-                      <div class="p-4 md:p-5 text-center">
-                        <svg
-                          class="mx-auto mb-4 text-red-700 w-12 h-12 dark:text-red-400"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                          />
-                        </svg>
-                        <h3 class="mb-5 text-lg font-normal text-gray-700 dark:text-gray-400">
-                          Are you sure you want to delete{" "}
-                          <span className="underline text-red-700 dark:text-red-500 font-bold uppercase">
-                            {" "}
-                            {selectedProduct?.pname || ""}
-                          </span>{" "}
-                          ?
-                        </h3>
-                        <button
-                          onClick={() => handleDeleteProduct(product.id)}
-                          type="button"
-                          class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
-                        >
-                          {" "}
-                          {isUpdating ? <div>....</div> : "Yes"}{" "}
-                        </button>
-                        <button
-                          onClick={() =>
-                            document
-                              .getElementById("popup-modal")
-                              .classList.add("hidden")
-                          }
-                          type="button"
-                          class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-                        >
-                          No!
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                <div className="w-2/3 flex justify-center text-gray-800 dark:text-white">
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {product.category}
+                  </span>
                 </div>
               </div>
-            </div>
 
-            // end of delete modal
-          ))}
+              {/* price and buttons */}
+              <div className="flex items-center grid md:grid-cols-2">
+                <div>
+                  <span className="text-sm text-blue-500 dark:text-white ms-1 font-semibold">
+                    <span>Ksh:</span> {product.price}
+                  </span>
+                </div>
+                <div className="grid justify-center grid-cols-2 gap-2 mx-2 md:mx-0 pt-2 md:pt-1">
+                  <button
+                    onClick={() => handleEdit(product.id)}
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-3 py-1 text-xs text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product.id)}
+                    className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg px- py-1 text-xs text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+              {/* end of price and buttons */}
+
+              {/* start delete modal */}
+              <div id="popup-modal" tabindex="-1" class="hidden justify-center bg-gray-900/80 h-full flex mx-auto overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative  p-4 w-full max-w-lg max-h-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 ">
+            <button type="button" 
+            onClick={() =>
+              document.getElementById("popup-modal").classList.add("hidden")
+            }
+            class="absolute top-3 end-2.5 text-gray-800 bg-red-200 dark:bg-red-400 hover:bg-red-300 hover:text-red-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-4 md:p-5 text-center">
+                <svg class="mx-auto mb-4 text-red-700 w-12 h-12 dark:text-red-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+                <h3 class="mb-5 text-lg font-normal text-gray-700 dark:text-gray-400">Are you sure you want to delete <span className="underline text-red-700 dark:text-red-500 font-bold uppercase"> {selectedProduct?.name || ""}</span> ?</h3>
+                <button  onClick={() => handleDeleteProduct(product.id)} type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2">
+                    Yes, I'm sure
+                </button>
+                <button onClick={() =>
+              document.getElementById("popup-modal").classList.add("hidden")} 
+            type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+            </div>
         </div>
-      )}
+    </div>
+</div>
+            </div>
+          </div>
+
+          // end of delete modal
+        ))}
+      </div>
+      )}  
 
       {/* <!-- Main modal --> */}
       <div
@@ -380,10 +336,7 @@ export default function Products() {
             {/* <!-- Modal header --> */}
             <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-                Update{" "}
-                <span className="font-bold  text-green-600 dark:text-green-400 uppercase">
-                  {selectedProduct?.pname || ""}
-                </span>
+                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedProduct?.name || ""}</span>
               </h3>
               <button
                 type="button"
@@ -414,29 +367,26 @@ export default function Products() {
             {/* <!-- Modal body --> */}
             <form onSubmit={handleUpdateProduct}>
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">
-                {/* <!-- Display selected files --> */}
-                {selectedImage ? (
-                  <img
-                    className="rounded-lg"
-                    src={URL.createObjectURL(selectedImage)}
-                    alt="Selected Img"
-                  />
-                ) : selectedProduct?.image &&
-                  typeof selectedProduct.image === "string" ? (
-                  <img
-                    className="rounded-lg"
-                    src={`http://localhost:5000/uploads/${
-                      selectedProduct.image.split(",")[0]
-                    }`}
-                    alt={selectedProduct.pname}
-                  />
-                ) : selectedProduct?.image instanceof File ? (
-                  <img
-                    className="rounded-lg"
-                    src={URL.createObjectURL(selectedProduct.image)}
-                    alt={selectedProduct.pname}
-                  />
-                ) : null}
+                 {/* <!-- Display selected files --> */}
+                 {selectedImage ? (
+  <img
+    className="rounded-lg"
+    src={URL.createObjectURL(selectedImage)}
+    alt="Selected Img"
+  />
+) : selectedProduct?.image && typeof selectedProduct.image === 'string' ? (
+  <img
+    className="rounded-lg"
+    src={`http://localhost:5000/uploads/${selectedProduct.image.split(',')[0]}`}
+    alt={selectedProduct.name}
+  />
+) : selectedProduct?.image instanceof File ? (
+  <img
+    className="rounded-lg"
+    src={URL.createObjectURL(selectedProduct.image)}
+    alt={selectedProduct.name}
+  />
+) : null}
 
                 <div className="md:pt-5">
                   <label
@@ -446,37 +396,39 @@ export default function Products() {
                     Upload image(s)
                   </label>
                   <input
-                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                    id="multiple_files"
-                    type="file"
-                    accept=".png, .jpg, .jpeg"
-                    multiple
-                    onChange={handleImageChange}
-                  />
+  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+  id="multiple_files"
+  type="file"
+  accept=".png, .jpg, .jpeg"
+  multiple
+  onChange={handleImageChange}
+/>
 
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     PNG, JPG, or JPEG files (Max. 5MB each)
                   </p>
                   <div className="md:pt-6">
-                    <label
-                      htmlFor="pname"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Product Name
-                    </label>
-                    <input
-                      type="text"
-                      name="pname"
-                      id="pname"
-                      value={selectedProduct?.pname || ""}
-                      onChange={handleModalInputChange}
-                      className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Type product name"
-                      required=""
-                    />
-                  </div>
+                  <label
+                    htmlFor="name"
+                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Product Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    value={selectedProduct?.name || ""}
+                    onChange={handleModalInputChange}
+                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Type product name"
+                    required=""
+                  />
+                </div>
                 </div>
 
+
+               
                 <div className="w-full">
                   <label
                     htmlFor="brand"
@@ -568,14 +520,14 @@ export default function Products() {
                     placeholder="Your description here"
                   ></textarea>
                 </div>
-
+           
+               
                 <div className="mt- sm:mt- sm:col-span-2">
                   <button
                     type="submit"
                     className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
                   >
-                    {" "}
-                    {isUpdating ? <div>....</div> : "Update Product"}{" "}
+                    Update Product
                   </button>
                 </div>
               </div>
@@ -586,3 +538,5 @@ export default function Products() {
     </div>
   );
 }
+  
+

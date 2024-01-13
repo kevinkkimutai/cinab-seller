@@ -46,7 +46,6 @@ export default function App() {
             <Route path="productform" element={<ProductsForm />} />
             <Route path="sales" element={<Sales />} />
           </Route>
-
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

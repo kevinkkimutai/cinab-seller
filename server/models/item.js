@@ -43,6 +43,8 @@ module.exports = (sequelize, DataTypes) => {
     file_type: DataTypes.STRING,
     created_at: DataTypes.DATE,
     updated_at: DataTypes.DATE,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
     license_name: DataTypes.TEXT,
     license_key: DataTypes.TEXT,
     item_type: DataTypes.STRING,
