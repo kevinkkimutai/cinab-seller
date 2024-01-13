@@ -1,30 +1,30 @@
 // controllers/productController.js
-const { Product, User, item } = require("../models");
+const { Product, User, item, category } = require("../models");
 
 const API = "https://cinab-seller-2m51.onrender.com";
 
 const productController = {
-  getAllProducts: async (req, res) => {
-    try {
-      const products = await Product.findAll({
-        order: [["createdAt", "ASC"]],
-      });
-      res.status(200).json(products);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  },
-
   // getAllProducts: async (req, res) => {
   //   try {
-  //     const items = await item.findAll();
-  //     res.status(200).json(items);
-
+  //     const products = await Product.findAll({
+  //       order: [["createdAt", "ASC"]],
+  //     });
+  //     res.status(200).json(products);
   //   } catch (error) {
-  //     console.log(error)
   //     res.status(500).json({ message: error.message });
   //   }
   // },
+
+  getAllProducts: async (req, res) => {
+    try {
+      const items = await category.findAll();
+      res.status(200).json(items);
+
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: error.message });
+    }
+  },
 
   createProduct: async (req, res) => {
     const {
