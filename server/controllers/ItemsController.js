@@ -1,15 +1,15 @@
 // controllers/itemsController.js
-const { items, Vendor } = require("../models");
+const { item, Vendor } = require("../models");
 
 const API = "http://localhost:5000";
 
 const itemsController = {
-  getAllitemss: async (req, res) => {
+  getAllitems: async (req, res) => {
     try {
-      const itemss = await items.findAll({
+      const items = await item.findAll({
         order: [["created_at", "ASC"]],
       });
-      res.status(200).json(itemss);
+      res.status(200).json(items);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
