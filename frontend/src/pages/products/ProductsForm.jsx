@@ -12,7 +12,7 @@ export default function UploadForm() {
     price: "",
     stock: "",
     description: "",
-    image: [],
+    image: null,
     approval: false,
   });
 
