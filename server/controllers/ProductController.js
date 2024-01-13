@@ -1,34 +1,34 @@
 // controllers/productController.js
 const { Product, User, item } = require("../models");
 
-const API = "http://localhost:5000";
+const API = "https://cinab-seller-2m51.onrender.com";
 
 const productController = {
-  // getAllProducts: async (req, res) => {
-  //   try {
-  //     const products = await Product.findAll({
-  //       order: [["createdAt", "ASC"]],
-  //     });
-  //     res.status(200).json(products);
-  //   } catch (error) {
-  //     res.status(500).json({ message: error.message });
-  //   }
-  // },
-
   getAllProducts: async (req, res) => {
     try {
-      const items = await item.findAll();
-      res.status(200).json(items);
-
+      const products = await Product.findAll({
+        order: [["createdAt", "ASC"]],
+      });
+      res.status(200).json(products);
     } catch (error) {
-      console.log(error)
       res.status(500).json({ message: error.message });
     }
   },
 
+  // getAllProducts: async (req, res) => {
+  //   try {
+  //     const items = await item.findAll();
+  //     res.status(200).json(items);
+
+  //   } catch (error) {
+  //     console.log(error)
+  //     res.status(500).json({ message: error.message });
+  //   }
+  // },
+
   createProduct: async (req, res) => {
     const {
-      vendorId,
+      // vendorId,
       pname,
       category,
       stock,
@@ -39,20 +39,21 @@ const productController = {
     } = req.body;
 
     try {
-      const user = await User.findByPk(vendorId);
+      // const user = await User.findByPk(vendorId);
 
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
+      // if (!user) {
+      //   return res.status(404).json({ message: "User not found" });
+      // }
 
       // Check if files were uploaded
       const imageFile = req.file;
       const imagePath = `${API}/uploads/${imageFile.filename}`;
       try {
         const newProduct = await Product.create({
-          vendorId,
+          vendorId: "1",
           pname,
           category,
+          Rprice: 200,
           stock,
           brand,
           description,
@@ -61,10 +62,11 @@ const productController = {
           image: imagePath, // Assuming image is a string field in the database
         });
 
-        await user.addProduct(newProduct);
+        // await user.addProduct(newProduct);
 
         res.status(201).json(newProduct);
       } catch (error) {
+        console.log(error)
         res.status(400).json({ message: error.message });
       }
     } catch (error) {

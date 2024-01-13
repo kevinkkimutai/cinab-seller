@@ -57,7 +57,7 @@ export default function Products() {
         const formData = new FormData();
   
         formData.append("id", selectedProduct.id);
-        formData.append("pname", selectedProduct.pname);
+        formData.append("name", selectedProduct.name);
         formData.append("stock", selectedProduct.stock);
         formData.append("price", selectedProduct.price || 0);
         formData.append("brand", selectedProduct.brand || "");
@@ -83,7 +83,7 @@ export default function Products() {
   
           setSelectedImage(null);
           document.getElementById("crud-modal").classList.add("hidden");
-          toast.success(`${data.pname} updated successfully`);
+          toast.success(`${data.name} updated successfully`);
         } else {
           toast.error("Failed to update product");
         } 
@@ -143,7 +143,7 @@ const handleImageChange = (e) => {
 
   // Filter products based on search query
   const filteredProducts = productData.filter((product) =>
-    product.pname.toLowerCase().includes(searchQuery.toLowerCase())
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleEdit = (productId) => {
@@ -237,14 +237,14 @@ const handleImageChange = (e) => {
               <img
                 class=" rounded-t-lg md:h-52 w-full"
                 src={product.image}
-                alt={product.pname}
+                alt={product.name}
               />
             </a>
       )}
             <div className="mx-2 pb-1 ">
               <span>
                 <h5 className="text-md tracking-tight text-center text-gray-900 dark:text-white">
-                  {product.pname}
+                  {product.name}
                 </h5>
               </span>
 
@@ -304,7 +304,7 @@ const handleImageChange = (e) => {
                 <svg class="mx-auto mb-4 text-red-700 w-12 h-12 dark:text-red-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                 </svg>
-                <h3 class="mb-5 text-lg font-normal text-gray-700 dark:text-gray-400">Are you sure you want to delete <span className="underline text-red-700 dark:text-red-500 font-bold uppercase"> {selectedProduct?.pname || ""}</span> ?</h3>
+                <h3 class="mb-5 text-lg font-normal text-gray-700 dark:text-gray-400">Are you sure you want to delete <span className="underline text-red-700 dark:text-red-500 font-bold uppercase"> {selectedProduct?.name || ""}</span> ?</h3>
                 <button  onClick={() => handleDeleteProduct(product.id)} type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2">
                     Yes, I'm sure
                 </button>
@@ -336,7 +336,7 @@ const handleImageChange = (e) => {
             {/* <!-- Modal header --> */}
             <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedProduct?.pname || ""}</span>
+                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedProduct?.name || ""}</span>
               </h3>
               <button
                 type="button"
@@ -378,13 +378,13 @@ const handleImageChange = (e) => {
   <img
     className="rounded-lg"
     src={`http://localhost:5000/uploads/${selectedProduct.image.split(',')[0]}`}
-    alt={selectedProduct.pname}
+    alt={selectedProduct.name}
   />
 ) : selectedProduct?.image instanceof File ? (
   <img
     className="rounded-lg"
     src={URL.createObjectURL(selectedProduct.image)}
-    alt={selectedProduct.pname}
+    alt={selectedProduct.name}
   />
 ) : null}
 
@@ -409,16 +409,16 @@ const handleImageChange = (e) => {
                   </p>
                   <div className="md:pt-6">
                   <label
-                    htmlFor="pname"
+                    htmlFor="name"
                     className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Product Name
                   </label>
                   <input
                     type="text"
-                    name="pname"
-                    id="pname"
-                    value={selectedProduct?.pname || ""}
+                    name="name"
+                    id="name"
+                    value={selectedProduct?.name || ""}
                     onChange={handleModalInputChange}
                     className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Type product name"
