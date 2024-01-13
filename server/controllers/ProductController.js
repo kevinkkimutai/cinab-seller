@@ -1,33 +1,43 @@
 // controllers/productController.js
-
 const { Product, User, item } = require("../models");
 
-const API = "http://localhost:5000";
+const API = "https://cinab-seller-2m51.onrender.com";
 
 const productController = {
-  // getAllProducts: async (req, res) => {
-  //   try {
-  //     const products = await Product.findAll({
-  //       order: [["createdAt", "ASC"]],
-  //     });
-  //     res.status(200).json(products);
-  //   } catch (error) {
-  //     res.status(500).json({ message: error.message });
-  //   }
-  // },
-
   getAllProducts: async (req, res) => {
     try {
-      const items = await item.findAll();
-      res.status(200).json(items);
-
+      const products = await Product.findAll({
+        order: [["createdAt", "ASC"]],
+      });
+      res.status(200).json(products);
     } catch (error) {
-      console.log(error)
       res.status(500).json({ message: error.message });
     }
   },
 
+  // getAllProducts: async (req, res) => {
+  //   try {
+  //     const items = await item.findAll();
+  //     res.status(200).json(items);
+
+  //   } catch (error) {
+  //     console.log(error)
+  //     res.status(500).json({ message: error.message });
+  //   }
+  // },
+
   createProduct: async (req, res) => {
+    const {
+      // vendorId,
+      pname,
+      category,
+      stock,
+      brand,
+      description,
+      price,
+      approval,
+    } = req.body;
+
     try {
       // const user = await User.findByPk(vendorId);
 
@@ -40,9 +50,10 @@ const productController = {
       const imagePath = `${API}/uploads/${imageFile.filename}`;
       try {
         const newProduct = await Product.create({
-          vendorId: 1,
+          vendorId: "1",
           pname,
           category,
+          Rprice: 200,
           stock,
           brand,
           description,
@@ -51,48 +62,16 @@ const productController = {
           image: imagePath, // Assuming image is a string field in the database
         });
 
-        await user.addProduct(newProduct);
+        // await user.addProduct(newProduct);
 
         res.status(201).json(newProduct);
       } catch (error) {
+        console.log(error)
         res.status(400).json({ message: error.message });
       }
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: error.message });
-    }
-  },
-
-  createProduct: async (req, res) => {
-    const { pname, category, stock, brand, description, price, approval } =
-      req.body;
-
-    const vendorId = 1;
-
-    const vendor = await Vendor.findByPk(vendorId);
-
-    if (!vendor) {
-      return res.status(404).json({ error: "Vendor Not Found" });
-    }
-    const imageFile = req.file;
-    const imagePath = `${API}/uploads/${imageFile.filename}`;
-    try {
-      const newProduct = await Product.create({
-        vendorId: vendor.id,
-        pname,
-        category,
-        stock,
-        brand,
-        description,
-        price,
-        approval,
-        image: imagePath,
-      });
-
-      return res.status(201).json(newProduct);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json("Internal Server Error");
     }
   },
 
@@ -132,7 +111,7 @@ const productController = {
       }
 
       // Update the product with the new information
-      const updatedProductData = {
+      const updatedProduct = await product.update({
         pname,
         category,
         stock,
@@ -140,14 +119,8 @@ const productController = {
         description,
         price,
         approval,
-      };
-
-      // Only update the image if a file was uploaded
-      if (imageFile) {
-        updatedProductData.image = imagePath;
-      }
-
-      const updatedProduct = await product.update(updatedProductData);
+        image: imagePath,
+      });
 
       return res.status(200).json(updatedProduct);
     } catch (err) {
