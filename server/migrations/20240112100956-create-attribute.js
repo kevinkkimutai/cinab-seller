@@ -2,18 +2,35 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('migrations', {
+    await queryInterface.createTable('attributes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-       migration: {
+      item_id: {
+        type: Sequelize.INTEGER
+      },
+      name: {
         type: Sequelize.STRING
       },
-      batch: {
-        type: Sequelize.INTEGER
+      keyword: {
+        type: Sequelize.STRING
+      },
+      created_at: {
+        type: Sequelize.DATE
+      },
+      updated_at: {
+        type: Sequelize.DATE
+      },
+      created_at: {
+        allowNull: true,
+        type: Sequelize.DATE
+      },
+      updated_at: {
+        allowNull: true,
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: true,
@@ -26,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('migrations');
+    await queryInterface.dropTable('attributes');
   }
 };

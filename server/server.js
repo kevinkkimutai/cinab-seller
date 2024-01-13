@@ -9,6 +9,7 @@ const socketIo = require("socket.io");
 const unprotectRoutes = require("./routes/Upprotectedroutes");
 const UserRoutes = require("./routes/UserRoutes");
 const offerRoutes = require("./routes/OffersRoute");
+const itemsRoutes = require("./routes/itemsRoutes");
 
 const VendorsRoutes = require("./routes/vendorsRoutes")
 
@@ -44,6 +45,7 @@ app.use("/v2", UserRoutes);
 app.use("/v2", unprotectRoutes);
 app.use("/v2", VendorsRoutes);
 app.use("/v2", offerRoutes);
+app.use("/v2", itemsRoutes);
 
 // put here product routes
 app.use("/v2", ProductRoutes);

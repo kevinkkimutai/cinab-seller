@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class migration extends Model {
+  class attribute extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,12 +13,15 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  migration.init({
-    migration: DataTypes.STRING,
-    batch: DataTypes.INTEGER
+  attribute.init({
+    item_id: DataTypes.INTEGER,
+    name: DataTypes.STRING,
+    keyword: DataTypes.STRING,
+    created_at: DataTypes.DATE,
+    updated_at: DataTypes.DATE
   }, {
     sequelize,
-    modelName: 'migration',
+    modelName: 'attribute',
   });
-  return migration;
+  return attribute;
 };
