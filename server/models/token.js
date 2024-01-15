@@ -4,9 +4,9 @@ const bcrypt = require("bcrypt");
 module.exports = (sequelize) => {
   class Token extends Model {
     static associate(models) {
-      Token.belongsTo(models.User, {
-        foreignKey: "userId",
-      });
+      // Token.belongsTo(models.User, {
+      //   foreignKey: "userId",
+      // });
     }
   }
 
