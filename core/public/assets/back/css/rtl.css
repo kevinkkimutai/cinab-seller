@@ -1,0 +1,115 @@
+body .wrapper{
+    direction: rtl;
+}
+.content-wrapper .form-group{
+    direction: rtl;
+    text-align: right
+  }
+  label{
+    display: block;
+    text-align: right
+  }
+  button[type=submit]{
+    display: block;
+    text-align: right
+  }
+  .custom-file-label::after{
+    right: auto;
+    left: 0px;
+  }
+  input,
+  textarea,
+  .form-control,
+  .tagify.tags
+  {
+    direction: rtl;
+    text-align: right
+  }
+  input[type=email],
+  input[name=from_email]
+  {
+    direction: ltr;
+    text-align: left
+  }
+  .cm-s-monokai.CodeMirror{
+    direction: ltr;
+    text-align: left
+  }
+  div.dataTables_wrapper div.dataTables_filter label{
+    text-align: right
+  }
+
+  .sidebar{
+      left: auto;
+      right: 0px;
+  }
+  .sidebar .nav {
+    padding-right: 0px;
+}
+.sidebar .nav>.nav-item a i {
+    margin-right: 0px;
+    margin-left: 15px;
+}
+.main-header .logo-header{
+    float: right;
+}
+.main-header .logo-header .navbar-minimize {
+    right: auto;
+    left: -25px;
+}
+.main-header .navbar-header{
+    text-align: left;
+}
+.navbar-expand-lg .navbar-nav.ml-md-auto{
+    margin-left: 0px !important;
+    margin-right: auto;
+}
+.navbar-expand-lg .navbar-nav .dropdown-menu{
+    right: auto;
+    left: 0px;
+}
+.user-box .u-text{
+    text-align: right;
+}
+.dropdown-item{
+    text-align: right;
+}
+.main-panel {
+    float: left;
+}
+.card  {
+    text-align: right;
+}
+.sidebar .nav > .nav-item a[data-toggle="collapse"][aria-expanded="true"] .caret {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+.sidebar .nav-collapse li a .sub-item {
+    margin-left: 0px;
+    margin-right: 25px;
+}
+.sidebar .nav-collapse li a .sub-item::before {
+    left: auto;
+    right: -15px;
+}
+button.btn{
+    display: inline-block;
+}
+
+
+.rtlinput{
+    direction: rtl;
+
+}
+
+.emailNotRTL{
+    direction: ltr !important;
+}
+.login-form{
+    direction: rtl;
+}
+.login-form .form-action
+.btn-login{
+    text-align: center;
+    direction: ltr;
+}

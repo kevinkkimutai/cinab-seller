@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   migration.init({
+
     migration: DataTypes.STRING,
     batch: DataTypes.INTEGER
   }, {
