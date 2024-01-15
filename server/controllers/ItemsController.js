@@ -1,5 +1,11 @@
 // controllers/itemsController.js
-const { item, Vendor } = require("../models");
+const {
+  item,
+  Vendor,
+  category,
+  subcategory,
+  chield_category,
+} = require("../models");
 
 const API = "http://localhost:5000";
 
@@ -15,31 +21,45 @@ const itemsController = {
     }
   },
 
-  createitems: async (req, res) => {
+  // get brand tax, child category and subcategory at ones
+
+  getData: async (req, res) => {
     try {
-      // const user = await User.findByPk(vendorId);
+      const categories = await category.findAll({
+        attributes: ["id", "name"],
 
-      // if (!user) {
-      //   return res.status(404).json({ message: "User not found" });
-      // }
+        include: {
+          model: subcategory,
+          as: "subcategories",
+          attributes: ["id", "name"],
+          include: [
+            {
+              model: chield_category,
+              as: "childcategories",
+              attributes: ["id", "name"],
+            },
+          ],
+        },
+      });
+      return res.status(200).send(categories);
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
+  createitems: async (req, res) => {
+    const createdData = req.body;
+    try {
       // Check if files were uploaded
       const imageFile = req.file;
-      const imagePath = `${API}/uploads/${imageFile.filename}`;
+      // const imagePath = `${API}/uploads/${imageFile.filename}`;
+      const imagePath =
+        "https://cinab-seller-2m51.onrender.com/uploads/file-1705133682452.png";
       try {
-        const newitems = await items.create({
-          vendorId: 1,
-          pname,
-          category,
-          stock,
-          brand,
-          description,
-          price,
-          approval,
+        const newitems = await item.create({
+          ...createdData,
           image: imagePath, // Assuming image is a string field in the database
         });
-
-        await user.additems(newitems);
 
         res.status(201).json(newitems);
       } catch (error) {
@@ -48,39 +68,6 @@ const itemsController = {
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: error.message });
-    }
-  },
-
-  createitems: async (req, res) => {
-    const { pname, category, stock, brand, description, price, approval } =
-      req.body;
-
-    const vendorId = 1;
-
-    const vendor = await Vendor.findByPk(vendorId);
-
-    if (!vendor) {
-      return res.status(404).json({ error: "Vendor Not Found" });
-    }
-    const imageFile = req.file;
-    const imagePath = `${API}/uploads/${imageFile.filename}`;
-    try {
-      const newitems = await items.create({
-        vendorId: vendor.id,
-        pname,
-        category,
-        stock,
-        brand,
-        description,
-        price,
-        approval,
-        image: imagePath,
-      });
-
-      return res.status(201).json(newitems);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json("Internal Server Error");
     }
   },
 
@@ -145,10 +132,10 @@ const itemsController = {
   },
 
   deleteitems: async (req, res) => {
-    const itemsId = req.params.id;
+    const { itemsId } = req.params;
 
     try {
-      const items = await items.findByPk(itemsId);
+      const items = await item.findByPk(itemsId);
 
       if (!items) {
         return res.status(404).json({ message: "items not found" });

@@ -1,19 +1,15 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class ChieldCategory extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  class chield_category extends Model {
     static associate(models) {
-      // define association here
+      chield_category.belongsTo(models.subcategory, {
+        as: "subcategory",
+        foreignKey: "subcategory_id",
+      });
     }
   }
-  ChieldCategory.init({
+  chield_category.init({
     name: DataTypes.STRING,
     slug: DataTypes.STRING,
     category_id: DataTypes.INTEGER,
@@ -21,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'ChieldCategory',
+    modelName: 'chield_category',
+    
   });
-  return ChieldCategory;
+  return chield_category;
 };
