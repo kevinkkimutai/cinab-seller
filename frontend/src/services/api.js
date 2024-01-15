@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setCredentials, logOut } from "../reducers/AuthReducers";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://cinab-seller-2m51.onrender.com/v2",
+  baseUrl: "http://locahost:5000/v2",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
