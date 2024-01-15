@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       is_type: DataTypes.STRING,
       date: DataTypes.STRING,
       file: DataTypes.STRING,
-      link: DataTypes.TEXT,
+      gallary: DataTypes.ARRAY(DataTypes.STRING),
       file_type: DataTypes.STRING,
       created_at: DataTypes.DATE,
       updated_at: DataTypes.DATE,

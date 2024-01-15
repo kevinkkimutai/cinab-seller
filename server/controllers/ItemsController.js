@@ -51,17 +51,17 @@ const itemsController = {
     const createdData = req.body;
     try {
       // Check if files were uploaded
-      const imageFile = req.file;
-      // const imagePath = `${API}/uploads/${imageFile.filename}`;
-      const imagePath =
-        "https://cinab-seller-2m51.onrender.com/uploads/file-1705133682452.png";
-      try {
-        const newitems = await item.create({
-          ...createdData,
-          image: imagePath, // Assuming image is a string field in the database
-        });
+      const imageFile = req.files;
+      const imageFilePath = imageFile.image[0];
 
-        res.status(201).json(newitems);
+    console.log(imageFilePath);
+      try {
+        // const newitems = await item.create({
+        //   ...createdData,
+        //   image: imagePath, // Assuming image is a string field in the database
+        // });
+
+        res.status(201).json("newitems");
       } catch (error) {
         res.status(400).json({ message: error.message });
       }
