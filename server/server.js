@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -11,21 +13,23 @@ const UserRoutes = require("./routes/UserRoutes");
 const offerRoutes = require("./routes/OffersRoute");
 const itemsRoutes = require("./routes/itemsRoutes");
 
-const VendorsRoutes = require("./routes/vendorsRoutes")
+const VendorsRoutes = require("./routes/vendorsRoutes");
 
 const ProductRoutes = require("./routes/ProductRoutes");
 const OrdersRoutes = require("./routes/OrdersRoutes");
 
-
 // const verifyJWT = require("./middlewares/verifyJWT");
-require("dotenv").config();
 
 const app = express();
 
 // Middleware setup
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://cinab-seller.vercel.app", "https://cinab-seller-git-kel-kevinkkimutai.vercel.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://cinab-seller.vercel.app",
+      "https://cinab-seller-git-kel-kevinkkimutai.vercel.app",
+    ],
     credentials: true,
   })
 );
@@ -62,7 +66,11 @@ const port = process.env.PORT || 5000;
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://cinab-seller.vercel.app/", "http://localhost:5000"],
+    origin: [
+      "http://localhost:3000",
+      "https://cinab-seller.vercel.app/",
+      "http://localhost:5000",
+    ],
     credentials: true,
   },
 });
