@@ -1,5 +1,5 @@
 // controllers/productController.js
-const { Product, User, item, category } = require("../models");
+const { Product, User, item, tax } = require("../models");
 
 const API = "https://cinab-seller-2m51.onrender.com";
 
@@ -17,7 +17,7 @@ const productController = {
 
   getAllProducts: async (req, res) => {
     try {
-      const items = await category.findAll();
+      const items = await item.findAll();
       res.status(200).json(items);
 
     } catch (error) {
@@ -28,14 +28,39 @@ const productController = {
 
   createProduct: async (req, res) => {
     const {
-      // vendorId,
-      pname,
-      category,
+      vendorId,
+      category_id,
+      subcategory_id,
+      childcategory_id,
+      tax_id,
+      brand_id,
+      name,
+      slug,
+      sku,
+      tags,
+      video,
+      sort_details,
+      specification_name,
+      specification_description,
+      is_specification,
+      details,
+      photo,
+      discount_price,
+      previous_price,
       stock,
-      brand,
-      description,
-      price,
-      approval,
+      meta_keywords,
+      meta_description,
+      status,
+      is_type,
+      date,
+      file,
+      link,
+      file_type,
+      license_name,
+      license_key,
+      item_type,
+      thumbnail,
+      affiliate_link,
     } = req.body;
 
     try {
@@ -47,18 +72,43 @@ const productController = {
 
       // Check if files were uploaded
       const imageFile = req.file;
-      const imagePath = `${API}/uploads/${imageFile.filename}`;
+      const imagePath = `https://cinab-seller-2m51.onrender.com/uploads/file-1705133682452.png`;
       try {
-        const newProduct = await Product.create({
+        const newProduct = await item.create({
+ 
           vendorId: "1",
-          pname,
-          category,
-          Rprice: 200,
+          category_id: "1",
+          subcategory_id: "1",
+          childcategory_id: "1",
+          tax_id,
+          brand_id,
+          name,
+          slug,
+          sku,
+          tags,
+          video,
+          sort_details,
+          specification_name,
+          specification_description,
+          is_specification,
+          details,
+          photo: imagePath,
+          discount_price,
+          previous_price,
           stock,
-          brand,
-          description,
-          price,
-          approval,
+          meta_keywords,
+          meta_description,
+          status,
+          is_type,
+          date,
+          file,
+          link,
+          file_type,
+          license_name,
+          license_key,
+          item_type,
+          thumbnail,
+          affiliate_link,
           image: imagePath, // Assuming image is a string field in the database
         });
 
