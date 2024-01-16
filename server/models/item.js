@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       is_type: DataTypes.STRING,
       date: DataTypes.STRING,
       file: DataTypes.STRING,
-      gallary: DataTypes.ARRAY(DataTypes.STRING),
+      gallery: DataTypes.TEXT,
       file_type: DataTypes.STRING,
       created_at: DataTypes.DATE,
       updated_at: DataTypes.DATE,
