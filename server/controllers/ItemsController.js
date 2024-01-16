@@ -51,18 +51,33 @@ const itemsController = {
     const createdData = req.body;
     try {
       // Check if files were uploaded
-      const imageFile = req.files;
-      const imageFilePath = imageFile.image[0];
+      const fileData = req.files;
+      // console.log(fileData);
+      const imageFile = fileData.image[0];
+      const imagePath = imageFile
+        ? `${API}/uploads/${imageFile.filename}`
+        : null;
+      console.log(imagePath);
+      // Handle gallery upload
+      const galleryFiles = fileData.gallery || [];
+      const galleryPaths = galleryFiles.map(
+        (file) => `${API}/uploads/${file.filename}`
+      );
+      const galleryPathsString = galleryPaths.join(",");
 
-    console.log(imageFilePath);
       try {
-        // const newitems = await item.create({
-        //   ...createdData,
-        //   image: imagePath, // Assuming image is a string field in the database
-        // });
+        const newitems = {
+          ...createdData,
+          item_type: "normal",
+          gallery: galleryPathsString,
+          image: imagePath, // Assuming image is a string field in the database
+        };
 
-        res.status(201).json("newitems");
+        await item.create(newitems)
+
+        res.status(201).json(newitems);
       } catch (error) {
+        console.log(error);
         res.status(400).json({ message: error.message });
       }
     } catch (error) {

@@ -25,7 +25,7 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
       
       createProduct: builder.mutation({
         query: (formData) => ({
-          url: `/products`,
+          url: `/items`,
           method: "POST",
           body: formData,
         }),
