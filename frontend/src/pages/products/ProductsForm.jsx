@@ -101,7 +101,7 @@ export default function UploadForm() {
     if (e.target.name === "image") {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        image: files[0], // assuming you only want to upload a single image
+        image: files[0], 
       }));
     } else if (e.target.name === "gallery") {
       setFormData((prevFormData) => ({
