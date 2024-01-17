@@ -8,6 +8,19 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    getCategory: builder.mutation({
+      query: () => ({
+        url: "/category",
+        method: "GET",
+      }),
+    }),
+    getBrands: builder.mutation({
+      query: () => ({
+        url: "/brands",
+        method: "GET",
+      }),
+    }),
     deleteProduct: builder.mutation({
         query: (id) => ({
           url: `/products/${id}`,  // Add a slash before the id
@@ -37,5 +50,7 @@ export const {
   useCreateProductMutation,
   useDeleteProductMutation,
   useGetProductsMutation,
+  useGetCategoryMutation,
+  useGetBrandsMutation,
   useUpdateProductMutation,
 } = ProductApiSlice;

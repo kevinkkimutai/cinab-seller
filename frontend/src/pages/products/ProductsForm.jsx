@@ -1,16 +1,30 @@
-import React, { useState } from "react";
-import { useCreateProductMutation } from "../../actions/ProductAction";
-import { useDispatch } from "react-redux";
-import { addProduct } from "../../reducers/ProductReducers";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addProduct,
+  selectBrands,
+  selectCategory,
+  selectChildCategory,
+  selectSubcategory,
+  setBrands,
+  setCategory,
+  setChildCategory,
+  setSubCategory,
+} from "../../reducers/ProductReducers";
 import { toast } from "react-toastify";
+import {
+  useCreateProductMutation,
+  useGetBrandsMutation,
+  useGetCategoryMutation,
+} from "../../actions/ProductAction";
 export default function UploadForm() {
   const [formData, setFormData] = useState({
     userId: 1,
-    category_id: 0,
-    subcategory_id: 0,
-    childcategory_id: 0,
+    category_id: null,
+    subcategory_id: null,
+    childcategory_id: null,
     tax_id: 3,
-    brand_id: 0,
+    brand_id: null,
     name: "",
     slug: "",
     sku: "",
@@ -36,7 +50,49 @@ export default function UploadForm() {
   });
 
   const [createProduct] = useCreateProductMutation();
+  const [getCategory] = useGetCategoryMutation();
+  const [getBrands] = useGetBrandsMutation();
   const dispatch = useDispatch();
+  const categoryData = useSelector(selectCategory);
+  const subCategory = useSelector(selectSubcategory);
+  const brandsData = useSelector(selectBrands);
+  const childCategories = useSelector(selectChildCategory);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const res = await getCategory();
+      if (!res.data) {
+        console.log("Failed to get Products");
+      } else {
+        dispatch(setCategory(res.data));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [getCategory, dispatch]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const fetchBrands = useCallback(async () => {
+    try {
+      const res = await getBrands();
+      console.log(res);
+      if (!res.data) {
+        console.log("Failed to get Products");
+      } else {
+        dispatch(setBrands(res.data));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [getBrands, dispatch]);
+
+  useEffect(() => {
+    fetchBrands();
+  }, [fetchBrands]);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -61,6 +117,7 @@ export default function UploadForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const formDataToSend = new FormData();
 
@@ -117,6 +174,8 @@ export default function UploadForm() {
     } catch (error) {
       console.error(error);
       toast.error("Failed to create product");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -162,19 +221,22 @@ export default function UploadForm() {
                     >
                       Select Product Brand *
                     </label>
+
                     <select
                       id="brand"
                       name="brand_id"
-                      value={formData.brand_id}
-                      onChange={handleInputChange}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      required
+                      value={formData.brand_id}
+                      onChange={(e) => {
+                        handleInputChange(e);
+                      }}
                     >
-                      <option value="">Select Brand</option>
-                      <option value="TV/Monitors">TV/Monitors</option>
-                      <option value="PC">PC</option>
-                      <option value="Gaming/Console">Gaming/Console</option>
-                      <option value="Phones">Phones</option>
+                      <option value="">Select brand</option>
+                      {brandsData.map((brand) => (
+                        <option key={brand.id} value={brand.id}>
+                          {brand.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -356,19 +418,35 @@ export default function UploadForm() {
                     >
                       Select Product Category *
                     </label>
+                    {/* Category dropdown */}
                     <select
                       id="category"
                       name="category_id"
-                      value={formData.category_id}
-                      onChange={handleInputChange}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      required
+                      value={formData.category_id}
+                      onChange={(e) => {
+                        handleInputChange(e);
+                        // Fetch subcategories based on the selected category
+                        const selectedCategory = categoryData.find(
+                          (category) => category.id === parseInt(e.target.value)
+                        );
+                        dispatch(
+                          setSubCategory(
+                            selectedCategory
+                              ? selectedCategory.subcategories
+                              : []
+                          )
+                        );
+                        // Reset child categories
+                        dispatch(setChildCategory([]));
+                      }}
                     >
                       <option value="">Select category</option>
-                      <option value="TV/Monitors">TV/Monitors</option>
-                      <option value="PC">PC</option>
-                      <option value="Gaming/Console">Gaming/Console</option>
-                      <option value="Phones">Phones</option>
+                      {categoryData.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="mb-2">
@@ -378,19 +456,34 @@ export default function UploadForm() {
                     >
                       Select Product Sub-Category *
                     </label>
+                    {/* Sub-category dropdown */}
                     <select
                       id="sub_category"
                       name="subcategory_id"
-                      value={formData.subcategory_id}
-                      onChange={handleInputChange}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      required
+                      value={formData.subcategory_id}
+                      onChange={(e) => {
+                        handleInputChange(e);
+                        // Fetch child categories based on the selected sub-category
+                        const selectedSubCategory = subCategory.find(
+                          (subCategory) =>
+                            subCategory.id === parseInt(e.target.value)
+                        );
+                        dispatch(
+                          setChildCategory(
+                            selectedSubCategory
+                              ? selectedSubCategory.childcategories
+                              : []
+                          )
+                        );
+                      }}
                     >
                       <option value="">Select sub-category</option>
-                      <option value="TV/Monitors">TV/Monitors</option>
-                      <option value="PC">PC</option>
-                      <option value="Gaming/Console">Gaming/Console</option>
-                      <option value="Phones">Phones</option>
+                      {subCategory.map((subCategory) => (
+                        <option key={subCategory.id} value={subCategory.id}>
+                          {subCategory.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="mb-2">
@@ -400,19 +493,20 @@ export default function UploadForm() {
                     >
                       Select Product Child-Category *
                     </label>
+
                     <select
                       id="child_category"
                       name="childcategory_id"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       value={formData.childcategory_id}
                       onChange={handleInputChange}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      required
                     >
                       <option value="">Select child-category</option>
-                      <option value="TV/Monitors">TV/Monitors</option>
-                      <option value="PC">PC</option>
-                      <option value="Gaming/Console">Gaming/Console</option>
-                      <option value="Phones">Phones</option>
+                      {childCategories.map((childCategory) => (
+                        <option key={childCategory.id} value={childCategory.id}>
+                          {childCategory.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -461,7 +555,7 @@ export default function UploadForm() {
                     type="submit"
                     className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
                   >
-                    Save
+                    {isLoading ? <div>Uploading..</div> : "Save"}
                   </button>
                   <button
                     type="submit"
