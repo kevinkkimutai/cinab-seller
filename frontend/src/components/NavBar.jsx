@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import Image from "../assets/cinablogo.png";
 
-import { BiSun, BiMoon } from "react-icons/bi";
 import { useStateContext } from "../contexts/ContextProvider";
 import { Dashboard } from "../pages";
 import { RxDashboard } from "react-icons/rx";
 
-import { BiStore, BiShoppingBag, BiPlus, BiLogIn } from "react-icons/bi"; // Import the icons you need from react-icons
+import { BiStore, BiShoppingBag, BiPlus, BiLogIn, BiSun, BiMoon, BiCart } from "react-icons/bi"; // Import the icons you need from react-icons
 import { useNavigate } from "react-router-dom";
 
 export default function NavBar() {
@@ -178,6 +177,11 @@ export default function NavBar() {
               to="/dashboard/productform"
               icon={<BiPlus />}
               label="Add Product"
+            />
+             <MenuItem
+              to="/dashboard/orders"
+              icon={<BiCart />}
+              label={<span>Orders <span className="nline-flex items-center justify-center w-2 h-2 p-1.5 ms-3 text-sm font-medium text-blue-800 bg-blue-200 rounded-full dark:bg-blue-900 dark:text-blue-300">10</span></span>}
             />
             <MenuItem to="/login" icon={<BiLogIn />} label="Sign In" />
           </ul>
