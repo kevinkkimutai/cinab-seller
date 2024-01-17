@@ -7,13 +7,23 @@ const {
   chield_category,
 } = require("../models");
 
+function generateRandomString(length) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
 const API = "http://localhost:5000";
 
 const itemsController = {
   getAllitems: async (req, res) => {
     try {
       const items = await item.findAll({
-        order: [["created_at", "ASC"]],
+        order: [["id", "ASC"]],
       });
       res.status(200).json(items);
     } catch (error) {
@@ -64,17 +74,28 @@ const itemsController = {
         (file) => `${API}/uploads/${file.filename}`
       );
       const galleryPathsString = galleryPaths.join(",");
+      // Generate a random SKU of 5 characters
+      const randomSku = generateRandomString(4);
+      // const randomSku = `#${randomSkuWithoutHash}`;
+
+      const newitems = {
+        ...createdData,
+        item_type: "normal",
+        gallery: galleryPathsString,
+        image: imagePath,
+        slug: createdData.name.replace(/\s+/g, "-"),
+        sku: randomSku,
+        specification_description: JSON.stringify(
+          [createdData.specification_description].filter(Boolean)
+        ),
+        is_specification: 1,
+        specification_name: JSON.stringify(
+          [createdData.name, createdData.brand].filter(Boolean)
+        ),
+      };
 
       try {
-        const newitems = {
-          ...createdData,
-          item_type: "normal",
-          gallery: galleryPathsString,
-          image: imagePath, // Assuming image is a string field in the database
-        };
-
-        await item.create(newitems)
-
+        await item.create(newitems);
         res.status(201).json(newitems);
       } catch (error) {
         console.log(error);
@@ -87,10 +108,10 @@ const itemsController = {
   },
 
   getitemsById: async (req, res) => {
-    const itemsId = req.params.id;
+    const { itemsId } = req.params;
 
     try {
-      const items = await items.findByPk(itemsId);
+      const items = await item.findByPk(itemsId);
 
       if (!items) {
         return res.status(404).json({ message: "items not found" });
