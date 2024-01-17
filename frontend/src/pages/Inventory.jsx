@@ -13,7 +13,6 @@ import {
 } from "../reducers/ProductReducers";
 import { Spinner } from "react-bootstrap";
 
-
 export default function Products() {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -53,7 +52,7 @@ export default function Products() {
   // update product
   const handleUpdateProduct = async (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
     try {
       if (selectedProduct) {
         const formData = new FormData();
@@ -70,7 +69,7 @@ export default function Products() {
         // Handle the image based on its type
         if (selectedImage instanceof File) {
           formData.append("image", selectedImage);
-        } else if (typeof selectedProduct.image === 'string') {
+        } else if (typeof selectedProduct.image === "string") {
           // Assuming selectedProduct.image is a string representing the image path
           // If it's something else, adjust this part accordingly
           formData.append("image", selectedProduct.image);
@@ -81,7 +80,7 @@ export default function Products() {
           formData,
         });
 
-        console.log('Product updated successfully:');
+        console.log("Product updated successfully:");
         console.log("Updated Product Data:", data);
 
         dispatch(updateProductAction(data));
@@ -92,11 +91,9 @@ export default function Products() {
     } catch (error) {
       console.error("Error updating product:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
-
-
 
   // function to handle product deletion
   const handleDeleteProduct = async (productId) => {
@@ -129,16 +126,12 @@ export default function Products() {
     }
   };
 
-
-
   const handleModalInputChange = (e) => {
     setSelectedProduct({
       ...selectedProduct,
       [e.target.name]: e.target.value,
     });
   };
-
-
 
   // Filter products based on search query
   const filteredProducts = productData.filter((product) =>
@@ -147,7 +140,7 @@ export default function Products() {
 
   const handleEdit = (row) => {
     console.log(row.id);
-    setSelectedProduct(row)
+    setSelectedProduct(row);
     // // Find the selected product for editing
     // const productToEdit = row.find(
     //   (product) => product.id === productId
@@ -174,32 +167,12 @@ export default function Products() {
       }
     }
   };
-  const heading = (
-
-    <div className="bg-purple h-10">
-      <h1 className="font-bold text-xl ml-3 ">Your Inventory</h1>
-    </div>
-
-  )
-
+  const heading = "Your Inventory";
 
   return (
     <>
-
-
-
       <ReusableTable
-
-        columns={[
-          "id",
-          "name",
-          "stock",
-          "price",
-          "brand",
-          "category",
-          "description",
-
-        ]}
+        columns={["name", "stock", "price", "brand", "category", "description"]}
         data={productData}
         header={heading}
         itemsPerPage={10}
@@ -211,16 +184,13 @@ export default function Products() {
           },
           {
             label: "Delete",
-            onClick: handleDeleteClick
-            ,
+            onClick: handleDeleteClick,
           },
-
         ]}
         // isError={errMsg}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
         columnMapping={{
-          id: "ID",
           name: "Company Name",
           status: "Status",
           Image: "Company Logo",
@@ -244,7 +214,10 @@ export default function Products() {
             {/* <!-- Modal header --> */}
             <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedProduct?.name || ""}</span>
+                Update{" "}
+                <span className="font-bold  text-green-600 dark:text-green-400 uppercase">
+                  {selectedProduct?.name || ""}
+                </span>
               </h3>
               <button
                 type="button"
@@ -281,7 +254,8 @@ export default function Products() {
                     src={URL.createObjectURL(selectedImage)}
                     alt="Selected Img"
                   />
-                ) : selectedProduct?.image && typeof selectedProduct.image === 'string' ? (
+                ) : selectedProduct?.image &&
+                  typeof selectedProduct.image === "string" ? (
                   <img
                     className="rounded-lg"
                     src={selectedProduct.image}
@@ -333,8 +307,6 @@ export default function Products() {
                     />
                   </div>
                 </div>
-
-
 
                 <div className="w-full">
                   <label
@@ -428,19 +400,17 @@ export default function Products() {
                   ></textarea>
                 </div>
 
-
                 <div className="mt- sm:mt- sm:col-span-2">
                   <button
                     type="submit"
                     className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
                   >
-                    {loading ? (<div role="status">
-
-                      <span className="">updating...</span>
-                    </div>) : (
-
+                    {loading ? (
+                      <div role="status">
+                        <span className="">updating...</span>
+                      </div>
+                    ) : (
                       "Update Product"
-
                     )}
                   </button>
                 </div>
@@ -450,5 +420,5 @@ export default function Products() {
         </div>
       </div>
     </>
-  )
+  );
 }
