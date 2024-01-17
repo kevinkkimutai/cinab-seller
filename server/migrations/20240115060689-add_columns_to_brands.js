@@ -3,13 +3,13 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface
-      .addColumn("items", "createdAt", {
+      .addColumn("brands", "createdAt", {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.fn("NOW"),
       })
       .then(() =>
-        queryInterface.addColumn("items", "updatedAt", {
+        queryInterface.addColumn("brands", "updatedAt", {
           type: Sequelize.DATE,
           allowNull: false,
           defaultValue: Sequelize.fn("NOW"),
@@ -20,8 +20,8 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return queryInterface
-      .removeColumn("items", "createdAt")
-      .then(() => queryInterface.removeColumn("items", "updatedAt"))
+      .removeColumn("brands", "createdAt")
+      .then(() => queryInterface.removeColumn("brands", "updatedAt"))
      
   },
 };

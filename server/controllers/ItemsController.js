@@ -3,6 +3,7 @@ const {
   item,
   Vendor,
   category,
+  brand,
   subcategory,
   chield_category,
 } = require("../models");
@@ -26,6 +27,17 @@ const itemsController = {
         order: [["id", "ASC"]],
       });
       res.status(200).json(items);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  getBrands: async (req, res) => {
+    try {
+      const brands = await brand.findAll({
+        order: [["id", "ASC"]],
+      });
+      res.status(200).json(brands);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
