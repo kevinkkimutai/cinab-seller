@@ -39,7 +39,6 @@ export default function UploadForm() {
     previous_price: 0,
     stock: 0,
     status: 0,
-    is_type: "",
     file: null,
     link: "",
     file_type: "",
