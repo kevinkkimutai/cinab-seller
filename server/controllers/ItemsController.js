@@ -95,6 +95,7 @@ const itemsController = {
         item_type: "normal",
         gallery: galleryPathsString,
         image: imagePath,
+        is_type: "undefined",
         slug: createdData.name.replace(/\s+/g, "-"),
         sku: randomSku,
         specification_description: JSON.stringify(
