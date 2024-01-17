@@ -46,9 +46,6 @@ export default function Products() {
               Product name
             </th>
             <th scope="col" className="px-6 py-3">
-              Category
-            </th>
-            <th scope="col" className="px-6 py-3">
               In-Stock
             </th>
             <th scope="col" className="px-6 py-3">
@@ -57,7 +54,7 @@ export default function Products() {
           </tr>
         </thead>
         <tbody>
-          {productData.slice(-10).map((product) => (
+          {productData.slice(-8).map((product) => (
             <tr
               key={product.id} // Assuming your product objects have a unique id
               className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -66,9 +63,8 @@ export default function Products() {
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                {product.pname}
+                {product.name.slice(0, 10)}
               </th>
-              <td className="px-6 py-4">{product.category}</td>
               <td className="px-6 py-4">{product.inStock ? "Yes" : "No"}</td>
               <td className="px-6 py-4">{product.stock}</td>
             </tr>

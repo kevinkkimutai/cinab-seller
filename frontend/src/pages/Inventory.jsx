@@ -59,7 +59,7 @@ export default function Products() {
         const formData = new FormData();
 
         formData.append("id", selectedProduct.id);
-        formData.append("pname", selectedProduct.pname);
+        formData.append("name", selectedProduct.name);
         formData.append("stock", selectedProduct.stock);
         formData.append("price", selectedProduct.price || 0);
         formData.append("brand", selectedProduct.brand || "");
@@ -142,7 +142,7 @@ export default function Products() {
 
   // Filter products based on search query
   const filteredProducts = productData.filter((product) =>
-    product.pname.toLowerCase().includes(searchQuery.toLowerCase())
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleEdit = (row) => {
@@ -192,7 +192,7 @@ export default function Products() {
 
         columns={[
           "id",
-          "pname",
+          "name",
           "stock",
           "price",
           "brand",
@@ -244,7 +244,7 @@ export default function Products() {
             {/* <!-- Modal header --> */}
             <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedProduct?.pname || ""}</span>
+                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedProduct?.name || ""}</span>
               </h3>
               <button
                 type="button"
@@ -285,13 +285,13 @@ export default function Products() {
                   <img
                     className="rounded-lg"
                     src={selectedProduct.image}
-                    alt={selectedProduct.pname}
+                    alt={selectedProduct.name}
                   />
                 ) : selectedProduct?.image instanceof File ? (
                   <img
                     className="rounded-lg"
                     src={URL.createObjectURL(selectedProduct.image)}
-                    alt={selectedProduct.pname}
+                    alt={selectedProduct.name}
                   />
                 ) : null}
 
@@ -316,16 +316,16 @@ export default function Products() {
                   </p>
                   <div className="md:pt-6">
                     <label
-                      htmlFor="pname"
+                      htmlFor="name"
                       className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                     >
                       Product Name
                     </label>
                     <input
                       type="text"
-                      name="pname"
-                      id="pname"
-                      value={selectedProduct?.pname || ""}
+                      name="name"
+                      id="name"
+                      value={selectedProduct?.name || ""}
                       onChange={handleModalInputChange}
                       className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Type product name"

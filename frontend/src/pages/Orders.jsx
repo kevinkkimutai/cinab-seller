@@ -59,7 +59,7 @@ export default function Orders() {
         const formData = new FormData();
 
         formData.append("id", selectedOrder.id);
-        formData.append("pname", selectedOrder.productName);
+        formData.append("name", selectedOrder.productName);
         formData.append("stock", selectedOrder.stock);
         formData.append("price", selectedOrder.price || 0);
         formData.append("brand", selectedOrder.brand || "");
@@ -243,7 +243,7 @@ export default function Orders() {
             {/* <!-- Modal header --> */}
             <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedOrder?.pname || ""}</span>
+                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedOrder?.name || ""}</span>
               </h3>
               <button
                 type="button"
@@ -284,13 +284,13 @@ export default function Orders() {
                   <img
                     className="rounded-lg"
                     src={selectedOrder.image}
-                    alt={selectedOrder.pname}
+                    alt={selectedOrder.name}
                   />
                 ) : selectedOrder?.image instanceof File ? (
                   <img
                     className="rounded-lg"
                     src={URL.createObjectURL(selectedOrder.image)}
-                    alt={selectedOrder.pname}
+                    alt={selectedOrder.name}
                   />
                 ) : null}
 
@@ -315,16 +315,16 @@ export default function Orders() {
                   </p>
                   <div className="md:pt-6">
                     <label
-                      htmlFor="pname"
+                      htmlFor="name"
                       className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                     >
                       Order Name
                     </label>
                     <input
                       type="text"
-                      name="pname"
-                      id="pname"
-                      value={selectedOrder?.pname || ""}
+                      name="name"
+                      id="name"
+                      value={selectedOrder?.name || ""}
                       onChange={handleModalInputChange}
                       className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Type Order name"

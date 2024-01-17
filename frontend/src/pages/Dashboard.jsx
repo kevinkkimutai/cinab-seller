@@ -1,7 +1,6 @@
 import React from "react";
 import { TableProducts, TableResents } from "../components";
 import { useNavigate } from "react-router-dom";
-import { MdOutlineInventory2 } from "react-icons/md";
 import { BiSolidOffer } from "react-icons/bi";
 import { FcSalesPerformance } from "react-icons/fc";
 import { FaCartShopping } from "react-icons/fa6";
