@@ -348,21 +348,11 @@ export default function UploadForm() {
                   </div>
                 </div>
 
-                {/* <!-- Display selected files --> */}
-                {/* {formData.image && (
-  <div>
-    <h3 className="text-lg font-medium text-gray-900 dark:text-white mt-4 mb-2">Selected Files:</h3>
-    <ul>
-      {formData.image.map((file, index) => (
-        <li key={index}>{file.name}</li>
-      ))}
-    </ul>
-  </div>
-)} */}
+        
               </div>
               {/* left section */}
               <div className="md:w-3/6">
-                s{/* price section */}
+                {/* price section */}
                 <div className="bg-gray-200 dark:bg-gray-500 rounded-lg p-1">
                   <div className="w-full">
                     <label
