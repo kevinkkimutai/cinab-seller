@@ -143,7 +143,7 @@ const handleImageChange = (e) => {
 
   // Filter products based on search query
   const filteredProducts = productData.filter((product) =>
-    product.pname.toLowerCase().includes(searchQuery.toLowerCase())
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleEdit = (productId) => {
