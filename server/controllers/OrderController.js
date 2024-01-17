@@ -1,7 +1,7 @@
 // controllers/orderController.js
 const { Order, User } = require("../models");
 
-const API = "http://localhost:5000/v2";
+const API = "https://cinab-seller-2m51.onrender.com/v2";
 
 const orderController = {
   getAllOrders: async (req, res) => {

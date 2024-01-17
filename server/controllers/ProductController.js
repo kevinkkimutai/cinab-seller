@@ -1,7 +1,7 @@
 // controllers/productController.js
 
 const { Product, User, item , } = require("../models");
-const API = "http://localhost:5000";
+const API = "https://cinab-seller-2m51.onrender.com";
 
 const productController = {
   // getAllProducts: async (req, res) => {
