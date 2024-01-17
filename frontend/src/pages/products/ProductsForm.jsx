@@ -41,9 +41,6 @@ export default function UploadForm() {
     status: 0,
     file: null,
     link: "",
-    file_type: "",
-    item_type: "",
-    thumbnail: "",
     image: null,
     gallery: [],
   });
@@ -142,12 +139,8 @@ export default function UploadForm() {
     formDataToSend.append("previous_price", formData.previous_price);
     formDataToSend.append("stock", formData.stock);
     formDataToSend.append("status", formData.status);
-    formDataToSend.append("is_type", formData.is_type);
     formDataToSend.append("file", formData.file);
     formDataToSend.append("link", formData.link);
-    formDataToSend.append("file_type", formData.file_type);
-    formDataToSend.append("item_type", formData.item_type);
-    formDataToSend.append("thumbnail", formData.thumbnail);
 
     // Append each file separately to the FormData object
     // formData.photo.forEach((file, index) => {
