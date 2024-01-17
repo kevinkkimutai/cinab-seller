@@ -12,6 +12,7 @@ import {
   updateProduct as updateProductAction,
 } from "../reducers/ProductReducers";
 import { Spinner } from "react-bootstrap";
+import ReusablePath from "../components/reusablePath";
 
 export default function Products() {
   const [loading, setLoading] = useState(false);
