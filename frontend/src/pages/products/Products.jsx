@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { ReusableTable } from "../../components";
 import {
   useGetProductsMutation,
   useUpdateProductMutation,
@@ -220,7 +221,52 @@ const handleImageChange = (e) => {
         </div>
       ) : (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto custom-grid" loading>
+        <ReusableTable
+
+columns={[
+  "id",
+  "name",
+  "stock",
+  "price",
+  "brand",
+  "category",
+  "description",
+
+]}
+data={productData}
+// header=heading
+itemsPerPage={10}
+isLoading={loading}
+actions={[
+  {
+    label: "Edit",
+    onClick: handleEdit,
+  },
+  {
+    label: "Delete"
+    // onClick: handleDeleteClick
+    ,
+  },
+
+]}
+// isError={errMsg}
+onEdit={handleEdit}
+// onDelete={handleDeleteClick}
+columnMapping={{
+  id: "ID",
+  name: "Company Name",
+  status: "Status",
+  Image: "Company Logo",
+  email: "Company Email",
+  KRA: "KRA Pin",
+  contact: "Phone No.",
+  location: "Address",
+}}
+/>
         {filteredProducts.map((product) => (
+          <>
+
+
           <div
             key={product.id}
             className="w-full max-w-sm h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
@@ -317,6 +363,7 @@ const handleImageChange = (e) => {
 </div>
             </div>
           </div>
+          </>
 
           // end of delete modal
         ))}
@@ -539,4 +586,3 @@ const handleImageChange = (e) => {
   );
 }
   
-
