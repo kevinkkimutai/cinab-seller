@@ -17,7 +17,7 @@ function generateRandomString(length) {
   return result;
 }
 
-const API = "http://localhost:5000";
+const API = "https://cinab-seller-2m51.onrender.com";
 
 const itemsController = {
   getAllitems: async (req, res) => {
