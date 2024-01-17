@@ -18,6 +18,7 @@ router.post(
   itemsController.createitems
 );
 router.delete("/items/:itemsId", itemsController.deleteitems);
+router.get("/items/:itemsId", itemsController.getitemsById);
 
 /**
  * Get a order by ID.
