@@ -18,7 +18,7 @@ export default function ReusableTable({
   onView,
   header,
   onDelete,
-  onQuote,
+  onApprove,
   onButton,
 }) {
   const [sortBy, setSortBy] = useState(null);
@@ -87,8 +87,8 @@ export default function ReusableTable({
   };
 
   const handleQuote = (row) => {
-    if (onQuote) {
-      onQuote(row);
+    if (onApprove) {
+      onApprove(row);
     }
   };
 
@@ -161,7 +161,7 @@ export default function ReusableTable({
   return (
     <>
       <ReusablePath header={header} />
-      <div className="mx-auto max-w-screen-xl px-2 lg:px-6 h-full overflow-auto scrollbar-hidden">
+      <div className="mx-auto max-w-screen-xl px-2 lg:px-3 ml-1 h-full overflow-auto scrollbar-hidden">
         <div className="bg-primary-50 dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
             <div className="w-full md:w-1/2">
@@ -332,24 +332,31 @@ export default function ReusableTable({
                                   )
                                 ) : (
                                   <div className="flex justify-start items-center space-x-2">
-                                    {onQuote && (
+                                   {onEdit && (
+                                      <button
+                                        onClick={() => handleEdit(row)}
+                                        className="inline-flex items-center px-2 py-0.5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                      >
+                                        Edit
+                                      </button>
+                                    )}
+                                        {onApprove && (
                                       <button
                                         onClick={() => handleQuote(row)}
-                                        className="text"
+                                        className="inline-flex items-center px-1.5 py-0.5 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
                                       >
-                                        <TooltipComponent title="Quote">
-                                          <RiChatQuoteFill className="text-xl text-green-600" />
-                                        </TooltipComponent>
+                                        Approve
                                       </button>
                                     )}
                                     {onDelete && (
                                       <button
                                         onClick={() => handleDelete(row)}
-                                        className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
+                                        className="inline-flex items-center px-1.5 py-0.5 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
                                       >
                                         Delete
                                       </button>
                                     )}
+                                 
                                     {onView && (
                                       <button
                                         onClick={() => handleView(row)}
@@ -360,14 +367,7 @@ export default function ReusableTable({
                                         </TooltipComponent>
                                       </button>
                                     )}
-                                    {onEdit && (
-                                      <button
-                                        onClick={() => handleEdit(row)}
-                                        className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                      >
-                                        Edit
-                                      </button>
-                                    )}
+                                    
                                   </div>
                                 )}
                               </td>
