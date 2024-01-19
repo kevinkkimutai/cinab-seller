@@ -14,7 +14,7 @@ import {
 } from "../reducers/ProductReducers";
 import { toast } from "react-toastify";
 
-export default function Products() {
+export default function Products({header}) {
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -129,14 +129,14 @@ export default function Products() {
     }
   });
 
-  const heading = "Your Inventory";
+  
 
   return (
     <>
       <ReusableTable
         columns={["image", "name", "stock", "discount_price", "previous_price"]}
         data={productData}
-        header={heading}
+        header={header}
         itemsPerPage={10}
         // isLoading={loading}
         onDelete={handleDeleteClick}
