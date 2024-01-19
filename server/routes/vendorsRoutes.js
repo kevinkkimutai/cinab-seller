@@ -7,6 +7,7 @@ const uploadMiddleware = require("../middlewares/UploadingFiles");
 router.get("/vendors", vendorController.getVendors);
 router.get("/vendors/:id", vendorController.getVendorById);
 router.post("/vendors", vendorController.createVendor);
+router.post("/self-register", vendorController.selfRegistration);
 router.put(
   "/vendors",
   uploadMiddleware.single("image"),
