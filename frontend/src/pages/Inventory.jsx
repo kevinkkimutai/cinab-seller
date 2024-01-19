@@ -9,31 +9,29 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   selectProducts,
   setProduct,
-  updateProduct as updateProductAction,
+  updateProduct,
+  deleteProduct,
 } from "../reducers/ProductReducers";
+import { toast } from "react-toastify";
 
-export default function Products({header}) {
+export default function Products() {
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [getProducts] = useGetProductsMutation();
-  const [updateProduct] = useUpdateProductMutation();
-  const [deleteProduct] = useDeleteProductMutation();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [getProducts] = useGetProductsMutation();
+  const [updateProductMutation] = useUpdateProductMutation();
+  const [deleteProductMutation] = useDeleteProductMutation();
 
-  // Get Products from the store
   const productData = useSelector(selectProducts);
   const dispatch = useDispatch();
 
-  // FUNCTION TO FETCH DATA
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const res = await getProducts();
-      console.log(res);
       if (!res.data) {
         console.log("Failed to get Products");
       } else {
-        // Dispatch the Products to store them in the store.
         dispatch(setProduct(res.data));
       }
     } catch (err) {
@@ -47,14 +45,12 @@ export default function Products({header}) {
     fetchData();
   }, [fetchData]);
 
-  // update product
   const handleUpdateProduct = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       if (selectedProduct) {
         const formData = new FormData();
-
         formData.append("id", selectedProduct.id);
         formData.append("name", selectedProduct.name);
         formData.append("stock", selectedProduct.stock);
@@ -64,12 +60,9 @@ export default function Products({header}) {
         formData.append("description", selectedProduct.description || "");
         formData.append("approval", selectedProduct.approval || "");
 
-        // Handle the image based on its type
         if (selectedImage instanceof File) {
           formData.append("image", selectedImage);
         } else if (typeof selectedProduct.image === "string") {
-          // Assuming selectedProduct.image is a string representing the image path
-          // If it's something else, adjust this part accordingly
           formData.append("image", selectedProduct.image);
         }
 
@@ -78,11 +71,7 @@ export default function Products({header}) {
           formData,
         });
 
-        console.log("Product updated successfully:");
-        console.log("Updated Product Data:", data);
-
-        dispatch(updateProductAction(data));
-
+        dispatch(updateProductMutation(data));
         setSelectedImage(null);
         document.getElementById("crud-modal").classList.add("hidden");
       }
@@ -97,58 +86,61 @@ export default function Products({header}) {
     const file = e.target.files[0];
     if (file) {
       setSelectedImage(file);
-
-      // Log the selected image
-      console.log("Selected Image:", file);
-
-      // Update selectedProduct with the new image
-      setSelectedProduct({
-        ...selectedProduct,
+      setSelectedProduct((prevProduct) => ({
+        ...prevProduct,
         image: file,
-      });
+      }));
     } else {
-      setSelectedImage(null); // Reset the state when no file is selected
+      setSelectedImage(null);
     }
   };
 
   const handleModalInputChange = (e) => {
-    setSelectedProduct({
-      ...selectedProduct,
+    setSelectedProduct((prevProduct) => ({
+      ...prevProduct,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
-  const handleEdit = (row) => {
-    console.log(row.id);
+  const handleEdit = useCallback((row) => {
     setSelectedProduct(row);
-
     document.getElementById("crud-modal").classList.remove("hidden");
-  };
+  }, []);
 
-  const handleDeleteClick = async (rowIndex, id) => {
+  const handleDeleteClick = useCallback(async (row) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete products?"
+      "Are you sure you want to delete this product?"
     );
     if (confirmDelete) {
-      const productId = rowIndex.id; // Renamed to avoid naming conflicts
+      const id = row.id;
       try {
-         await deleteProduct(productId);
-        dispatch(deleteProduct(productId));
+        const res = await deleteProductMutation(id);
+        if (res.data) {
+          toast.success("Item deleted successfully");
+          dispatch(deleteProduct(id));
+        } else {
+          console.log("error");
+          toast.error("Failed to delete, please try again");
+        }
+        fetchData();
       } catch (error) {
         console.error(error);
       }
     }
-  };
- 
+  });
+
+  const heading = "Your Inventory";
 
   return (
     <>
       <ReusableTable
         columns={["image", "name", "stock", "discount_price", "previous_price"]}
         data={productData}
-        header={header}
+        header={heading}
         itemsPerPage={10}
-        isLoading={loading}
+        // isLoading={loading}
+        onDelete={handleDeleteClick}
+        onEdit={handleEdit}
         actions={[
           {
             label: "Edit",
@@ -159,18 +151,15 @@ export default function Products({header}) {
             onClick: handleDeleteClick,
           },
         ]}
-        // isError={errMsg}
-        onEdit={handleEdit}
-        onDelete={handleDeleteClick}
         columnMapping={{
           name: "Product Name",
+
           discount_price: "Discount",
           status: "Status",
           image: "Image",
           previous_price: "previous price",
         }}
       />
-
       {/* <!-- Main modal --> */}
       <div
         id="crud-modal"
@@ -205,9 +194,9 @@ export default function Products({header}) {
                 >
                   <path
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                   />
                 </svg>
@@ -238,7 +227,6 @@ export default function Products({header}) {
                     alt={selectedProduct.name}
                   />
                 ) : null}
-
                 <div className="md:pt-5">
                   <label
                     className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
@@ -254,7 +242,6 @@ export default function Products({header}) {
                     multiple
                     onChange={handleImageChange}
                   />
-
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     PNG, JPG, or JPEG files (Max. 5MB each)
                   </p>
@@ -277,7 +264,6 @@ export default function Products({header}) {
                     />
                   </div>
                 </div>
-
                 <div className="w-full">
                   <label
                     htmlFor="brand"
@@ -306,7 +292,7 @@ export default function Products({header}) {
                   <select
                     id="category"
                     value={selectedProduct?.category || ""}
-                    onChange={(e) => handleModalInputChange(e)}
+                    onChange={handleModalInputChange}
                     className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   >
                     <option>Select category</option>
@@ -369,7 +355,6 @@ export default function Products({header}) {
                     placeholder="Your description here"
                   ></textarea>
                 </div>
-
                 <div className="mt- sm:mt- sm:col-span-2">
                   <button
                     type="submit"
