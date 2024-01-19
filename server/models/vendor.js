@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       Kra: {
         type: DataTypes.STRING,
       },
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: "pending",
+      },
       licence: {
         type: DataTypes.STRING,
       },
