@@ -48,9 +48,17 @@ const ProductSlice = createSlice({
     },
 
     deleteProduct: (state, action) => {
+      const productIdToDelete = action.payload.id;
+      // Filter out the product based on its id
       state.products = state.products.filter(
-        (Product) => Product.id !== action.payload.id
+        (product) => product.id !== productIdToDelete
       );
+
+      // Alternatively, you can use findIndex and splice to remove the product
+      // const productIndex = state.products.findIndex(product => product.id === productIdToDelete);
+      // if (productIndex !== -1) {
+      //   state.products.splice(productIndex, 1);
+      // }
     },
   },
 });
@@ -68,8 +76,8 @@ export const {
 
 export default ProductSlice.reducer;
 
-export const selectProducts = (state) => state.Product.products;
-export const selectBrands = (state) => state.Product.brands;
-export const selectCategory = (state) => state.Product.category;
-export const selectSubcategory = (state) => state.Product.subcategories;
-export const selectChildCategory = (state) => state.Product.childcategories;
+export const selectProducts = (state) => state.product.products;
+export const selectBrands = (state) => state.product.brands;
+export const selectCategory = (state) => state.product.category;
+export const selectSubcategory = (state) => state.product.subcategories;
+export const selectChildCategory = (state) => state.product.childcategories;

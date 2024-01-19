@@ -3,9 +3,9 @@ import React from "react";
 export default function ReusablePath({ header }) {
   return (
     <>
-      <div class="w-full mb-1">
-        <div class="mb-4">
-          <nav class="flex mb-5" aria-label="Breadcrumb">
+      <div class="w-full  px-2 ">
+        <div class="">
+          <nav class="flex mb-2" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
               <li class="inline-flex items-center">
                 <a
@@ -69,7 +69,7 @@ export default function ReusablePath({ header }) {
               </li>
             </ol>
           </nav>
-          <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
+          <h1 class="text-xl font-semibold px-2 text-gray-900 sm:text-2xl dark:text-white">
             {header}{" "}
           </h1>
         </div>

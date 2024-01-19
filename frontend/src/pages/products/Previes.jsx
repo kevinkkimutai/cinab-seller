@@ -1,558 +1,475 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { Spinner } from "react-bootstrap";
+import { TiTickOutline } from "react-icons/ti";
+import { GrRevert } from "react-icons/gr";
+import { RiChatQuoteFill, RiDeleteBinLine } from "react-icons/ri";
+import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import {
-  addProduct,
-  selectBrands,
-  selectCategory,
-  selectChildCategory,
-  selectSubcategory,
-  setBrands,
-  setCategory,
-  setChildCategory,
-  setSubCategory,
-} from "../../reducers/ProductReducers";
-import { toast } from "react-toastify";
-import {
-  useCreateProductMutation,
-  useGetBrandsMutation,
-  useGetCategoryMutation,
-} from "../../actions/ProductAction";
-export default function UploadForm() {
-  const [formData, setFormData] = useState({
-    userId: 1,
-    category_id: null,
-    subcategory_id: null,
-    childcategory_id: null,
-    tax_id: 3,
-    brand_id: null,
-    name: "",
-    slug: "",
-    sku: "",
-    tags: "",
-    video: null,
-    sort_details: "",
-    specification_description: [],
-    is_specification: 0,
-    details: "",
-    photo: "",
-    discount_price: 0,
-    previous_price: 0,
-    stock: 0,
-    status: 0,
-    file: null,
-    link: "",
-    image: null,
-    gallery: [],
-  });
+  BsFillEmojiDizzyFill,
+  BsViewStacked,
+  BsCaretDownFill,
+  BsCaretUpFill,
+} from "react-icons/bs";
+import { ThreeDots } from "react-loader-spinner";
+import ReusablePath from "./reusablePath";
+export default function ReusableTable({
+  columns,
+  data,
+  itemsPerPage,
+  actions,
+  columnMapping,
+  isLoading,
 
-  const [createProduct] = useCreateProductMutation();
-  const [getCategory] = useGetCategoryMutation();
-  const [getBrands] = useGetBrandsMutation();
-  const dispatch = useDispatch();
-  const categoryData = useSelector(selectCategory);
-  const subCategory = useSelector(selectSubcategory);
-  const brandsData = useSelector(selectBrands);
-  const childCategories = useSelector(selectChildCategory);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const fetchData = useCallback(async () => {
-    try {
-      const res = await getCategory();
-      if (!res.data) {
-        console.log("Failed to get Products");
-      } else {
-        dispatch(setCategory(res.data));
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [getCategory, dispatch]);
+  onEdit,
+  onView,
+  header,
+  onDelete,
+  onQuote,
+  onButton,
+}) {
+  const [sortBy, setSortBy] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredData, setFilteredData] = useState(data || []);
+  const [editStates, setEditStates] = useState({});
+  const [editedData, setEditedData] = useState({});
+  const [savingRows, setSavingRows] = useState(new Set()); // To track rows being saved
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (Array.isArray(data)) {
+      const filtered = data.filter((row) =>
+        columns.some((column) => {
+          const cellValue = String(row[column]);
+          return (
+            cellValue &&
+            cellValue.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+        })
+      );
 
-  const fetchBrands = useCallback(async () => {
-    try {
-      const res = await getBrands();
-      console.log(res);
-      if (!res.data) {
-        console.log("Failed to get Products");
-      } else {
-        dispatch(setBrands(res.data));
-      }
-    } catch (err) {
-      console.error(err);
+      setFilteredData(filtered);
     }
-  }, [getBrands, dispatch]);
+  }, [searchQuery, data, columns]);
 
-  useEffect(() => {
-    fetchBrands();
-  }, [fetchBrands]);
-
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const handleFileChange = (e) => {
-    const files = e.target.files;
-    if (e.target.name === "image") {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        image: files[0], 
-      }));
-    } else if (e.target.name === "gallery") {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        gallery: [...prevFormData.gallery, ...files],
-      }));
+  function handleSort(column) {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
     }
-  };
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const showPagination = filteredData.length > itemsPerPage;
 
-    const formDataToSend = new FormData();
+  const visibleData = filteredData.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
 
-    formDataToSend.append("category_id", formData.category_id);
-    formDataToSend.append("subcategory_id", formData.subcategory_id);
-    formDataToSend.append("childcategory_id", formData.childcategory_id);
-    formDataToSend.append("tax_id", formData.tax_id);
-    formDataToSend.append("brand_id", formData.brand_id);
-    formDataToSend.append("name", formData.name);
-    formDataToSend.append("slug", formData.slug);
-    formDataToSend.append("sku", formData.sku);
-    formDataToSend.append("tags", formData.tags);
-    formDataToSend.append("video", formData.video);
-    formDataToSend.append("sort_details", formData.sort_details);
+  function sortData(dataToSort) {
+    if (sortBy) {
+      return [...dataToSort].sort((a, b) => {
+        const aValue = String(a[sortBy]);
+        const bValue = String(b[sortBy]);
+        return sortOrder === "asc"
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      });
+    }
+    return dataToSort;
+  }
 
-    formDataToSend.append(
-      "specification_description",
-      formData.specification_description
-    );
-    formDataToSend.append("is_specification", formData.is_specification);
-    formDataToSend.append("details", formData.details);
-    formDataToSend.append("discount_price", formData.discount_price);
-    formDataToSend.append("previous_price", formData.previous_price);
-    formDataToSend.append("stock", formData.stock);
-    formDataToSend.append("status", formData.status);
-    formDataToSend.append("file", formData.file);
-    formDataToSend.append("link", formData.link);
-
-    // Append each file separately to the FormData object
-    // formData.photo.forEach((file, index) => {
-    //   formDataToSend.append(`photo`, file);
-    // });
-
-    formDataToSend.append("image", formData.image);
-    formData.gallery.forEach((file, index) => {
-      formDataToSend.append("gallery", file);
-    });
-
-    console.log("formData before:", formData);
-
-    try {
-      const { data } = await createProduct(formDataToSend);
-      if (data) {
-        dispatch(addProduct(data));
-        console.log("formData after:", formData);
-        toast.success(`${formData.name} added to Products successfully`);
-      } else {
-        toast.error("Failed to create product");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to create product");
-    } finally {
-      setIsLoading(false);
+  const handleDelete = (row) => {
+    if (onDelete) {
+      onDelete(row);
     }
   };
+
+  const handleEdit = (row) => {
+    setEditStates((prevEditStates) => ({
+      ...prevEditStates,
+      [row.id]: true,
+    }));
+  };
+
+  const handleView = (row) => {
+    if (onView) {
+      onView(row);
+    }
+  };
+
+  const handleQuote = (row) => {
+    if (onQuote) {
+      onQuote(row);
+    }
+  };
+
+  const handleEditInventory = (row) => {
+    if (onEdit) {
+      onEdit(row);
+    }
+  };
+
+  const handleEditFieldChange = (rowId, column, value) => {
+    setEditedData((prevEditedData) => ({
+      ...prevEditedData,
+      [rowId]: {
+        ...prevEditedData[rowId],
+        [column]: value,
+      },
+    }));
+  };
+
+  // Inside ReusableTable component
+  const handleSaveEdit = (row) => {
+    const editedRowData = editedData[row.id];
+    if (onEdit) {
+      // Start saving for the target row
+      setSavingRows((prevSavingRows) => new Set(prevSavingRows).add(row.id));
+
+      onEdit({ id: row.id, ...editedRowData }).then(() => {
+        // Save operation completed, remove the row from the saving set
+        setSavingRows((prevSavingRows) => {
+          const newSavingRows = new Set(prevSavingRows);
+          newSavingRows.delete(row.id);
+          return newSavingRows;
+        });
+
+        // Clear the edited data and edit state for this row
+        setEditStates((prevEditStates) => ({
+          ...prevEditStates,
+          [row.id]: false,
+        }));
+        setEditedData((prevEditedData) => ({
+          ...prevEditedData,
+          [row.id]: {},
+        }));
+      });
+    }
+  };
+
+  const handleCancelEdit = (row) => {
+    setEditStates((prevEditStates) => ({
+      ...prevEditStates,
+      [row.id]: false,
+    }));
+    setEditedData((prevEditedData) => ({
+      ...prevEditedData,
+      [row.id]: {},
+    }));
+  };
+
+
+
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    const lastPage = Math.ceil(filteredData.length / itemsPerPage);
+    if (currentPage < lastPage - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const offset = currentPage * itemsPerPage;
 
   return (
-    <section className="bg-gray-100 dark:bg-gray-900 w-full h-full max-h-full overflow-y-auto">
-      <div className="flex flex-col w-full  justify-center aligns-center items-center">
-        <div className="relative  w-full  rounded-lg shadow-lg ">
-          <div className="bg-gray-200 dark:bg-gray-500 rounded-t">
-            <h2 className="mb-3 p-2 text-2xl font-bold text-gray-900 dark:text-white text-center ">
-              Add Product
-            </h2>
+    <>
+      <div className="h-full">
+        <ReusablePath header={header} />
+        <div className="max-h-full h-full bg-primary-50 shadow-lg rounded-lg overflow-auto ">
+          <div class="sm:flex">
+            <div class="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0 dark:divide-gray-700">
+              <form class="lg:pr-3" action="#" method="GET">
+                <label for="users-search" class="sr-only">
+                  Search
+                </label>
+                <div class="relative mt-1 lg:w-64 xl:w-96">
+                  <input
+                    type="text"
+                    name="name"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    id="search"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Search"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="flex items-center ml-auto space-x-2 sm:space-x-3">
+              <button
+                type="button"
+                data-modal-toggle="add-user-modal"
+                class="inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                <svg
+                  class="w-5 h-5 mr-2 -ml-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+                Add user
+              </button>
+              <a
+                href="#"
+                class="inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+              >
+                <svg
+                  class="w-5 h-5 mr-2 -ml-1"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+                Export
+              </a>
+            </div>
           </div>
-          <div className="w-full">
-            <form
-              className="w-full flex gap-2"
-              onSubmit={handleSubmit}
-              encType="multipart/form-data"
-            >
-              <div className="gap-4 sm:gap-6 mb-2 md:w-4/6">
-                <div className="bg-gray-200 dark:bg-gray-500 rounded-lg  p-1">
-                  <div className="sm:col-span-2 mb-2">
-                    <label
-                      htmlFor="name"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+          <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-4 py-3">
+                    <span>#</span>
+                  </th>
+                  {columns.map((column) => (
+                    <th
+                      key={column}
+                      scope="col"
+                      className={`px-4 py-3 whitespace${
+                        column === "name" ? " text-bold" : ""
+                      }`}
+                      onClick={() => handleSort(column)}
                     >
-                      Product Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="Type product name"
-                      required
-                    />
-                  </div>
-                  <div className="mb-2">
-                    <label
-                      htmlFor="brand"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Select Product Brand *
-                    </label>
-
-                    <select
-                      id="brand"
-                      name="brand_id"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      value={formData.brand_id}
-                      onChange={(e) => {
-                        handleInputChange(e);
-                      }}
-                    >
-                      <option value="">Select brand</option>
-                      {brandsData.map((brand) => (
-                        <option key={brand.id} value={brand.id}>
-                          {brand.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* image section */}
-                <div className="bg-gray-200 dark:bg-gray-500 rounded-lg mt-4 p-1">
-                  <div>
-                    <label
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                      htmlFor="image"
-                    >
-                      Upload file(s)
-                    </label>
-                    <input
-                      className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                      id="image"
-                      type="file"
-                      name="image"
-                      onChange={handleFileChange}
-                      accept=".png, .jpg, .jpeg"
-                      //  multiple
-                      // required
-                    />
-
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      PNG, JPG, or JPEG files (Max. 5MB each)
-                    </p>
-                  </div>
-                </div>
-
-                {/*gallery image section */}
-                <div className="bg-gray-200 dark:bg-gray-500 rounded-lg mt-4 p-1">
-                  <div>
-                    <label
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                      htmlFor="gallery"
-                    >
-                      Gallary{" "}
-                    </label>
-                    <input
-                      className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                      id="gallery"
-                      type="file"
-                      name="gallery"
-                      onChange={handleFileChange}
-                      accept=".png, .jpg, .jpeg"
-                      multiple
-                      // required
-                    />
-
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      PNG, JPG, or JPEG files (Max. 5MB each)
-                    </p>
-                  </div>
-                </div>
-
-                {/* description section */}
-                <div className="bg-gray-200 dark:bg-gray-500 rounded-lg mt-4 p-1">
-                  <div className="sm:col-span-2">
-                    <label
-                      htmlFor="short_description"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Short Description *
-                    </label>
-                    <textarea
-                      id="short_description"
-                      name="sort_details"
-                      rows="5"
-                      value={formData.sort_details}
-                      onChange={handleInputChange}
-                      className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="A short description about the product"
-                      required
-                    ></textarea>
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <label
-                      htmlFor="detail_description"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Description *
-                    </label>
-                    <textarea
-                      id="detail_description"
-                      name="details"
-                      rows="5"
-                      value={formData.details}
-                      onChange={handleInputChange}
-                      className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="Your Product description here"
-                      required
-                    ></textarea>
-                  </div>
-                </div>
-
-                {/* specifications section */}
-                <div className="bg-gray-200 dark:bg-gray-500 rounded-lg mt-4 p-1">
-                  <div className="sm:col-span-2">
-                    <label
-                      htmlFor="spec_description"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Specification spec_Description *
-                    </label>
-                    <textarea
-                      id="spec_description"
-                      name="specification_description"
-                      rows="5"
-                      value={formData.specification_description}
-                      onChange={handleInputChange}
-                      className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="Your specification description here"
-                      required
-                    ></textarea>
-                  </div>
-                </div>
-
-        
-              </div>
-              {/* left section */}
-              <div className="md:w-3/6">
-                {/* price section */}
-                <div className="bg-gray-200 dark:bg-gray-500 rounded-lg p-1">
-                  <div className="w-full">
-                    <label
-                      htmlFor="price"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Wholesale Price (Ksh) *
-                    </label>
-                    <input
-                      type="number"
-                      name="price"
-                      id="price"
-                      value={formData.wholesale_price}
-                      onChange={handleInputChange}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="3000"
-                      required
-                    />
-                  </div>
-                  <div className="w-full mb-1">
-                    <label
-                      htmlFor="d_price"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Retail Price (Ksh) *
-                    </label>
-                    <input
-                      type="number"
-                      name="discount_price"
-                      id="d_price"
-                      value={formData.discount_price}
-                      onChange={handleInputChange}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="3000"
-                      required
-                    />
-                  </div>
-                </div>
-                {/* category secton */}
-                <div className="bg-gray-200 dark:bg-gray-500 rounded-lg mt-5 p-1">
-                  <div className="mb-2">
-                    <label
-                      htmlFor="category"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Select Product Category *
-                    </label>
-                    {/* Category dropdown */}
-                    <select
-                      id="category"
-                      name="category_id"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      value={formData.category_id}
-                      onChange={(e) => {
-                        handleInputChange(e);
-                        // Fetch subcategories based on the selected category
-                        const selectedCategory = categoryData.find(
-                          (category) => category.id === parseInt(e.target.value)
-                        );
-                        dispatch(
-                          setSubCategory(
-                            selectedCategory
-                              ? selectedCategory.subcategories
-                              : []
-                          )
-                        );
-                        // Reset child categories
-                        dispatch(setChildCategory([]));
-                      }}
-                    >
-                      <option value="">Select category</option>
-                      {categoryData.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-2">
-                    <label
-                      htmlFor="sub_category"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Select Product Sub-Category *
-                    </label>
-                    {/* Sub-category dropdown */}
-                    <select
-                      id="sub_category"
-                      name="subcategory_id"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      value={formData.subcategory_id}
-                      onChange={(e) => {
-                        handleInputChange(e);
-                        // Fetch child categories based on the selected sub-category
-                        const selectedSubCategory = subCategory.find(
-                          (subCategory) =>
-                            subCategory.id === parseInt(e.target.value)
-                        );
-                        dispatch(
-                          setChildCategory(
-                            selectedSubCategory
-                              ? selectedSubCategory.childcategories
-                              : []
-                          )
-                        );
-                      }}
-                    >
-                      <option value="">Select sub-category</option>
-                      {subCategory.map((subCategory) => (
-                        <option key={subCategory.id} value={subCategory.id}>
-                          {subCategory.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-2">
-                    <label
-                      htmlFor="child_category"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Select Product Child-Category *
-                    </label>
-
-                    <select
-                      id="child_category"
-                      name="childcategory_id"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      value={formData.childcategory_id}
-                      onChange={handleInputChange}
-                    >
-                      <option value="">Select child-category</option>
-                      {childCategories.map((childCategory) => (
-                        <option key={childCategory.id} value={childCategory.id}>
-                          {childCategory.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                {/* stock section */}
-                <div className="bg-gray-200 dark:bg-gray-500 rounded-lg mt-5 p-1">
-                  <div className="w-full">
-                    <label
-                      htmlFor="s_price"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Stock *
-                    </label>
-                    <input
-                      type="number"
-                      name="stock"
-                      id="s_price"
-                      value={formData.stock}
-                      onChange={handleInputChange}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="3000"
-                      required
-                    />
-                  </div>
-
-                  <div className="w-full mt-2 mb-1">
-                    <label
-                      htmlFor="video"
-                      className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Video Link
-                    </label>
-                    <input
-                      type="text"
-                      name="video"
-                      id="video"
-                      value={formData.video}
-                      onChange={handleInputChange}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="3000"
-                    />
-                  </div>
-                </div>
-                {/* submit buttons */}
-                <div className="bg-gray-200 dark:bg-gray-500 rounded-t grid grid-cols-2 gap-4 p-1 mt-3">
-                  <button
-                    type="submit"
-                    className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+                      <div className="flex items-center">
+                        <span>{columnMapping[column] || column}</span>
+                        {sortBy === column && sortOrder === "asc" ? (
+                          <BsCaretUpFill className="ml-1" />
+                        ) : (
+                          <BsCaretDownFill className="ml-1" />
+                        )}
+                      </div>
+                    </th>
+                  ))}
+                  {actions && (
+                    <th scope="col" className="cursor-pointer px-2 py-3 mr-4">
+                      <span className="">Actions</span>
+                    </th>
+                  )}
+                </tr>
+              </thead>
+              <tbody
+                className={`h-full w-full items-center ${isLoading ? "" : ""}`}
+              >
+                {isLoading ? (
+                  <td
+                    colSpan={columns.length + (actions ? 1 : 0)}
+                    className="text-center py-4"
                   >
-                    {isLoading ? <div>Uploading..</div> : "Save"}
+                    <div className="h-72 flex items-center justify-center animate-pulse">
+                      <ThreeDots className="text-blue-500" />
+                    </div>
+                  </td>
+                ) : (
+                  sortData(filteredData)
+                    .slice(offset, offset + itemsPerPage)
+                    .map((row, index) => (
+                      <tr
+                        key={row.id}
+                        className="border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-700 odd:bg-primary-50 odd:dark:bg-gray-900 even:bg-gray-100 even:dark:bg-gray-800"
+                      >
+                        <td className="px-4 py-2">{offset + index + 1}</td>
+
+                        {columns.map((column) => (
+                          <td
+                            key={column}
+                            className={`px-4 py-2  ${
+                              column === "name"
+                                ? "font-medium text-gray-900 "
+                                : ""
+                            }`}
+                          >
+                            {editStates[row.id] ? (
+                              <input
+                                type="text"
+                                className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                value={
+                                  editedData[row.id]?.[column] || row[column]
+                                }
+                                onChange={(e) =>
+                                  handleEditFieldChange(
+                                    row.id,
+                                    column,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            ) : column === "image" ? (
+                              <img
+                                src={row[column]}
+                                alt=""
+                                className="rounded-full w-8 h-8"
+                              />
+                            ) : (
+                              row[column]
+                            )}
+                          </td>
+                        ))}
+                        {actions && (
+                          <td className="flex-1 justify-between m-auto px-2">
+                            {editStates[row.id] ? (
+                              savingRows.has(row.id) ? (
+                                <div className="text-center">
+                                  <Spinner
+                                    animation="border"
+                                    role="status"
+                                  ></Spinner>
+                                </div>
+                              ) : (
+                                <div className="flex justify-start items-center space-x-2">
+                                  <button
+                                    onClick={() => handleSaveEdit(row)}
+                                    className="text-green-500"
+                                  >
+                                    <TooltipComponent title="Save">
+                                      <TiTickOutline className="text-xl" />
+                                    </TooltipComponent>
+                                  </button>
+                                  <button
+                                    onClick={() => handleCancelEdit(row)}
+                                    className="text-red-500"
+                                  >
+                                    <TooltipComponent title="Cancel">
+                                      <GrRevert className="text-xl" />
+                                    </TooltipComponent>
+                                  </button>
+                                </div>
+                              )
+                            ) : (
+                              <div className="flex justify-start items-center space-x-2">
+                                {onQuote && (
+                                  <button
+                                    onClick={() => handleQuote(row)}
+                                    className="text"
+                                  >
+                                    <TooltipComponent title="Quote">
+                                      <RiChatQuoteFill className="text-xl text-green-600" />
+                                    </TooltipComponent>
+                                  </button>
+                                )}
+
+                                {onEdit && (
+                                  <button
+                                    onClick={() => handleEditInventory(row)}
+                                    className="text-blue-500"
+                                  >
+                                    <span>Edit</span>
+                                  </button>
+                                )}
+
+                                {onDelete && (
+                                  <button
+                                    onClick={() => handleDelete(row)}
+                                    className="text-orange-500"
+                                  >
+                                    <TooltipComponent title="Delete">
+                                      <RiDeleteBinLine className="text-xl" />
+                                    </TooltipComponent>
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </td>
+                        )}
+                      </tr>
+                    ))
+                )}
+              </tbody>{" "}
+            </table>
+
+            {showPagination && (
+              <div className="flex justify-between me-4 px-4 p-2">
+                <span className="text-sm text-gray-700 dark:text-gray-400">
+                  Showing{" "}
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {offset + 1}
+                  </span>{" "}
+                  to{" "}
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {Math.min(offset + itemsPerPage, filteredData.length)}
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {filteredData.length}
+                  </span>{" "}
+                  Entries
+                </span>
+                <div className="inline-flex mt-2 xs:mt-0">
+                  <button
+                    onClick={handlePrevPage}
+                    className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-600 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    <svg
+                      className="w-3.5 h-3.5 me-2 rtl:rotate-180"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 14 10"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13 5H1m0 0 4 4M1 5l4-4"
+                      />
+                    </svg>
+                    Prev
                   </button>
                   <button
-                    type="submit"
-                    className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+                    onClick={handleNextPage}
+                    className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-600 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                   >
-                    Save&Edit
+                    Next
+                    <svg
+                      className="w-3.5 h-3.5 ms-2 rtl:rotate-180"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 14 10"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M1 5h12m0 0L9 1m4 4L9 9"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
-            </form>
+            )}
           </div>
         </div>
       </div>
-
-  
-    </section>
+    </>
   );
 }
