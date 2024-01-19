@@ -19,7 +19,7 @@ export const VendorApiSlice = apiSlice.injectEndpoints({
 
     deleteVendor: builder.mutation({
       query: (id) => ({
-        url: `/vendors${id}`,
+        url: `/vendors/${id}`,
         method: "DELETE",
       }),
     }),
