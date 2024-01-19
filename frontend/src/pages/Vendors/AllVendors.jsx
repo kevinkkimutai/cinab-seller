@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ReusableTable } from "../components";
+import { ReusableTable } from "../../components";
 import {
   useGetOrdersMutation,
   useUpdateOrderMutation,
   useDeleteOrderMutation,
-} from "../actions/OrderAction";
+} from "../../actions/OrderAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectOrders,
   setOrder,
   updateOrder as updateOrderAction,
-} from "../reducers/OrderReducers";
+} from "../../reducers/OrderReducers";
 import { Spinner } from "react-bootstrap";
 
 
@@ -177,7 +177,7 @@ export default function Orders() {
   const heading = (
 
     <div className="bg-blue h-10">
-      <h1 className="font-bold text-xl ml-3 ">Your Orders</h1>
+      <h1 className="font-bold text-xl ml-3 ">All Vendors</h1>
     </div>
 
   )
