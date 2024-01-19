@@ -1,5 +1,16 @@
 {
   "development": {
+    "username": "root",
+    "password": "",
+    "database": "cinab",
+    "host": "127.0.0.1",
+    "port": 2000,
+    "dialect": "mysql",
+    "dialectOptions": {
+      "ssl": false
+    }
+  },
+  "": {
     "username": "ugiuhnbvokave",
     "password": "1u4@217kJbb@",
     "database": "dbheawk4u7vsfk",
