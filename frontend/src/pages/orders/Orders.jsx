@@ -1,95 +1,113 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ReusableTable } from "../components";
+import { ReusableTable } from "../../components";
 import {
-  useGetProductsMutation,
-  useUpdateProductMutation,
-  useDeleteProductMutation,
-} from "../actions/ProductAction";
+  useGetOrdersMutation,
+  useUpdateOrderMutation,
+  useDeleteOrderMutation,
+} from "../../actions/OrderAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  selectProducts,
-  setProduct,
-  updateProduct as updateProductAction,
-} from "../reducers/ProductReducers";
+  selectOrders,
+  setOrder,
+  updateOrder as updateOrderAction,
+} from "../../reducers/OrderReducers";
+import { Spinner } from "react-bootstrap";
 
-export default function Products({header}) {
+
+export default function Orders() {
   const [loading, setLoading] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [getProducts] = useGetProductsMutation();
-  const [updateProduct] = useUpdateProductMutation();
-  const [deleteProduct] = useDeleteProductMutation();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [getOrders] = useGetOrdersMutation();
+  const [updateOrder] = useUpdateOrderMutation();
+  const [deleteOrder] = useDeleteOrderMutation();
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // Get Products from the store
-  const productData = useSelector(selectProducts);
+  // Get Orders from the store
+  const orderData = useSelector(selectOrders);
   const dispatch = useDispatch();
 
   // FUNCTION TO FETCH DATA
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getProducts();
+      const res = await getOrders();
       console.log(res);
       if (!res.data) {
-        console.log("Failed to get Products");
+        console.log("Failed to get Orders");
       } else {
-        // Dispatch the Products to store them in the store.
-        dispatch(setProduct(res.data));
+        // Dispatch the Orders to store them in the store.
+        dispatch(setOrder(res.data));
       }
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
     }
-  }, [dispatch, getProducts]);
+  }, [dispatch, getOrders]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  // update product
-  const handleUpdateProduct = async (e) => {
+  // update Order
+  const handleUpdateOrder = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setLoading(true)
     try {
-      if (selectedProduct) {
+      if (selectedOrder) {
         const formData = new FormData();
 
-        formData.append("id", selectedProduct.id);
-        formData.append("name", selectedProduct.name);
-        formData.append("stock", selectedProduct.stock);
-        formData.append("price", selectedProduct.price || 0);
-        formData.append("brand", selectedProduct.brand || "");
-        formData.append("category", selectedProduct.category || "");
-        formData.append("description", selectedProduct.description || "");
-        formData.append("approval", selectedProduct.approval || "");
+        formData.append("id", selectedOrder.id);
+        formData.append("name", selectedOrder.productName);
+        formData.append("stock", selectedOrder.stock);
+        formData.append("price", selectedOrder.price || 0);
+        formData.append("brand", selectedOrder.brand || "");
+        formData.append("category", selectedOrder.category || "");
+        formData.append("description", selectedOrder.description || "");
+        formData.append("approval", selectedOrder.approval || "");
 
         // Handle the image based on its type
         if (selectedImage instanceof File) {
           formData.append("image", selectedImage);
-        } else if (typeof selectedProduct.image === "string") {
-          // Assuming selectedProduct.image is a string representing the image path
+        } else if (typeof selectedOrder.image === 'string') {
+          // Assuming selectedOrder.image is a string representing the image path
           // If it's something else, adjust this part accordingly
-          formData.append("image", selectedProduct.image);
+          formData.append("image", selectedOrder.image);
         }
 
-        const { data } = await updateProduct({
-          id: selectedProduct.id,
+        const { data } = await updateOrder({
+          id: selectedOrder.id,
           formData,
         });
 
-        console.log("Product updated successfully:");
-        console.log("Updated Product Data:", data);
+        console.log('Order updated successfully:');
+        console.log("Updated Order Data:", data);
 
-        dispatch(updateProductAction(data));
+        dispatch(updateOrderAction(data));
 
         setSelectedImage(null);
         document.getElementById("crud-modal").classList.add("hidden");
       }
     } catch (error) {
-      console.error("Error updating product:", error);
+      console.error("Error updating Order:", error);
     } finally {
-      setLoading(false);
+      setLoading(false)
+    }
+  };
+
+
+
+  // function to handle Order deletion
+  const handleDeleteOrder = async (OrderId) => {
+    try {
+      // Call the deleteOrder mutation with the correct id parameter
+      await deleteOrder(OrderId);
+
+      // Fetch the latest Orders and update the Redux store
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting Order:", error);
     }
   };
 
@@ -101,9 +119,9 @@ export default function Products({header}) {
       // Log the selected image
       console.log("Selected Image:", file);
 
-      // Update selectedProduct with the new image
-      setSelectedProduct({
-        ...selectedProduct,
+      // Update selectedOrder with the new image
+      setSelectedOrder({
+        ...selectedOrder,
         image: file,
       });
     } else {
@@ -111,17 +129,32 @@ export default function Products({header}) {
     }
   };
 
+
+
   const handleModalInputChange = (e) => {
-    setSelectedProduct({
-      ...selectedProduct,
+    setSelectedOrder({
+      ...selectedOrder,
       [e.target.name]: e.target.value,
     });
   };
 
+
+
+  // Filter Orders based on search query
+  const filteredOrders = orderData.filter((order) =>
+    order.productName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const handleEdit = (row) => {
     console.log(row.id);
-    setSelectedProduct(row);
+    setSelectedOrder(row)
+    // // Find the selected Order for editing
+    // const OrderToEdit = row.find(
+    //   (Order) => Order.id === OrderId
+    // );
+    // setSelectedOrder(OrderToEdit);
 
+    // // Open the modal
     document.getElementById("crud-modal").classList.remove("hidden");
   };
 
@@ -130,23 +163,44 @@ export default function Products({header}) {
       "Are you sure you want to delete products?"
     );
     if (confirmDelete) {
-      const productId = rowIndex.id; // Renamed to avoid naming conflicts
+      const orderId = rowIndex.id; // Renamed to avoid naming conflicts
       try {
-         await deleteProduct(productId);
-        dispatch(deleteProduct(productId));
+        await deleteOrder(orderId);
+
+        // dispatch(deleteproduct(res.data));
+        fetchData();
       } catch (error) {
         console.error(error);
       }
     }
   };
- 
+  const heading = (
+
+    <div className="bg-blue h-10">
+      <h1 className="font-bold text-xl ml-3 ">Your Orders</h1>
+    </div>
+
+  )
 
   return (
     <>
+
+
+
       <ReusableTable
-        columns={["image", "name", "stock", "discount_price", "previous_price"]}
-        data={productData}
-        header={header}
+
+        columns={[
+          "id",
+          "productName",
+          "stock",
+          "price",
+          "brand",
+          "category",
+          "description",
+
+        ]}
+        data={orderData}
+        header={heading}
         itemsPerPage={10}
         isLoading={loading}
         actions={[
@@ -156,18 +210,23 @@ export default function Products({header}) {
           },
           {
             label: "Delete",
-            onClick: handleDeleteClick,
+            onClick: handleDeleteClick
+            ,
           },
+
         ]}
         // isError={errMsg}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
         columnMapping={{
-          name: "Product Name",
-          discount_price: "Discount",
+          id: "ID",
+          name: "Company Name",
           status: "Status",
-          image: "Image",
-          previous_price: "previous price",
+          Image: "Company Logo",
+          email: "Company Email",
+          KRA: "KRA Pin",
+          contact: "Phone No.",
+          location: "Address",
         }}
       />
 
@@ -184,10 +243,7 @@ export default function Products({header}) {
             {/* <!-- Modal header --> */}
             <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-                Update{" "}
-                <span className="font-bold  text-green-600 dark:text-green-400 uppercase">
-                  {selectedProduct?.name || ""}
-                </span>
+                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedOrder?.name || ""}</span>
               </h3>
               <button
                 type="button"
@@ -215,7 +271,7 @@ export default function Products({header}) {
               </button>
             </div>
             {/* <!-- Modal body --> */}
-            <form onSubmit={handleUpdateProduct}>
+            <form onSubmit={handleUpdateOrder}>
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">
                 {/* <!-- Display selected files --> */}
                 {selectedImage ? (
@@ -224,18 +280,17 @@ export default function Products({header}) {
                     src={URL.createObjectURL(selectedImage)}
                     alt="Selected Img"
                   />
-                ) : selectedProduct?.image &&
-                  typeof selectedProduct.image === "string" ? (
+                ) : selectedOrder?.image && typeof selectedOrder.image === 'string' ? (
                   <img
                     className="rounded-lg"
-                    src={selectedProduct.image}
-                    alt={selectedProduct.name}
+                    src={selectedOrder.image}
+                    alt={selectedOrder.name}
                   />
-                ) : selectedProduct?.image instanceof File ? (
+                ) : selectedOrder?.image instanceof File ? (
                   <img
                     className="rounded-lg"
-                    src={URL.createObjectURL(selectedProduct.image)}
-                    alt={selectedProduct.name}
+                    src={URL.createObjectURL(selectedOrder.image)}
+                    alt={selectedOrder.name}
                   />
                 ) : null}
 
@@ -263,20 +318,22 @@ export default function Products({header}) {
                       htmlFor="name"
                       className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      Product Name
+                      Order Name
                     </label>
                     <input
                       type="text"
                       name="name"
                       id="name"
-                      value={selectedProduct?.name || ""}
+                      value={selectedOrder?.name || ""}
                       onChange={handleModalInputChange}
                       className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Type product name"
+                      placeholder="Type Order name"
                       required=""
                     />
                   </div>
                 </div>
+
+
 
                 <div className="w-full">
                   <label
@@ -289,10 +346,10 @@ export default function Products({header}) {
                     type="text"
                     name="brand"
                     id="brand"
-                    value={selectedProduct?.brand || ""}
+                    value={selectedOrder?.brand || ""}
                     onChange={handleModalInputChange}
                     className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Product brand"
+                    placeholder="Order brand"
                     required=""
                   />
                 </div>
@@ -305,7 +362,7 @@ export default function Products({header}) {
                   </label>
                   <select
                     id="category"
-                    value={selectedProduct?.category || ""}
+                    value={selectedOrder?.category || ""}
                     onChange={(e) => handleModalInputChange(e)}
                     className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   >
@@ -326,7 +383,7 @@ export default function Products({header}) {
                   <input
                     type="number"
                     name="price"
-                    value={selectedProduct?.price || ""}
+                    value={selectedOrder?.price || ""}
                     onChange={handleModalInputChange}
                     id="price"
                     className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -345,7 +402,7 @@ export default function Products({header}) {
                     type="number"
                     name="stock"
                     id="stock"
-                    value={selectedProduct?.stock || ""}
+                    value={selectedOrder?.stock || ""}
                     onChange={handleModalInputChange}
                     className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="10"
@@ -363,24 +420,26 @@ export default function Products({header}) {
                     name="description"
                     id="description"
                     rows="4"
-                    value={selectedProduct?.description || ""}
+                    value={selectedOrder?.description || ""}
                     onChange={handleModalInputChange}
                     className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Your description here"
                   ></textarea>
                 </div>
 
+
                 <div className="mt- sm:mt- sm:col-span-2">
                   <button
                     type="submit"
                     className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
                   >
-                    {loading ? (
-                      <div role="status">
-                        <span className="">updating...</span>
-                      </div>
-                    ) : (
-                      "Update Product"
+                    {loading ? (<div role="status">
+
+                      <span className="">updating...</span>
+                    </div>) : (
+
+                      "Update Order"
+
                     )}
                   </button>
                 </div>
@@ -390,5 +449,5 @@ export default function Products({header}) {
         </div>
       </div>
     </>
-  );
+  )
 }
