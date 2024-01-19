@@ -17,10 +17,10 @@ const authPersistConfig = {
 
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducers),
-  vendor: vendorReducer,
-  product: productReducer,
-  order: orderReducer,
-  offer: offerReducer,
+  Vendor: vendorReducer,
+  Product: productReducer,
+  Order: orderReducer,
+  Offer: offerReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 

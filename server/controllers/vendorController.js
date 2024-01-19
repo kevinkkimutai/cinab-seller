@@ -31,6 +31,8 @@ const vendorController = {
     }
   },
 
+  
+
   getVendorById: async (req, res) => {
     const { id } = req.params;
     try {
