@@ -7,6 +7,7 @@ const uploads = require("../middlewares/UploadingFiles");
  * Get all orders.
  */
 router.get("/items", itemsController.getAllitems);
+router.put("/items/:id", itemsController.updateitems);
 router.get("/brands", itemsController.getBrands);
 router.get("/category", itemsController.getData);
 

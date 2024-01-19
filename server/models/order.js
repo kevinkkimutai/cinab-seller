@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class order extends Model {
     /**
@@ -13,29 +11,33 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  order.init({
-    user_id: DataTypes.INTEGER,
-    cart: DataTypes.TEXT,
-    currency_sign: DataTypes.STRING,
-    currency_value: DataTypes.STRING,
-    discount: DataTypes.TEXT,
-    shipping: DataTypes.TEXT,
-    payment_method: DataTypes.STRING,
-    txnid: DataTypes.STRING,
-    tax: DataTypes.DOUBLE,
-    charge_id: DataTypes.STRING,
-    transaction_number: DataTypes.STRING,
-    order_status: DataTypes.STRING,
-    shipping_info: DataTypes.TEXT,
-    billing_info: DataTypes.TEXT,
-    payment_status: DataTypes.STRING,
-    created_at: DataTypes.DATE,
-    updated_at: DataTypes.DATE,
-    state_price: DataTypes.DOUBLE,
-    state: DataTypes.TEXT
-  }, {
-    sequelize,
-    modelName: 'order',
-  });
+  order.init(
+    {
+      user_id: DataTypes.INTEGER,
+      cart: DataTypes.TEXT,
+      currency_sign: DataTypes.STRING,
+      currency_value: DataTypes.STRING,
+      discount: DataTypes.TEXT,
+      shipping: DataTypes.TEXT,
+      payment_method: DataTypes.STRING,
+      txnid: DataTypes.STRING,
+      tax: DataTypes.DOUBLE,
+      charge_id: DataTypes.STRING,
+      transaction_number: DataTypes.STRING,
+      order_status: DataTypes.STRING,
+      shipping_info: DataTypes.TEXT,
+      billing_info: DataTypes.TEXT,
+      payment_status: DataTypes.STRING,
+      created_at: DataTypes.DATE,
+      updated_at: DataTypes.DATE,
+      state_price: DataTypes.DOUBLE,
+      state: DataTypes.TEXT,
+    },
+    {
+      sequelize,
+      modelName: "order",
+      timestamps: false,
+    }
+  );
   return order;
 };
