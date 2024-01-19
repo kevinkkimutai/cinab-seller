@@ -7,14 +7,20 @@ import {
   Offers,
   Orders,
   Login,
-  Products,
   ProductsForm,
   Error,
   Sales,
+  AllVendors,
+  RegisteredVendors,
+  PendingVendors,
+  DeclinedVendors,
+  PendingProducts,
+  PendingOrders,
+  ClearedOrders,
 } from "./pages";
 import { NavBar } from "./components";
 import { useStateContext } from "./contexts/ContextProvider";
-import Vendor from "./pages/Vendors/Vendor";
+import Vendor from "./pages/Vendors/steps/Vendor";
 import Layout from "./components/Layout";
 import NotFound from "./components/NotFound";
 
@@ -39,12 +45,23 @@ export default function App() {
 
           <Route path="/dashboard/" element={<Layout />}>
             <Route path="vendor" element={<Dashboard />} />
-            <Route path="products" element={<Products />} />
-            <Route path="inventory" element={<Inventory />} />
-            <Route path="offers" element={<Offers />} />
-            <Route path="orders" element={<Orders />} />
+            <Route path="all-vendors" element={<AllVendors />} />
+            <Route path="registered-vendors" element={<RegisteredVendors />} />
+            <Route path="pending-vendors" element={<PendingVendors />} />
+            <Route path="declined-vendors" element={<DeclinedVendors />} />
+
+            <Route path="products" element={<Inventory header="Products List"/>} />
             <Route path="productform" element={<ProductsForm />} />
+            <Route path="pending-products" element={<PendingProducts />} />
+            <Route path="inventory" element={<Inventory header="Inventory List"/>} />
+
+            <Route path="orders" element={<Orders />} />
+            <Route path="pending-orders" element={<PendingOrders />} />
+            <Route path="cleared-orders" element={<ClearedOrders />} />
+
+            <Route path="offers" element={<Offers />} />
             <Route path="sales" element={<Sales />} />
+
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

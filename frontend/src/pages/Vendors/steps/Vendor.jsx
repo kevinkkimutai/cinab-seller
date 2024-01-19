@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { StepperController, Stepper } from "../../pages";
-import { StepperContext } from "../../contexts/StepperContext";
-import BusinessInformation from "./steps/BusinessInformation";
-import ShippingInformation from "./steps/ShippingInfoamation";
-import ProfileComponent from "./steps/ShopInfomation";
-import Complete from "./steps/Complete";
-import PaymentInformation from "./steps/PaymentInformation";
+import { StepperController, Stepper } from "../..";
+import { StepperContext } from "../../../contexts/StepperContext";
+import BusinessInformation from "./BusinessInformation";
+import ShippingInformation from "./ShippingInfoamation";
+import ProfileComponent from "./ShopInfomation";
+import Complete from "./Complete";
+import PaymentInformation from "./PaymentInformation";
 
 export default function Vendor() {
   // STEPS DESCRIPTION
