@@ -9,6 +9,14 @@ export const VendorApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    selfRegister: builder.mutation({
+      query: (formData) => ({
+        url: "/self-register",
+        method: "POST",
+        body: formData,
+      }),
+    }),
+
     deleteVendor: builder.mutation({
       query: (id) => ({
         url: `/vendors${id}`,
@@ -34,6 +42,7 @@ export const VendorApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+  useSelfRegisterMutation,
   useCreateVendorMutation,
   useDeleteVendorMutation,
   useGetVendorsMutation,

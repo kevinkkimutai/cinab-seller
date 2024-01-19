@@ -85,7 +85,41 @@ const sendSecretCode = async ({ email, secretCode, next }) => {
   }
 };
 
+const sellerCenter = async ({ email, link, companyName }) => {
+  try {
+    const mailOptions = {
+      from: "onlinecinab@gmail.com",
+      to: email,
+      subject: "Exciting Updates from CinabOnline",
+      html: `
+        <p>Dear ${companyName},</p>
+        <p>We extend our sincere gratitude for choosing CinabOnline, your go-to e-commerce partner in the region.</p>
+        <p>We are thrilled to inform you about some exciting new changes that will enhance your experience on our platform.</p>
+        <p>To explore these updates and make the most of our improved features, please click the link below:</p>
+        <a href="${link}">Click here to get started</a>
+        <p>If you did not initiate this request, kindly report it to us at cinabsupport@gmail.com.</p>
+        <p>Thank you for being a valued member of the CinabOnline family. We look forward to serving you better!</p>
+        <p>Best regards,<br />CinabOnline Team</p>
+      `,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.error("Error sending email:", error);
+      } else {
+        console.log("Mail sent");
+      }
+      if (next) {
+        next(); // Proceed to the next middleware or route handler
+      }
+    });
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+};
+
 module.exports = {
+  sellerCenter,
   sendEmails,
   sendSecretCode,
   sendingEmails,
