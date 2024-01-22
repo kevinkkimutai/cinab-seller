@@ -194,15 +194,11 @@ export default function Vendors({ header }) {
             label: "Delete",
             onClick: handleDeleteClick,
           },
-          {
-            label: "Approve",
-            onClick: handleDeleteClick,
-          },
+         
         ]}
         // isError={errMsg}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
-        onApprove={handleDeleteClick}
         columnMapping={{
           name: "Company Name",
           status: "Status",
