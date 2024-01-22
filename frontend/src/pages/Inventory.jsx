@@ -13,6 +13,7 @@ import {
 import { toast } from "react-toastify";
 import UpdateProductsFn from "./products/updatedProudct";
 import { Button, Spinner } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Products({ header }) {
   const [loading, setLoading] = useState(false);
@@ -75,6 +76,10 @@ export default function Products({ header }) {
   const handleClose = (e) => {
     setShowUpdatePage(false);
   };
+const navigate = useNavigate()
+  const handleAddProduct = (e) => {
+    navigate("/dashboard/productform")
+  }
 
   return (
     <>
@@ -96,7 +101,10 @@ export default function Products({ header }) {
           data={productData}
           header={header}
           itemsPerPage={10}
+          btnFn={handleAddProduct}
           // isLoading={loading}
+          
+          onButton="Add Product"
           onDelete={handleOpenModal}
           onEdit={handleEdit}
           actions={[
