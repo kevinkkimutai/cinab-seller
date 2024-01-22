@@ -4,6 +4,7 @@ const {
   Vendor,
   category,
   brand,
+  order,
   subcategory,
   chield_category,
 } = require("../models");
@@ -21,12 +22,34 @@ function generateRandomString(length) {
 const API = "https://cinab-seller-2m51.onrender.com";
 
 const itemsController = {
+  // getAllitems: async (req, res) => {
+  //   try {
+  //     const items = await item.findAll({
+  //       order: [["id", "ASC"]],
+  //     });
+  //     res.status(200).json(items);
+  //   } catch (error) {
+  //     res.status(500).json({ message: error.message });
+  //   }
+  // },
+
   getAllitems: async (req, res) => {
     try {
-      const items = await item.findAll({
+      const orders = await order.findAll({
         order: [["id", "ASC"]],
       });
-      res.status(200).json(items);
+
+      // Extracting only the "cart" information from each order
+      const carts = orders.map((order) => {
+        return {
+          cart: JSON.parse(order.cart), // Parse the cart string to convert it into an object
+        };
+      });
+
+      // Extract and flatten product IDs
+      const productIDs = carts.flatMap((item) => Object.keys(item.cart));
+
+      res.status(200).json(productIDs);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -138,40 +161,18 @@ const itemsController = {
 
   updateitems: async (req, res) => {
     const { id } = req.params;
-    const { pname, category, stock, brand, description, price, approval } =
-      req.body;
-
+    const updateditemsData = req.body;
+    console.log(updateditemsData);
     try {
-      // Check if a file was uploaded
-      const imageFile = req.file;
-      const imagePath = imageFile
-        ? `${API}/uploads/${imageFile.filename}`
-        : null;
-
       // Check if the items with the given ID exists
-      const items = await items.findByPk(id);
+      const items = await item.findByPk(id);
 
       if (!items) {
         return res.status(404).json({ error: "items Not Found" });
       }
 
-      // Update the items with the new information
-      const updateditemsData = {
-        pname,
-        category,
-        stock,
-        brand,
-        description,
-        price,
-        approval,
-      };
-
-      // Only update the image if a file was uploaded
-      if (imageFile) {
-        updateditemsData.image = imagePath;
-      }
-
       const updateditems = await items.update(updateditemsData);
+
 
       return res.status(200).json(updateditems);
     } catch (err) {
@@ -180,6 +181,7 @@ const itemsController = {
     }
   },
 
+  
   deleteitems: async (req, res) => {
     const { itemsId } = req.params;
 

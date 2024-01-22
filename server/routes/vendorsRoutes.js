@@ -5,6 +5,8 @@ const uploadMiddleware = require("../middlewares/UploadingFiles");
 
 // Define routes for vendors
 router.get("/vendors", vendorController.getVendors);
+router.put("/approve/:id", vendorController.approveVendor);
+router.put("/reject/:id", vendorController.rejectVendor);
 router.get("/vendors/:id", vendorController.getVendorById);
 router.post("/vendors", vendorController.createVendor);
 router.post("/self-register", vendorController.selfRegistration);

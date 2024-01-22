@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addProduct,
   selectBrands,
   selectCategory,
   selectChildCategory,
@@ -10,43 +9,27 @@ import {
   setCategory,
   setChildCategory,
   setSubCategory,
+  updateProduct,
 } from "../../reducers/ProductReducers";
 import { toast } from "react-toastify";
 import {
-  useCreateProductMutation,
   useGetBrandsMutation,
   useGetCategoryMutation,
+  useUpdateItemsMutation,
 } from "../../actions/ProductAction";
 import ReusablePath from "../../components/ReusablePath";
-export default function ProductsForm() {
-  const [formData, setFormData] = useState({
-    userId: 1,
-    category_id: null,
-    subcategory_id: null,
-    childcategory_id: null,
-    tax_id: 3,
-    brand_id: null,
-    name: "",
-    slug: "",
-    sku: "",
-    tags: "",
-    video: null,
-    sort_details: "",
-    specification_description: [],
-    is_specification: 0,
-    details: "",
-    photo: "",
-    discount_price: 0,
-    previous_price: 0,
-    stock: 0,
-    status: 0,
-    file: null,
-    link: "",
-    image: null,
-    gallery: [],
-  });
-
-  const [createProduct] = useCreateProductMutation();
+export default function UpdateProductsFn({
+  formData,
+  handleClose,
+  setSelectedProduct,
+}) {
+  const handleInputChange = (e) => {
+    setSelectedProduct((prevProduct) => ({
+      ...prevProduct,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const [updateProductMutation] = useUpdateItemsMutation();
   const [getCategory] = useGetCategoryMutation();
   const [getBrands] = useGetBrandsMutation();
   const dispatch = useDispatch();
@@ -91,33 +74,11 @@ export default function ProductsForm() {
     fetchBrands();
   }, [fetchBrands]);
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const handleFileChange = (e) => {
-    const files = e.target.files;
-    if (e.target.name === "image") {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        image: files[0],
-      }));
-    } else if (e.target.name === "gallery") {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        gallery: [...prevFormData.gallery, ...files],
-      }));
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     const formDataToSend = new FormData();
-
     formDataToSend.append("category_id", formData.category_id);
     formDataToSend.append("subcategory_id", formData.subcategory_id);
     formDataToSend.append("childcategory_id", formData.childcategory_id);
@@ -143,19 +104,18 @@ export default function ProductsForm() {
     formDataToSend.append("file", formData.file);
     formDataToSend.append("link", formData.link);
 
-    formDataToSend.append("image", formData.image);
-    formData.gallery.forEach((file, index) => {
-      formDataToSend.append("gallery", file);
-    });
-
     console.log("formData before:", formData);
 
     try {
-      const { data } = await createProduct(formDataToSend);
+      const { data } = await updateProductMutation({
+        formData,
+        id: formData.id,
+      });
       if (data) {
-        dispatch(addProduct(data));
+        dispatch(updateProduct(data));
         console.log("formData after:", formData);
         toast.success(`${formData.name} added to Products successfully`);
+        handleClose();
       } else {
         toast.error("Failed to create product");
       }
@@ -169,19 +129,14 @@ export default function ProductsForm() {
 
   return (
     <>
-      <ReusablePath header="Add Products" />
-
-      <div className="h-full max-h-full bg-primary-50 dark:bg-gray-800 overflow-auto scrollbar-hidden shadow-lg rounded-lg">
-        <form
-          className=""
-          onSubmit={handleSubmit}
-          encType="multipart/form-data"
-        >
-          <div className="grid grid-cols-1 p-4 md:grid-cols-3 gap-4 ">
-            <div className="">
+      <ReusablePath header="Update Product" />
+      <div className="h-full overflow-auto mt-2 scrollbar-hidden p-4 bg-primary-50 dark:bg-slate-800 shadow-lg rounded-lg">
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4">
+            <div class="mb-5">
               <label
-                htmlFor="name"
-                className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+                for="email"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Product Name *
               </label>
@@ -191,72 +146,7 @@ export default function ProductsForm() {
                 id="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Type product name"
-                required
-              />
-            </div>
-
-            <div className="">
-              <label
-                htmlFor="brand"
-                className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Select Product Brand *
-              </label>
-
-              <select
-                id="brand"
-                name="brand_id"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                value={formData.brand_id}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
-              >
-                <option value="">Select brand</option>
-                {brandsData.map((brand) => (
-                  <option key={brand.id} value={brand.id}>
-                    {brand.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="">
-              <label
-                htmlFor="s_price"
-                className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Stock *
-              </label>
-              <input
-                type="number"
-                name="stock"
-                id="s_price"
-                value={formData.stock}
-                onChange={handleInputChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="3000"
-                required
-              />
-            </div>
-
-            <div className="">
-              <label
-                htmlFor="video"
-                className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Video Link
-              </label>
-              <input
-                type="text"
-                name="video"
-                id="video"
-                value={formData.video}
-                onChange={handleInputChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="3000"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
 
@@ -271,6 +161,7 @@ export default function ProductsForm() {
                 type="number"
                 name="price"
                 id="price"
+                min="0"
                 value={formData.wholesale_price}
                 onChange={handleInputChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -278,7 +169,6 @@ export default function ProductsForm() {
                 required
               />
             </div>
-
             <div className="">
               <label
                 htmlFor="d_price"
@@ -290,12 +180,38 @@ export default function ProductsForm() {
                 type="number"
                 name="discount_price"
                 id="d_price"
+                min="0"
                 value={formData.discount_price}
                 onChange={handleInputChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="3000"
-                required
               />
+            </div>
+
+            <div className="">
+              <label
+                htmlFor="brand"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Select Product Brand *
+              </label>
+
+              <select
+                id="brand"
+                name="brand_id"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={formData.brand_id}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              >
+                <option value="">Select brand</option>
+                {brandsData.map((brand) => (
+                  <option key={brand.id} value={brand.id}>
+                    {brand.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="">
@@ -334,7 +250,6 @@ export default function ProductsForm() {
                 ))}
               </select>
             </div>
-
             <div className="">
               <label
                 htmlFor="sub_category"
@@ -395,55 +310,45 @@ export default function ProductsForm() {
                 ))}
               </select>
             </div>
+
             <div className="">
               <label
+                htmlFor="s_price"
                 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                htmlFor="image"
               >
-                Upload file(s)
+                Stock *
               </label>
               <input
-                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                id="image"
-                type="file"
-                name="image"
-                onChange={handleFileChange}
-                accept=".png, .jpg, .jpeg"
-                //  multiple
-                // required
+                type="number"
+                name="stock"
+                id="s_price"
+                min="1"
+                value={formData.stock}
+                onChange={handleInputChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="3000"
+                required
               />
-
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                PNG, JPG, or JPEG files (Max. 5MB each)
-              </p>
             </div>
 
-            <div>
+            <div className="">
               <label
+                htmlFor="video"
                 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                htmlFor="gallery"
               >
-                Gallary{" "}
+                Video Link
               </label>
               <input
-                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                id="gallery"
-                type="file"
-                name="gallery"
-                onChange={handleFileChange}
-                accept=".png, .jpg, .jpeg"
-                multiple
-                // required
+                type="text"
+                name="video"
+                id="video"
+                value={formData.video}
+                onChange={handleInputChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="3000"
               />
-
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                PNG, JPG, or JPEG files (Max. 5MB each)
-              </p>
             </div>
-          </div>
 
-          {/* image section */}
-          <div className="grid grid-cols-1 mb-6 p-4 md:grid-cols-3 gap-4 ">
             <div className="">
               <label
                 htmlFor="short_description"
@@ -482,7 +387,7 @@ export default function ProductsForm() {
               ></textarea>
             </div>
 
-            <div className="">
+            <div className="s">
               <label
                 htmlFor="spec_description"
                 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
@@ -501,15 +406,20 @@ export default function ProductsForm() {
               ></textarea>
             </div>
           </div>
-
-          <div className="bg-primary-50 mb-4 dark:bg-gray-500  shadow-lg flex justify-end  mt-2">
+          <div className=" flex justify-end mt-4">
             <button
               type="submit"
-              className="px-7 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+              className=" px-8 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
             >
-              {isLoading ? <div>Uploading..</div> : "Save"}
+              {isLoading ? <div>Updating..</div> : "Save"}
             </button>
-         
+            <button
+              type="button"
+              onClick={handleClose}
+              className=" items-center justify-center px-8 py-2.5 text-sm font-medium text-gray-800 bg-gray-100 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+            >
+              Cancel{" "}
+            </button>
           </div>
         </form>
       </div>
