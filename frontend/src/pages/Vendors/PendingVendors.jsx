@@ -7,6 +7,8 @@ import {
   useGetVendorsMutation,
   useUpdateVendorMutation,
   useDeleteVendorMutation,
+  useAcceptVendorsMutation,
+  useRejectVendorsMutation,
 } from "../../actions/VendorAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,15 +17,15 @@ import {
   updateVendors,
 } from "../../reducers/VendorReducer";
 
-
 export default function Vendors({ header }) {
   const [loading, setLoading] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [getVendorsMutation] = useGetVendorsMutation();
+  const [acceptVendor] = useAcceptVendorsMutation();
+  const [rejectVendor] = useRejectVendorsMutation();
   const [updateVendorMutation] = useUpdateVendorMutation();
   const [deleteVendorMutation] = useDeleteVendorMutation();
   const [selectedImage, setSelectedImage] = useState(null);
-
 
   // Get Vendors from the store
   const VendorData = useSelector(selectVendors);
@@ -39,8 +41,10 @@ export default function Vendors({ header }) {
         console.log("Failed to get Vendors");
       } else {
         // Dispatch the Vendors to store them in the store.
-        const filteredVendors = res.data.filter(vendor => vendor.status === "pending");
-  
+        const filteredVendors = res.data.filter(
+          (vendor) => vendor.status === "pending"
+        );
+
         // Dispatch the filtered vendors to store them in the Redux store.
         dispatch(setVendor(filteredVendors));
       }
@@ -145,45 +149,45 @@ export default function Vendors({ header }) {
     document.getElementById("crud-modal").classList.remove("hidden");
   };
 
-// Define the handleApprove function
-// ...
+  // Define the handleApprove function
+  // ...
 
-// Define the handleApprove function
-const handleApprove = async (row) => {
-  setSelectedVendor(row);
-  try {
-    if (row) {
-      // Update the status to "approved"
-      const  data  = await updateVendorMutation({
-        id: row.id,
-        formData: {
-          ...row,
-          status: "approved",
-        },
-      });
-
-   
-      console.log("Updated Vendor Data:", data);
-
-      dispatch(updateVendors(data));
-
-      // Optionally, you can perform additional actions or show a success message
-      toast.success("Vendor approved successfully");
+  // Define the handleApprove function
+  const handleApprove = async (row) => {
+    setSelectedVendor(row);
+    try {
+      if (row) {
+        const res = acceptVendor(row.id);
+        dispatch(setVendor(res.data));
+        fetchData();
+        toast.success("Vendor approved successfully");
+      }
+    } catch (error) {
+      console.error("Error approving Vendor:", error);
+      // Handle error, show an error message, etc.
+      toast.error("Failed to approve Vendor");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Error approving Vendor:", error);
-    // Handle error, show an error message, etc.
-    toast.error("Failed to approve Vendor");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
-// ...
-
-
-
-
+  const handleReject = async (row) => {
+    setSelectedVendor(row);
+    try {
+      if (row) {
+        const res = rejectVendor(row.id);
+        dispatch(setVendor(res.data));
+        fetchData();
+        toast.success("Vendor rejected successfully");
+      }
+    } catch (error) {
+      console.error("Error approving Vendor:", error);
+      // Handle error, show an error message, etc.
+      toast.error("Failed to approve Vendor");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -217,7 +221,7 @@ const handleApprove = async (row) => {
         // isError={errMsg}
         onEdit={handleEdit}
         onApprove={handleApprove}
-        onReject={handleEdit}
+        onReject={handleReject}
         columnMapping={{
           name: "Company Name",
           status: "Status",
@@ -228,7 +232,7 @@ const handleApprove = async (row) => {
           location: "Address",
         }}
       />
-      
+
       {/* <!-- Main modal --> */}
       <div
         id="crud-modal"
@@ -263,9 +267,9 @@ const handleApprove = async (row) => {
                 >
                   <path
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                   />
                 </svg>

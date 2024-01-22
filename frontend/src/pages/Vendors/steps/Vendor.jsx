@@ -48,8 +48,8 @@ export default function Vendor() {
   };
 
   return (
-    <div class="p-4 bg-slate-100 h-full">
-      <div class="p-4 border-2  border-gray-200 bg-white  rounded-lg shadow-lg dark:border-gray-700 ">
+    <div className="p-4 bg-slate-100 h-full">
+      <div className="p-4 border-2  border-gray-200 bg-white  rounded-lg shadow-lg dark:border-gray-700 ">
         <div className="mb-4 mx-auto max-w-screen">
           <Stepper steps={steps} currentStep={currentStep} />
         </div>

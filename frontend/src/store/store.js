@@ -12,7 +12,7 @@ import offerReducer from "../reducers/OfferReducer";
 const authPersistConfig = {
   key: "auth",
   storage,
-  whitelist: ["token", "roles", "user"],
+  whitelist: ["token", "roles", "user" , "refreshToken"],
 };
 
 const rootReducer = combineReducers({

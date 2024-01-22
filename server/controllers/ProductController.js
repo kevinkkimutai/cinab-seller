@@ -1,6 +1,6 @@
 // controllers/productController.js
 
-const { Product, User, item , } = require("../models");
+const { Product, User, item } = require("../models");
 const API = "https://cinab-seller-2m51.onrender.com";
 
 const productController = {
@@ -17,11 +17,12 @@ const productController = {
 
   getAllProducts: async (req, res) => {
     try {
+      const id = req.user.id;
+      console.log("id" ,id);
       const items = await item.findAll();
       res.status(200).json(items);
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
       res.status(500).json({ message: error.message });
     }
   },
@@ -75,7 +76,6 @@ const productController = {
       const imagePath = `https://cinab-seller-2m51.onrender.com/uploads/file-1705133682452.png`;
       try {
         const newProduct = await item.create({
- 
           vendorId: "1",
           category_id: "1",
           subcategory_id: "1",
@@ -116,7 +116,7 @@ const productController = {
 
         res.status(201).json(newProduct);
       } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(400).json({ message: error.message });
       }
     } catch (error) {

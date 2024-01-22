@@ -19,7 +19,7 @@ export default function ReusableTable({
   btnFn,
   onApprove,
   onButton,
-  onReject
+  onReject,
 }) {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
@@ -76,7 +76,7 @@ export default function ReusableTable({
 
   const handleReject = (row) => {
     if (onReject) {
-      onDelete(row);
+      onReject(row);
     }
   };
 
@@ -175,7 +175,7 @@ export default function ReusableTable({
                 <div className="relative mb- mt-">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <svg
-                      class="w-4 h-4 text-gray-800 dark:text-white me-2"
+                      className="w-4 h-4 text-gray-800 dark:text-white me-2"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -183,9 +183,9 @@ export default function ReusableTable({
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                       />
                     </svg>
@@ -375,18 +375,18 @@ export default function ReusableTable({
                                     )}
                                     {onApprove && (
                                       <button
-                                      onClick={() => handleApprove(row)}
-                                      className="inline-flex items-center px-2 py-0.5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                    >
-                                     Approve
-                                    </button>
+                                        onClick={() => handleApprove(row)}
+                                        className="inline-flex items-center px-2 py-0.5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                      >
+                                        Approve
+                                      </button>
                                     )}
                                     {onReject && (
                                       <button
                                         onClick={() => handleReject(row)}
                                         className="inline-flex items-center px-1.5 py-0.5 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
                                       >
-                                       Reject
+                                        Reject
                                       </button>
                                     )}
                                     {onDelete && (
