@@ -8,16 +8,29 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    getCategory: builder.mutation({
+      query: () => ({
+        url: "/category",
+        method: "GET",
+      }),
+    }),
+    getBrands: builder.mutation({
+      query: () => ({
+        url: "/brands",
+        method: "GET",
+      }),
+    }),
     deleteProduct: builder.mutation({
         query: (id) => ({
-          url: `/products/${id}`,  // Add a slash before the id
+          url: `/items/${id}`,  // Add a slash before the id
           method: "DELETE",
         }),
       }),
       
-      updateProduct: builder.mutation({
+      updateItems: builder.mutation({
         query: ({ id, formData }) => ({
-          url: `/products/${id}`,  // Use dynamic parameter for the product ID
+          url: `/items/${id}`,  // Use dynamic parameter for the product ID
           method: "PUT",
           body: formData,
         }),
@@ -25,7 +38,7 @@ export const ProductApiSlice = apiSlice.injectEndpoints({
       
       createProduct: builder.mutation({
         query: (formData) => ({
-          url: `/products`,
+          url: `/items`,
           method: "POST",
           body: formData,
         }),
@@ -37,5 +50,7 @@ export const {
   useCreateProductMutation,
   useDeleteProductMutation,
   useGetProductsMutation,
-  useUpdateProductMutation,
+  useGetCategoryMutation,
+  useGetBrandsMutation,
+  useUpdateItemsMutation,
 } = ProductApiSlice;

@@ -4,16 +4,23 @@ module.exports = (sequelize) => {
   class Product extends Model {
     static associate(models) {
       // Define Associations
-      Product.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
+      Product.belongsTo(models.Vendor, {
+        foreignKey: "vendorId",
+        as: "vendor",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      Product.hasMany(models.Offer, {
+        foreignKey: "productId",
+        as: "offers",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
 
   Product.init(
     {
-      userId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       pname: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -30,13 +37,24 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      vendorId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+        references: { model: "vendors", key: "id" },
+      },
       image: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       price: {
         type: DataTypes.FLOAT,
         allowNull: false,
+      },
+      Rprice: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
       },
       approval: {
         type: DataTypes.STRING,
@@ -46,7 +64,7 @@ module.exports = (sequelize) => {
       stock: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
     },
     {
       sequelize,

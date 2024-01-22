@@ -1,57 +1,44 @@
-const { Model, DataTypes } = require("sequelize");
-const bcrypt = require("bcrypt");
-
-module.exports = (sequelize) => {
-  class User extends Model {
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class user extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
     static associate(models) {
-      // Insert here Associations
-      User.hasMany(models.Product, { foreignKey: 'userId', as: 'products' });
+      // define association here
     }
   }
-
-  User.init(
-    {
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      otp: {
-        type: DataTypes.STRING,
-      },
-        email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-          isEmail: {
-            msg: "Invalid email format",
-          },
-        },
-      },
-
-      role: {
-        type: DataTypes.STRING,
-      },
-      refreshToken: {
-        type: DataTypes.TEXT,
-      },
-
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: {
-            args: [6, 100],
-            msg: "Password must be at least 6 characters long",
-          },
-        },
-      },
-    },
-    {
-      sequelize,
-      modelName: "User",
-    }
-  );
-
-  return User;
+  user.init({
+    first_name: DataTypes.STRING,
+    last_name: DataTypes.STRING,
+    phone: DataTypes.STRING,
+    email: DataTypes.STRING,
+    photo: DataTypes.STRING,
+    email_token: DataTypes.STRING,
+    password: DataTypes.STRING,
+    ship_address1: DataTypes.STRING,
+    ship_address2: DataTypes.STRING,
+    ship_zip: DataTypes.STRING,
+    ship_city: DataTypes.STRING,
+    ship_country: DataTypes.STRING,
+    ship_company: DataTypes.STRING,
+    bill_address1: DataTypes.STRING,
+    bill_address2: DataTypes.STRING,
+    bill_zip: DataTypes.STRING,
+    bill_city: DataTypes.STRING,
+    bill_country: DataTypes.STRING,
+    bill_company: DataTypes.STRING,
+    created_at: DataTypes.DATE,
+    updated_at: DataTypes.DATE,
+    state_id: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: 'user',
+  });
+  return user;
 };

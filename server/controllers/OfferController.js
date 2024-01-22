@@ -1,70 +1,48 @@
-// controllers/productController.js
-const { Offer } = require('../models');
+const { Offer, Product } = require("../models");
 
 const offerController = {
+  // get products with their offers
+  getAllOffers: async (req, res) => {
+    try {
+      const products = await Product.findAll({
+        include: {
+          model: Offer,
+          as: "offers",
+          where: { status: "active" },
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
+        },
+      });
 
-getAllOffers: async (req, res) => {
-  try {
-    const offers = await Offer.findAll();
-    res.json(offers);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-},
+      const combinedData = products.reduce((acc, product) => {
+        product.offers.forEach((offer) => {
+          acc.push({
+            productId: product.id,
+            productName: product.pname,
+            description: product.description,
+            brand: product.brand,
+            category: product.category,
+            image: product.image,
+            Rprice: product.Rprice,
+            stock: product.stock,
+            Approval: product.approval,
+            offerId: offer.id,
+            offerPrice: offer.price,
+            fromDate: offer.fromDate,
+            toDate: offer.toDate,
+            status: offer.status,
+          });
+        });
 
+        return acc;
+      }, []);
 
-getOfferById: async (req, res) => {
-  const offerId = req.params.id;
-
-  try {
-    const offer = await Offer.findByPk(offerId);
-
-    if (!offer) {
-      return res.status(404).json({ message: 'Product not found' });
+      res.json(combinedData);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
-
-    res.json(offer);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-},
-
-updateOffer: async (req, res) => {
-  const offerId = req.params.id;
-  const { name, price, description, image } = req.body;
-
-  try {
-    const offer = await Offer.findByPk(offerId);
-
-    if (!offer) {
-      return res.status(404).json({ message: 'Offer not found' });
-    }
-
-    await offer.update({productName, description, category, inStock, previousPrice, offerPrice, endDate});
-
-    res.json(offer);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-},
-
-deleteOffer: async (req, res) => {
-  const offerId = req.params.id;
-
-  try {
-    const offer = await Offer.findByPk(offerId);
-
-    if (!offer) {
-      return res.status(404).json({ message: 'Offer not found' });
-    }
-
-    await offer.destroy();
-
-    res.json({ message: 'Offer deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-},
-
+  },
 };
+
 module.exports = offerController;

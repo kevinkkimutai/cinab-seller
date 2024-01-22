@@ -2,18 +2,25 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Vendor extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      Vendor.belongsTo(models.User, {
+        foreignKey: "userId",
+        as: "user",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      Vendor.hasMany(models.Product, {
+        foreignKey: "vendorId",
+        as: "products",
+      });
     }
   }
   Vendor.init(
     {
       companyName: {
+        type: DataTypes.STRING,
+      },
+      secretCode: {
         type: DataTypes.STRING,
       },
       companyEMail: {
@@ -22,11 +29,18 @@ module.exports = (sequelize, DataTypes) => {
       Kra: {
         type: DataTypes.STRING,
       },
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: "pending",
+      },
       licence: {
         type: DataTypes.STRING,
       },
       AddressOne: {
         type: DataTypes.STRING,
+      },
+      userId: {
+        type: DataTypes.INTEGER,
       },
       AddressTwo: {
         type: DataTypes.STRING,
@@ -34,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       city: {
         type: DataTypes.STRING,
       },
+
       state: {
         type: DataTypes.STRING,
       },
@@ -80,6 +95,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       shopZone: {
+        type: DataTypes.STRING,
+      },
+      username: {
+        type: DataTypes.STRING,
+      },
+      image: {
         type: DataTypes.STRING,
       },
     },

@@ -1,24 +1,37 @@
 {
-  "development": {
-    "username": "cinab_user",
-    "password": "1UbBYmZJ8U6Xc8Lr5rESiV8luUuPtAOg",
-    "database": "cinab",
-    "host": "dpg-cm02c5ud3nmc738ia2rg-a.oregon-postgres.render.com",
-    "port": 5432,
-    "dialect": "postgres",
+
+  "": {
+    "username": "ugiuhnbvokave",
+    "password": "1u4@217kJbb@",
+    "database": "dbheawk4u7vsfk",
+    "host": "cinab.co.ke",
+    "port": 3306,
+    "dialect": "mysql",
     "dialectOptions": {
-      "ssl": true
+      "ssl": false
+    }
+  },
+
+  "development": {
+    "username": "root",
+    "password": "",
+    "database": "training_cinab",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "dialect": "mysql",
+    "dialectOptions": {
+      "ssl": false
     }
   },
   "production": {
-    "username": "cinab_user",
-    "password": "1UbBYmZJ8U6Xc8Lr5rESiV8luUuPtAOg",
-    "database": "cinab",
-    "host": "dpg-cm02c5ud3nmc738ia2rg-a.oregon-postgres.render.com",
-    "port": 5432,
-    "dialect": "postgres",
+    "username": "ugiuhnbvokave",
+    "password": "1u4@217kJbb@",
+    "database": "dbheawk4u7vsfk",
+    "host": "cinab.co.ke",
+    "port": 3306,
+    "dialect": "mysql",
     "dialectOptions": {
-      "ssl": true
+      "ssl": false
     }
   }
 }

@@ -1,227 +1,217 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from "react";
+import { ReusableTable } from "../components";
+import {
+  useGetProductsMutation,
+  useDeleteProductMutation,
+} from "../actions/ProductAction";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectProducts,
+  setProduct,
 
-export default function Inventory() {
+} from "../reducers/ProductReducers";
+import { toast } from "react-toastify";
+import UpdateProductsFn from "./products/updatedProudct";
+import { Button, Spinner } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
+
+export default function Products({ header }) {
+  const [loading, setLoading] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [getProducts] = useGetProductsMutation();
+  const [deleteProductMutation] = useDeleteProductMutation();
+  const [showUpdatePage, setShowUpdatePage] = useState(false);
+
+  const productData = useSelector(selectProducts);
+  const dispatch = useDispatch();
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await getProducts();
+      if (!res.data) {
+        console.log("Failed to get Products");
+      } else {
+        dispatch(setProduct(res.data));
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [dispatch, getProducts]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handleEdit = (row) => {
+    setShowUpdatePage(true);
+    setSelectedProduct(row);
+  };
+
+  //   open modal
+
+  const handleOpenModal = async (row) => {
+    setSelectedProduct(row);
+    // Open the modal
+    document.getElementById("popup-modal").classList.remove("hidden");
+  };
+
+  const handleDeleteClick = async () => {
+    const id = selectedProduct.id;
+    setLoading(true);
+    try {
+      await deleteProductMutation(id);
+      toast.success("Item deleted successfully");
+      document.getElementById("popup-modal").classList.add("hidden");
+      fetchData();
+    } catch (error) {
+      toast.error("Failed to delete");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClose = (e) => {
+    setShowUpdatePage(false);
+  };
+const navigate = useNavigate()
+  const handleAddProduct = (e) => {
+    navigate("/dashboard/productform")
+  }
+
   return (
-    <div>
-  
-
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
-    <div class="bg-purple h-10">
-    <h1 class="font-bold text-xl ml-3 ">Stock Inventory</h1>
-
-</div>
-<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-
-
-    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-            
-            <th scope="col" className="px-6 py-3">
-                Product name
-            </th>
-           
-            <th scope="col" className="px-6 py-3">
-                Category
-            </th>
-            
-            <th scope="col" className="px-6 py-3">
-                In-Stock
-            </th>
-            <th scope="col" className="px-6 py-3">
-                Units Left
-            </th>
-          
-            <th scope="col" className="px-6 py-3">
-                Action
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-            
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Apple MacBook Pro 17"
-            </th>
-
-   
-            <td class="px-6 py-4">
-
-                Laptop
-            </td>
-            <td className="px-6 py-4">
-                Yes
-            </td>
-          
-            <td className="px-6 py-4">
-                99
-            </td>
-           
-            <td className="flex items-center px-6 py-4">
-                <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-            </td>
-        </tr>
-        <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-           
-            
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Microsoft Surface Pro
-            </th>
-
-          
-            <td class="px-6 py-4">
-
-                Laptop PC
-            </td>
-            <td className="px-6 py-4">
-                No
-            </td>
-           
-            <td className="px-6 py-4">
-                1
-            </td>
-           
-            <td className="flex items-center px-6 py-4">
-                <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-            </td>
-        </tr>
-        <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-         
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Magic Mouse 2
-            </th>
-
-       
-            <td class="px-6 py-4">
-
-                Accessories
-            </td>
-            <td className="px-6 py-4">
-                Yes
-            </td>
-          
-            <td className="px-6 py-4">
-                99
-            </td>
-          
-            <td className="flex items-center px-6 py-4">
-                <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-            </td>
-        </tr>
-        <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Apple Watch
-            </th>
-
-    
-            <td class="px-6 py-4">
-
-                Watches
-            </td>
-            <td className="px-6 py-4">
-                Yes
-            </td>
-           
-            <td className="px-6 py-4">
-                19
-            </td>
-           
-            <td className="flex items-center px-6 py-4">
-                <a href="#" data-modal-target="crud-modal" data-modal-toggle="crud-modal" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-            </td>
-        </tr>
-     
-    </tbody>
-</table>
-</div>
-
-<div id="crud-modal" tabindex="-1" aria-hidden="true" className="hidden md:pt-12 md:ml-24 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-<div className="relative p-4 w-full max-w-2xl max-h-full">
-    {/* <!-- Modal content --> */}
-    <div className="relative bg-primary-50 rounded-lg shadow dark:bg-gray-700">
-        {/* <!-- Modal header --> */}
-        <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
-            <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-               Update Product
-            </h3>
-            <button type="button" className="text-red-600 bg-transparent hover:bg-red-200 hover:text-red-600 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-red-800" data-modal-toggle="crud-modal">
-                <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                </svg>
-                <span className="sr-only">Close modal</span>
-            </button>
-        </div>
-        {/* <!-- Modal body --> */}
-        <form >
-    <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">
-      <div className="sm:col-span-2">
-        <label for="name" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Product Name</label>
-        <input type="text" name="name" id="name" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Type product name" required="" />
-      </div>
-     
-      <div>
-        <label for="category" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-        <select id="category" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-          <option >Select category</option>
-          <option value="TV">TV/Monitors</option>
-          <option value="PC">PC</option>
-          <option value="GA">Gaming/Console</option>
-          <option value="PH">Phones</option>
-        </select>
-      </div>
-      <div>
-        <label for="category" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">In-Stock</label>
-        <select id="category" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-          <option >Select</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-          
-        </select>
-      </div>
-      <div>
-        <label for="item-stock" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Stock/Quantity</label>
-        <input type="number" name="item-weight" id="item-weight" className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="10" required="" />
-      </div>
-
-   
-
-      <div>
-        <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-white" for="multiple_files">Upload file(s)</label>
-        <input
-          className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-          id="multiple_files"
-          type="file"
-          accept=".png, .jpg, .jpeg"
-          multiple
-       
+    <>
+      {showUpdatePage ? (
+        <UpdateProductsFn
+          formData={selectedProduct}
+          setSelectedProduct={setSelectedProduct}
+          handleClose={handleClose}
         />
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">PNG, JPG, or JPEG files (Max. 5MB each)</p>
-      </div>
+      ) : (
+        <ReusableTable
+          columns={[
+            "image",
+            "name",
+            "stock",
+            "discount_price",
+            "previous_price",
+          ]}
+          data={productData}
+          header={header}
+          itemsPerPage={10}
+          btnFn={handleAddProduct}
+          // isLoading={loading}
+          
+          onButton="Add Product"
+          onDelete={handleOpenModal}
+          onEdit={handleEdit}
+          actions={[
+            {
+              label: "Edit",
+              onClick: handleEdit,
+            },
+            {
+              label: "Delete",
+              onClick: handleOpenModal,
+            },
+          ]}
+          columnMapping={{
+            name: "Product Name",
 
-      <div v-if="selectedFiles.length > 0">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mt-4 mb-1">Selected Files:</h3>
-        <ul>
-          <li v-for="(file, index) in selectedFiles" key="index"></li>
-        </ul>
-      </div>
-      <div className="mt-4 sm:mt- sm:col-span-2">
-        <button
-          type="submit"
-          className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
-        >
-          Update Product
-        </button>
-      </div>
-    </div>
-  </form>
-    </div>
-</div>
-</div> 
+            discount_price: "Discount",
+            status: "Status",
+            image: "Image",
+            previous_price: "previous price",
+          }}
+        />
+      )}
 
-</div>
-  )
+      {/* start delete modal */}
+      <div
+        id="popup-modal"
+        tabindex="-1"
+        class="hidden justify-center bg-gray-900/80 mx-auto flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 j items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+      >
+        <div class="relative p-4 w-full max-w-lg max-h-full">
+          <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 ">
+            <button
+              type="button"
+              onClick={() =>
+                document.getElementById("popup-modal").classList.add("hidden")
+              }
+              class="absolute top-3 end-2.5 text-gray-800 bg-red-200 dark:bg-red-400 hover:bg-red-300 hover:text-red-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white"
+            >
+              <svg
+                class="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-4 md:p-5 text-center">
+              <svg
+                class="mx-auto mb-4 text-red-700 w-12 h-12 dark:text-red-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+              <h3 class="mb-5 text-lg font-normal text-gray-700 dark:text-gray-400">
+                Are you sure you want to delete{" "}
+                <span className="underline text-red-700 dark:text-red-500 font-bold uppercase">
+                  {" "}
+                  {selectedProduct?.pname || ""}
+                </span>{" "}
+                ?
+              </h3>
+
+              <Button
+                type="button"
+                onClick={() => handleDeleteClick()}
+                class="text-white bg-red-600 py-1 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-3 text-center me-2"
+              >
+                {loading ? (
+                  <div className="flex flex-row gap-3">
+                    <Spinner aria-label="Spinner button example" size="sm" />
+                    <span className="pl-3">Deleting...</span>
+                  </div>
+                ) : (
+                  "Yes!"
+                )}
+              </Button>
+              <button
+                onClick={() =>
+                  document.getElementById("popup-modal").classList.add("hidden")
+                }
+                type="button"
+                class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+              >
+                No?
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }

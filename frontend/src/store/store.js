@@ -1,25 +1,27 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { thunk } from "redux-thunk";
-import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
+import thunk from "redux-thunk"; 
 import { apiSlice } from "../services/api";
-import AuthReducers from "../reducers/AuthReducers";
-import VendorReducer from "../reducers/VendorReducer";
-import ProductReducer from "../reducers/ProductReducers";
+import authReducers from "../reducers/AuthReducers";
+import vendorReducer from "../reducers/VendorReducer";
+import productReducer from "../reducers/ProductReducers";
+import orderReducer from "../reducers/OrderReducers";
+import offerReducer from "../reducers/OfferReducer";
 
 const authPersistConfig = {
   key: "auth",
   storage,
   whitelist: ["token", "roles", "user"],
-  stateReconciler: autoMergeLevel2,
 };
 
 const rootReducer = combineReducers({
-  auth: persistReducer(authPersistConfig, AuthReducers),
+  auth: persistReducer(authPersistConfig, authReducers),
+  Vendor: vendorReducer,
+  Product: productReducer,
+  Order: orderReducer,
+  Offer: offerReducer,
 
-  Vendor: VendorReducer,
-  Product: ProductReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 

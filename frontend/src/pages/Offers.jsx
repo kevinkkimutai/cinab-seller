@@ -1,376 +1,290 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { ReusableTable } from "../components";
+import {
+  useGetOffersMutation,
+  useUpdateOfferMutation,
+  useDeleteOfferMutation,
+} from "../actions/OfferAction";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectOffers,
+  setOffer,
+  updateOffer as updateOfferAction,
+} from "../reducers/OfferReducer";
+import { Spinner } from "react-bootstrap";
+
 
 export default function Offers() {
-  return (
-    <div>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 justify-center">
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedOffer, setSelectedOffer] = useState(null);
+  const [getOffers] = useGetOffersMutation();
+  const [updateOffer] = useUpdateOfferMutation();
+  const [deleteOffer] = useDeleteOfferMutation();
+  const [selectedImage, setSelectedImage] = useState(null);
 
-      <div className="bg-orange h-10">
-            <h1 className="font-bold text-xl ml-3 ">Your Current Offers</h1>
-          </div>
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-         
+  // Get Offers from the store
+  const offerData = useSelector(selectOffers);
+  const dispatch = useDispatch();
+
+  // FUNCTION TO FETCH DATA
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await getOffers();
+      console.log(res);
+      if (!res.data) {
+        console.log("Failed to get Offers");
+      } else {
+        // Dispatch the Offers to store them in the store.
+        dispatch(setOffer(res.data));
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [dispatch, getOffers]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // update Offer
+  const handleUpdateOffer = async (e) => {
+    e.preventDefault();
+    setLoading(true)
+    try {
+      if (selectedOffer) {
+        const formData = new FormData();
+
+        formData.append("id", selectedOffer.id);
+        formData.append("productName", selectedOffer.productName);
+        formData.append("stock", selectedOffer.stock);
+        formData.append("price", selectedOffer.price || 0);
+        formData.append("brand", selectedOffer.brand || "");
+        formData.append("category", selectedOffer.category || "");
+        formData.append("description", selectedOffer.description || "");
+        formData.append("offerPrice", selectedOffer.offerPrice || "");
+        formData.append("fromDate", selectedOffer.fromDate || "");
+        formData.append("toDate", selectedOffer.toDate || "");
+        formData.append("status", selectedOffer.status || "");
+
+        // Handle the image based on its type
+        if (selectedImage instanceof File) {
+          formData.append("image", selectedImage);
+        } else if (typeof selectedOffer.image === 'string') {
+          // Assuming selectedOffer.image is a string representing the image path
+          // If it's something else, adjust this part accordingly
+          formData.append("image", selectedOffer.image);
+        }
+
+        const { data } = await updateOffer({
+          id: selectedOffer.id,
+          formData,
+        });
+
+        console.log('Offer updated successfully:');
+        console.log("Updated Offer Data:", data);
+
+        dispatch(updateOfferAction(data));
+
+        setSelectedImage(null);
+        document.getElementById("crud-modal").classList.add("hidden");
+      }
+    } catch (error) {
+      console.error("Error updating Offer:", error);
+    } finally {
+      setLoading(false)
+    }
+  };
 
 
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
 
-                Product name
-              </th>
+  // function to handle Offer deletion
+  const handleDeleteOffer = async (offerId) => {
+    try {
+      // Call the deleteOffer mutation with the correct id parameter
+      await deleteOffer(offerId);
 
-              <th scope="col" className="px-6 py-3">
-                Description
-              </th>
+      // Fetch the latest Offers and update the Redux store
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting Offer:", error);
+    }
+  };
 
-              <th scope="col" className="px-6 py-3">
-                Category
-              </th>
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
 
-              <th scope="col" className="px-6 py-3">
-                In-Stock
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Previous Price
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Offer Price
-              </th>
-              <th scope="col" className="px-6 py-3">
-                End Date
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Apple MacBook Pro 17"
-              </th>
-              <td className="px-6 py-4">Silver</td>
-              <td className="px-6 py-4">Laptop</td>
-              <td className="px-6 py-4">Yes</td>
+      // Log the selected image
+      console.log("Selected Image:", file);
 
-              <td className="px-6 py-4">$2999</td>
-              <td className="px-6 py-4">$2500</td>
-              <td className="px-6 py-4">15-7-23</td>
-              <td className="flex items-center px-6 py-4">
-                <a
-                  href="#"
-                  data-modal-target="crud-modal"
-                  data-modal-toggle="crud-modal"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit
-                </a>
-                <a
-                  href="#"
-                  className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
-                >
-                  Remove
-                </a>
-              </td>
-            </tr>
-            <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Microsoft Surface Pro
-              </th>
-              <td className="px-6 py-4">White</td>
-              <td className="px-6 py-4">Laptop PC</td>
-              <td className="px-6 py-4">No</td>
+      // Update selectedOffer with the new image
+      setSelectedOffer({
+        ...selectedOffer,
+        image: file,
+      });
+    } else {
+      setSelectedImage(null); // Reset the state when no file is selected
+    }
+  };
 
-              <td className="px-6 py-4">$1999</td>
-              <td className="px-6 py-4">$2500</td>
-              <td className="px-6 py-4">15-7-23</td>
 
-              <td className="flex items-center px-6 py-4">
-                <a
-                  href="#"
-                  data-modal-target="crud-modal"
-                  data-modal-toggle="crud-modal"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit
-                </a>
-                <a
-                  href="#"
-                  className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
-                >
-                  Remove
-                </a>
-              </td>
-            </tr>
-            <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Magic Mouse 2
-              </th>
-              <td className="px-6 py-4">Black</td>
-              <td className="px-6 py-4">Accessories</td>
-              <td className="px-6 py-4">Yes</td>
 
-              <td className="px-6 py-4">$99</td>
-              <td className="px-6 py-4">$2500</td>
-              <td className="px-6 py-4">15-7-23</td>
+  const handleModalInputChange = (e) => {
+    setSelectedOffer({
+      ...selectedOffer,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-              <td className="flex items-center px-6 py-4">
-                <a
-                  href="#"
-                  data-modal-target="crud-modal"
-                  data-modal-toggle="crud-modal"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit
-                </a>
-                <a
-                  href="#"
-                  className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
-                >
-                  Remove
-                </a>
-              </td>
-            </tr>
-            <tr className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Apple Watch
-              </th>
-              <td className="px-6 py-4">Black</td>
-              <td className="px-6 py-4">Watches</td>
-              <td className="px-6 py-4">Yes</td>
 
-              <td className="px-6 py-4">$199</td>
-              <td className="px-6 py-4">$2500</td>
-              <td className="px-6 py-4">15-7-23</td>
 
-              <td className="flex items-center px-6 py-4">
-                <a
-                  href="#"
-                  data-modal-target="crud-modal"
-                  data-modal-toggle="crud-modal"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit
-                </a>
-                <a
-                  href="#"
-                  className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
-                >
-                  Remove
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div
-        id="crud-modal"
-        tabindex="-1"
-        aria-hidden="true"
-        className="hidden md:pt-12 md:ml-24 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
-      >
-        <div className="relative p-4 w-full max-w-2xl max-h-full">
-          {/* <!-- Modal content --> */}
-          <div className="relative bg-primary-50 rounded-lg shadow dark:bg-gray-700">
-            {/* <!-- Modal header --> */}
-            <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
-              <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-                Update Offers
-              </h3>
-              <button
-                type="button"
-                className="text-red-600 bg-transparent hover:bg-red-200 hover:text-red-600 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-red-800"
-                data-modal-toggle="crud-modal"
-              >
-                <svg
-                  className="w-3 h-3"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 14"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                  />
-                </svg>
-                <span className="sr-only">Close modal</span>
-              </button>
-            </div>
-            {/* <!-- Modal body --> */}
-            <form>
-              <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">
-                <div className="sm:col-span-2">
-                  <label
-                    for="name"
-                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Product Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Type product name"
-                    required=""
-                  />
-                </div>
-
-                <div>
-                  <label
-                    for="category"
-                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Category
-                  </label>
-                  <select
-                    id="category"
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    <option>Select category</option>
-                    <option value="TV">TV/Monitors</option>
-                    <option value="PC">PC</option>
-                    <option value="GA">Gaming/Console</option>
-                    <option value="PH">Phones</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    for="category"
-                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    In-Stock
-                  </label>
-                  <select
-                    id="category"
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    <option>Select</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                  </select>
-                </div>
-
-                <div className="sm:col-span-1">
-                  <label
-                    for="description"
-                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Description
-                  </label>
-                  <textarea
-                    id="description"
-                    rows="4"
-                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Your description here"
-                  ></textarea>
-                </div>
-                <div>
-                  <label
-                    for="end-date"
-                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    End date
-                  </label>
-                  <input
-                    type="number"
-                    name="item-weight"
-                    id="item-weight"
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="10-12-23"
-                    required=""
-                  />
-                </div>
-                <div>
-                  <label
-                    for="previous-price"
-                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Previous price
-                  </label>
-                  <input
-                    type="number"
-                    name="item-weight"
-                    id="item-weight"
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="10"
-                    required=""
-                  />
-                </div>
-                <div>
-                  <label
-                    for="offer-price"
-                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Offer price
-                  </label>
-                  <input
-                    type="number"
-                    name="item-weight"
-                    id="item-weight"
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="10"
-                    required=""
-                  />
-                </div>
-
-                <div>
-                  <label
-                    className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                    for="multiple_files"
-                  >
-                    Upload file(s)
-                  </label>
-                  <input
-                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                    id="multiple_files"
-                    type="file"
-                    accept=".png, .jpg, .jpeg"
-                    multiple
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    PNG, JPG, or JPEG files (Max. 5MB each)
-                  </p>
-                </div>
-                {/* <!-- Display selected files --> */}
-                <div v-if="selectedFiles.length > 0">
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mt-4 mb-1">
-                    Selected Files:
-                  </h3>
-                  <ul>
-                    <li v-for="(file, index) in selectedFiles">file</li>
-                  </ul>
-                </div>
-                <div className="mt-4 sm:mt- sm:col-span-2">
-                  <button
-                    type="submit"
-                    className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
-                  >
-                    Update Product
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+  // Filter Offers based on search query
+  const filteredOffers = offerData.filter((offer) =>
+    offer.productName.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleEdit = (row) => {
+    console.log(row.id);
+    setSelectedOffer(row)
+    // // Find the selected Offer for editing
+    // const OfferToEdit = row.find(
+    //   (Offer) => Offer.id === OfferId
+    // );
+    // setSelectedOffer(OfferToEdit);
+
+    // // Open the modal
+    document.getElementById("offer-modal").classList.remove("hidden");
+  };
+
+  const handleDeleteClick = async (rowIndex, id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete Suppliers?"
+    );
+    if (confirmDelete) {
+      const supplierId = rowIndex.id; // Renamed to avoid naming conflicts
+      try {
+        await deleteOffer(supplierId);
+
+        // dispatch(deleteSupplier(res.data));
+        fetchData();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+  const heading = (
+
+    <div className="bg-orange h-10">
+      <h1 className="font-bold text-xl ml-3 ">Your Offers</h1>
+    </div>
+
+  )
+  return (
+
+    <>
+
+
+
+    <ReusableTable
+
+      columns={[
+        "productId",
+        "productName",
+        "category",
+        "description",
+        "stock",
+        "Rprice",
+        "offerPrice",
+        "fromDate",
+        "toDate",
+        "status",
+        
+       
+
+      ]}
+      data={offerData}
+      header={heading}
+      itemsPerPage={10}
+      isLoading={loading}
+      actions={[
+        {
+          label: "Edit",
+          onClick: handleEdit,
+        },
+        {
+          label: "Delete",
+          onClick: handleDeleteClick
+          ,
+        },
+
+      ]}
+      // isError={errMsg}
+      onEdit={handleEdit}
+      onDelete={handleDeleteClick}
+      columnMapping={{
+        id: "ID",
+        name: "Company Name",
+        status: "Status",
+        Image: "Company Logo",
+        email: "Company Email",
+        KRA: "KRA Pin",
+        contact: "Phone No.",
+        location: "Address",
+      }}
+    />
+
+    {/* offer modal */}
+<div id="offer-modal" tabindex="-1" className="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div className="relative p-4 w-full max-w-md max-h-full">
+        <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div class="flex items-center justify-between p-2 md:p-3 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Offer "Offer name"
+                </h3>
+                <button data-modal-hide="offer-modal" type="button" className="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <div className="p-4 md:p-5 text-center">
+            <div class="p-2 md:p-1 text-start mb-3">
+                <form class="space-y-4">
+                <div>
+                        <label htmlFor="offer-p" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Offer price :</label>
+                        <input type="digit" name="offer-p" id="offer-p" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="3000" required />
+                    </div>
+
+
+                   <div className="grid grid-cols-2 gap-2">
+                   <div>
+                        <label htmlFor="from" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start date :</label>
+                        <input type="date" name="from" id="from" placeholder="01/12/2024" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
+                    </div>
+                    <div>
+                        <label htmlFor="to" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End date :</label>
+                        <input type="date" name="to" id="to" placeholder="12/12/2024" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
+                    </div>
+                   </div>
+                
+                  
+                </form>
+            </div>
+                <button data-modal-hide="offer-modal" type="button" className="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-700 dark:focus:ring-blue-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-1.5 text-center me-2">
+                   Submit
+                </button>
+                <button data-modal-hide="offer-modal" type="button" className="text-gray-500 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-1.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+  </> 
+
+  )
 }

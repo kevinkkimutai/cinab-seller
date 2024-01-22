@@ -10,17 +10,18 @@ const VendorSlice = createSlice({
       state.vendors = action.payload;
     },
 
-    addVendor: (state, action) => {
+    createVendor: (state, action) => {
       state.vendors.push(action.payload);
     },
     updateVendors: (state, action) => {
       const updatedIndex = state.vendors.findIndex(
-        (Vendor) => Vendor.id === action.payload.id
+        (vendor) => vendor.id === action.payload.id
       );
       if (updatedIndex !== -1) {
         state.vendors[updatedIndex] = action.payload;
       }
     },
+    
     deleteVendor: (state, action) => {
       state.vendors = state.vendors.filter(
         (Vendor) => Vendor.id !== action.payload.id
@@ -29,7 +30,7 @@ const VendorSlice = createSlice({
   },
 });
 
-export const { setVendor, addVendor, updateVendors, deleteVendor } =
+export const { setVendor, createVendor, updateVendors, deleteVendor } =
   VendorSlice.actions;
 
 export default VendorSlice.reducer;

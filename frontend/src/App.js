@@ -7,14 +7,24 @@ import {
   Offers,
   Orders,
   Login,
-  Products,
   ProductsForm,
+  Error,
   Sales,
   Settings,
+  AllVendors,
+  RegisteredVendors,
+  PendingVendors,
+  DeclinedVendors,
+  PendingProducts,
+  PendingOrders,
+  ClearedOrders,
+
 } from "./pages";
 import { NavBar } from "./components";
 import { useStateContext } from "./contexts/ContextProvider";
-import Vendor from "./pages/Vendors/Vendor";
+import Vendor from "./pages/Vendors/steps/Vendor";
+import Layout from "./components/Layout";
+import NotFound from "./components/NotFound";
 
 export default function App() {
   const { setCurrentColor, setCurrentMode, currentMode } = useStateContext();
@@ -28,20 +38,37 @@ export default function App() {
   }, [setCurrentColor, setCurrentMode]);
 
   return (
-    <div className={currentMode === "Dark" ? "dark" : ""}>
-      <NavBar />
-      <div className="md:w-10/12 md:ml-56 p-2 pt-20 overflow-auto scrollbar-hidden dark:bg-gray-900 w-full max-h-screen h-screen bg-slate-100">
+    <div className={currentMode === "Dark" ? "dark h-full" : " h-full"}>
+      <div className="h-full bg-slate-100">
         <Routes>
-          <Route index element={<Dashboard />} />
-          <Route path="/inventory" element={<Inventory />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/offers" element={<Offers />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/productform" element={<ProductsForm />} />
           <Route path="/login" element={<Login />} className="md:w-12/12" />
+          <Route index element={<Login />} className="md:w-12/12" />
           <Route path="/vendors/:code" element={<VendorPage />} />
           <Route path="/sales" element={<Sales />} />
           <Route path="/settings" element={<Settings />} />
+
+
+          <Route path="/dashboard/" element={<Layout />}>
+            <Route path="vendor" element={<Dashboard />} />
+            <Route path="all-vendors" element={<AllVendors header="All Vendors" />} />
+            <Route path="registered-vendors" element={<RegisteredVendors header="Rejected List Of Vendorss"/>} />
+            <Route path="pending-vendors" element={<PendingVendors header="Pending List of Vendors"/>} />
+            <Route path="declined-vendors" element={<DeclinedVendors header="Rejected List of Vendors"/>} />
+
+            <Route path="products" element={<Inventory header="Products List"/>} />
+            <Route path="productform" element={<ProductsForm />} />
+            <Route path="pending-products" element={<PendingProducts header="Pending List of Products" />} />
+            <Route path="inventory" element={<Inventory header="Inventory List"/>} />
+
+            <Route path="orders" element={<Orders />} />
+            <Route path="pending-orders" element={<PendingOrders />} />
+            <Route path="cleared-orders" element={<ClearedOrders />} />
+
+            <Route path="offers" element={<Offers />} />
+            <Route path="sales" element={<Sales />} />
+
+          </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
