@@ -197,17 +197,16 @@ const navigate = useNavigate()
             label: "Delete",
             onClick: handleDeleteClick,
           },
-          {
-            label: "Approve",
-            onClick: handleDeleteClick,
-          },
+         
         ]}
         // isError={errMsg}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
+
         onButton="Add Vendor"
         btnFn={handleAddVendor}
         onApprove={handleDeleteClick}
+
         columnMapping={{
           name: "Company Name",
           status: "Status",
