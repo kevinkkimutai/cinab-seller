@@ -11,9 +11,9 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   return (
-    <div class="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 h-full overflow-auto scrollbar-hidden">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-        <div class="flex items-center justify-center h-24 hover:bg-white rounded bg-gray-50 dark:bg-gray-800">
+    <div className="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 h-full overflow-auto scrollbar-hidden">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div className="flex items-center justify-center h-24 hover:bg-white rounded bg-gray-50 dark:bg-gray-800">
           <button
             type="button"
             onClick={() => {
@@ -41,7 +41,7 @@ export default function Dashboard() {
           </button>
         </div>
 
-        <div class="flex items-center justify-center h-24 hover:bg-white rounded bg-gray-50 dark:bg-gray-800">
+        <div className="flex items-center justify-center h-24 hover:bg-white rounded bg-gray-50 dark:bg-gray-800">
           <button
             type="button"
             onClick={() => {
@@ -69,7 +69,7 @@ export default function Dashboard() {
           </button>
         </div>
 
-        <div class="flex items-center justify-center h-24 hover:bg-white rounded bg-gray-50 dark:bg-gray-800">
+        <div className="flex items-center justify-center h-24 hover:bg-white rounded bg-gray-50 dark:bg-gray-800">
           <button
             type="button"
             onClick={() => {
@@ -97,7 +97,7 @@ export default function Dashboard() {
           </button>
         </div>
 
-        <div class="flex items-center justify-center h-24 hover:bg-white rounded bg-gray-50 dark:bg-gray-800">
+        <div className="flex items-center justify-center h-24 hover:bg-white rounded bg-gray-50 dark:bg-gray-800">
           <button
             type="button"
             onClick={() => {
@@ -126,11 +126,11 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-4 mb-4 h-full">
-        <div class=" h-full rounded bg-gray-50  overflow-auto scrollbar-hidden dark:bg-gray-800">
+      <div className="grid grid-cols-2 gap-4 mb-4 h-full">
+        <div className=" h-full rounded bg-gray-50  overflow-auto scrollbar-hidden dark:bg-gray-800">
           <TableProducts />
         </div>
-        <div class=" h-full rounded bg-gray-50  overflow-auto scrollbar-hidden dark:bg-gray-800">
+        <div className=" h-full rounded bg-gray-50  overflow-auto scrollbar-hidden dark:bg-gray-800">
           <TableResents />
         </div>
       </div>

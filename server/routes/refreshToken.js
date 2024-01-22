@@ -6,7 +6,7 @@
  */
 const express = require("express");
 const router = express.Router();
-const refreshController = require("../controllers/refershTokenController");
+const refreshController = require("../controllers/refershTokenController.js");
 
 router.get("/refresh", refreshController.getRefreshToken);
 
