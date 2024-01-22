@@ -1,5 +1,5 @@
 const { Vendor, User } = require("../models");
-const { sendSecretCode } = require("../middlewares/Verification");
+const { sendSecretCode, sellerCenter } = require("../middlewares/Verification");
 const API = "http://localhost:5000";
 const bcrypt = require("bcrypt");
 const { newUser } = require("./UserController");
@@ -46,10 +46,20 @@ const vendorController = {
     }
   },
 
-  createVendor: async (req, res) => {
+  selfRegistration: async (req, res) => {
     const { companyEmail } = req.body;
-    console.log(req.body);
+   console.log(req.body);
     try {
+      // Check if a user with the given companyEmail already exists
+      const existingUser = await User.findOne({
+        where: { email: companyEmail },
+      });
+      if (existingUser) {
+        return res
+          .status(409)
+          .send({ error: "company email already registered" });
+      }
+
       const randomString = generateRandomString(20);
       sendSecretCode({
         email: companyEmail,
@@ -61,6 +71,77 @@ const vendorController = {
       });
 
       console.log("Send mails");
+      return res.status(201).json(createdVendor);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: "Internal Server Error" });
+    }
+  },
+
+  createVendor: async (req, res) => {
+    const {
+      companyEmail,
+      companyName,
+      location,
+      AddressOne,
+      username,
+      contact,
+    } = req.body;
+    console.log(req.body);
+
+    try {
+      // Check if a user with the given companyEmail already exists
+      const existingUser = await User.findOne({
+        where: { email: companyEmail },
+      });
+      if (existingUser) {
+        return res
+          .status(409)
+          .send({ error: "company email already registered" });
+      }
+
+      // Generate a random string for additional security
+      const randomString = generateRandomString(20);
+
+      // Find the id of the last user
+      const lastUser = await User.findOne({
+        order: [["id", "DESC"]],
+      });
+      // Set a default password for the user
+      const password = "123456";
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Create a new user
+      const userDataInfo = {
+        name: username,
+        email: companyEmail,
+        role: "Vendor",
+        refreshToken: null,
+        status: "pending",
+        password: hashedPassword,
+        id: lastUser ? lastUser.id + 1 : 1,
+      };
+      const createdUser = await newUser(userDataInfo, password);
+
+      // Create a new vendor
+      const createdVendor = await Vendor.create({
+        companyEMail: companyEmail,
+        city: location,
+        companyName,
+        AddressOne,
+        username,
+        userId: createdUser.id,
+        MpesaNumber: contact,
+      });
+
+      // Send a welcome email to the new vendor
+      sellerCenter({
+        email: companyEmail,
+        link: "https://cinab-seller.vercel.app/",
+        companyName: companyName,
+      });
+
+      console.log("Sent email to", companyEmail, companyName);
       return res.status(201).json(createdVendor);
     } catch (error) {
       console.error(error);
@@ -158,7 +239,7 @@ const vendorController = {
 
         const updatedVendor = await vendor.update(vendorData);
 
-        return res.status(200).json({ updatedVendor});
+        return res.status(200).json({ updatedVendor });
       }
     } catch (error) {
       console.error(error);
