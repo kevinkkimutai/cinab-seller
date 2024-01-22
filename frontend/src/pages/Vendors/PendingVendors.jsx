@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ReusableTable } from "../../components";
+import { toast } from "react-toastify";
+import { Spinner } from "react-bootstrap";
+import { Button } from "flowbite-react";
 import {
   useGetVendorsMutation,
   useUpdateVendorMutation,
@@ -11,23 +14,23 @@ import {
   setVendor,
   updateVendors,
 } from "../../reducers/VendorReducer";
-import { Spinner } from "react-bootstrap";
+
 
 export default function Vendors({ header }) {
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [getVendorsMutation] = useGetVendorsMutation();
   const [updateVendorMutation] = useUpdateVendorMutation();
   const [deleteVendorMutation] = useDeleteVendorMutation();
   const [selectedImage, setSelectedImage] = useState(null);
 
+
   // Get Vendors from the store
   const VendorData = useSelector(selectVendors);
   const dispatch = useDispatch();
 
-// FUNCTION TO FETCH DATA
-const fetchData = useCallback(async () => {
+  // FUNCTION TO FETCH DATA
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const res = await getVendorsMutation();
@@ -35,19 +38,18 @@ const fetchData = useCallback(async () => {
       if (!res.data) {
         console.log("Failed to get Vendors");
       } else {
-        // Filter vendors with status === 0
+        // Dispatch the Vendors to store them in the store.
         const filteredVendors = res.data.filter(vendor => vendor.status === "pending");
   
         // Dispatch the filtered vendors to store them in the Redux store.
         dispatch(setVendor(filteredVendors));
       }
     } catch (err) {
-      console.error(err);
+      console.log(err);
     } finally {
       setLoading(false);
     }
   }, [dispatch, getVendorsMutation]);
-  
 
   useEffect(() => {
     fetchData();
@@ -62,13 +64,14 @@ const fetchData = useCallback(async () => {
         const formData = new FormData();
 
         formData.append("id", selectedVendor.id);
-        formData.append("name", selectedVendor.productName);
+        formData.append("name", selectedVendor.VendorName);
         formData.append("stock", selectedVendor.stock);
         formData.append("price", selectedVendor.price || 0);
         formData.append("brand", selectedVendor.brand || "");
         formData.append("category", selectedVendor.category || "");
         formData.append("description", selectedVendor.description || "");
         formData.append("approval", selectedVendor.approval || "");
+        formData.append("status", selectedVendor.status || "");
 
         // Handle the image based on its type
         if (selectedImage instanceof File) {
@@ -99,19 +102,6 @@ const fetchData = useCallback(async () => {
     }
   };
 
-  // function to handle Vendor deletion
-  const handleDeleteVendor = async (VendorId) => {
-    try {
-      // Call the deleteVendor mutation with the correct id parameter
-      await deleteVendorMutation(VendorId);
-
-      // Fetch the latest Vendors and update the Redux store
-      fetchData();
-    } catch (error) {
-      console.error("Error deleting Vendor:", error);
-    }
-  };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -139,7 +129,7 @@ const fetchData = useCallback(async () => {
 
   // Filter Vendors based on search query
   // const filteredVendors = VendorData.filter((Vendor) =>
-  //   Vendor.productName.toLowerCase().includes(searchQuery.toLowerCase())
+  //   Vendor.VendorName.toLowerCase().includes(searchQuery.toLowerCase())
   // );
 
   const handleEdit = (row) => {
@@ -155,38 +145,61 @@ const fetchData = useCallback(async () => {
     document.getElementById("crud-modal").classList.remove("hidden");
   };
 
-  const handleDeleteClick = async (rowIndex, id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete products?"
-    );
-    if (confirmDelete) {
-      const VendorId = rowIndex.id; // Renamed to avoid naming conflicts
-      try {
-        await deleteVendorMutation(VendorId);
+// Define the handleApprove function
+// ...
 
-        // dispatch(deleteproduct(res.data));
-        fetchData();
-      } catch (error) {
-        console.error(error);
-      }
+// Define the handleApprove function
+const handleApprove = async (row) => {
+  setSelectedVendor(row);
+  try {
+    if (row) {
+      // Update the status to "approved"
+      const  data  = await updateVendorMutation({
+        id: row.id,
+        formData: {
+          ...row,
+          status: "approved",
+        },
+      });
+
+   
+      console.log("Updated Vendor Data:", data);
+
+      dispatch(updateVendors(data));
+
+      // Optionally, you can perform additional actions or show a success message
+      toast.success("Vendor approved successfully");
     }
-  };
+  } catch (error) {
+    console.error("Error approving Vendor:", error);
+    // Handle error, show an error message, etc.
+    toast.error("Failed to approve Vendor");
+  } finally {
+    setLoading(false);
+  }
+};
+
+// ...
+
+
+
+
 
   return (
     <>
       <ReusableTable
         columns={[
-          "image",
           "companyName",
           "status",
+          "image",
           "companyEMail",
-       
+          "Kra",
           "MpesaNumber",
         ]}
         data={VendorData}
         header={header}
         itemsPerPage={10}
-        isLoading={loading}
+        // isLoading={loading}
         actions={[
           {
             label: "Edit",
@@ -194,23 +207,28 @@ const fetchData = useCallback(async () => {
           },
           {
             label: "Delete",
-            onClick: handleDeleteClick,
+            onClick: handleEdit,
+          },
+          {
+            label: "Approve",
+            onClick: handleApprove,
           },
         ]}
         // isError={errMsg}
         onEdit={handleEdit}
-        onDelete={handleDeleteClick}
+        onApprove={handleApprove}
+        onReject={handleEdit}
         columnMapping={{
           name: "Company Name",
           status: "Status",
           Image: "Company Logo",
           email: "Company Email",
-
+          KRA: "KRA Pin",
           contact: "Phone No.",
           location: "Address",
         }}
       />
-
+      
       {/* <!-- Main modal --> */}
       <div
         id="crud-modal"
