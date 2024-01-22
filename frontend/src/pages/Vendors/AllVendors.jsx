@@ -14,6 +14,7 @@ import {
 } from "../../reducers/VendorReducer";
 import { Spinner } from "react-bootstrap";
 import { Button } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Vendors({ header }) {
   const [loading, setLoading] = useState(false);
@@ -28,7 +29,7 @@ export default function Vendors({ header }) {
   // Get Vendors from the store
   const VendorData = useSelector(selectVendors);
   const dispatch = useDispatch();
-
+const navigate = useNavigate()
   // FUNCTION TO FETCH DATA
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -142,33 +143,35 @@ export default function Vendors({ header }) {
   };
 
   const handleDeleteClick = async (row) => {
-
     setSelectedVendor(row);
     // Open the modal
     document.getElementById("popup-modal").classList.remove("hidden");
   };
 
-  
-
   // function to handle Vendor deletion
   const handleDeleteVendor = async () => {
     setIsDeleting(true);
-     const id = selectedVendor.id
+    const id = selectedVendor.id;
     try {
       // Call the deleteVendor mutation with the correct id parameter
-      const  res  = await deleteVendorMutation(id);
-   console.log(res);
-        toast.success(`Vendor deleted successfully`);
-        document.getElementById("popup-modal").classList.add("hidden");
+      const res = await deleteVendorMutation(id);
+      console.log(res);
+      toast.success(`Vendor deleted successfully`);
+      document.getElementById("popup-modal").classList.add("hidden");
       // Fetch the latest Vendors and update the Redux store
       fetchData();
     } catch (error) {
       console.error("Error deleting Vendor:", error);
-       toast.error("Failed to update Vendor");
+      toast.error("Failed to update Vendor");
     } finally {
       setIsDeleting(false);
     }
   };
+
+  const handleAddVendor = (e)=> {
+    e.preventDefault()
+    navigate("/dashboard/registered-vendors")
+  }
 
   return (
     <>
@@ -202,6 +205,8 @@ export default function Vendors({ header }) {
         // isError={errMsg}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
+        onButton="Add Vendor"
+        btnFn={handleAddVendor}
         onApprove={handleDeleteClick}
         columnMapping={{
           name: "Company Name",
