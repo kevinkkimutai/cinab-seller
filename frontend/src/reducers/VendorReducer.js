@@ -15,12 +15,13 @@ const VendorSlice = createSlice({
     },
     updateVendors: (state, action) => {
       const updatedIndex = state.vendors.findIndex(
-        (Vendor) => Vendor.id === action.payload.id
+        (vendor) => vendor.id === action.payload.id
       );
       if (updatedIndex !== -1) {
         state.vendors[updatedIndex] = action.payload;
       }
     },
+    
     deleteVendor: (state, action) => {
       state.vendors = state.vendors.filter(
         (Vendor) => Vendor.id !== action.payload.id

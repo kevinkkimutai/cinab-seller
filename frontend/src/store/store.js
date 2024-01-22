@@ -21,6 +21,7 @@ const rootReducer = combineReducers({
   product: productReducer,
   order: orderReducer,
   offer: offerReducer,
+
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 
