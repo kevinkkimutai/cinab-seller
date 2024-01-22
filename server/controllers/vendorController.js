@@ -48,7 +48,7 @@ const vendorController = {
 
   selfRegistration: async (req, res) => {
     const { companyEmail } = req.body;
-   console.log(req.body);
+    console.log(req.body);
     try {
       // Check if a user with the given companyEmail already exists
       const existingUser = await User.findOne({
@@ -256,6 +256,37 @@ const vendorController = {
       } else {
         await Vendor.destroy({ where: { id } });
         return res.status(204).send(); // Successful deletion, no content to return
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: "Internal Server Error" });
+    }
+  },
+
+  approveVendor: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const vendor = await Vendor.findByPk(id);
+      if (!vendor) {
+        return res.status(404).send({ error: "Vendor Not Found" });
+      } else {
+        await vendor.update({ status: "approved" });
+        return res.status(204).send(vendor); // Successful deletion, no content to return
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: "Internal Server Error" });
+    }
+  },
+  rejectVendor: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const vendor = await Vendor.findByPk(id);
+      if (!vendor) {
+        return res.status(404).send({ error: "Vendor Not Found" });
+      } else {
+        await vendor.update({ status: "rejected"});
+        return res.status(204).send(vendor); // Successful deletion, no content to return
       }
     } catch (error) {
       console.error(error);
