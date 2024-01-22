@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TiTickOutline } from "react-icons/ti";
 import { GrRevert } from "react-icons/gr";
-import { RiChatQuoteFill } from "react-icons/ri";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { BsViewStacked, BsCaretDownFill, BsCaretUpFill } from "react-icons/bs";
 import ReusablePath from "./ReusablePath";
@@ -18,6 +17,7 @@ export default function ReusableTable({
   onView,
   header,
   onDelete,
+  btnFn,
   onApprove,
   onButton,
   onReject
@@ -173,34 +173,61 @@ export default function ReusableTable({
           <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
             <div className="w-full md:w-1/2">
               <form className="flex items-center">
-              <div className="relative mb- mt-">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-800 dark:text-white me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-  </svg>
+                <div className="relative mb- mt-">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg
+                      class="w-4 h-4 text-gray-800 dark:text-white me-2"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    id="simple-search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Search..."
+                    required
+                  />
                 </div>
-                <input
-                  type="text"
-                  id="simple-search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search..."
-                  required
-                />
-              </div>
               </form>
             </div>
             <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-              <button
-                type="button"
-                className="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
-              >
-              <svg class="w-3.5 h-3.5 me-2 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-  </svg>
-                Add product
-              </button>
+              {onButton && (
+                <button
+                  type="button"
+                  onClick={btnFn}
+                  className="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                >
+                  <svg
+                    className="w-3.5 h-3.5 me-2 text-white dark:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 18 18"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 1v16M1 9h16"
+                    />
+                  </svg>
+                  {onButton}{" "}
+                </button>
+              )}
             </div>
           </div>
 
@@ -339,7 +366,7 @@ export default function ReusableTable({
                                   )
                                 ) : (
                                   <div className="flex justify-start items-center space-x-2">
-                                   {onEdit && (
+                                    {onEdit && (
                                       <button
                                         onClick={() => handleEdit(row)}
                                         className="inline-flex items-center px-2 py-0.5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -347,7 +374,7 @@ export default function ReusableTable({
                                         Edit
                                       </button>
                                     )}
-                                        {onApprove && (
+                                    {onApprove && (
                                       <button
                                       onClick={() => handleApprove(row)}
                                       className="inline-flex items-center px-2 py-0.5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -371,7 +398,7 @@ export default function ReusableTable({
                                         Delete
                                       </button>
                                     )}
-                                 
+
                                     {onView && (
                                       <button
                                         onClick={() => handleView(row)}
@@ -382,7 +409,6 @@ export default function ReusableTable({
                                         </TooltipComponent>
                                       </button>
                                     )}
-                                    
                                   </div>
                                 )}
                               </td>
