@@ -12,7 +12,6 @@ export default function ReusableTable({
   actions,
   columnMapping,
   isLoading,
-  isError,
   onEdit,
   onView,
   header,
@@ -232,7 +231,7 @@ export default function ReusableTable({
           </div>
 
           <div className="overflow-x-auto  scrollbar-hidden px-4">
-            <table className="w-full h-full max-h-full text-sm text-left border border-gray-200 text-gray-500  dark:text-gray-400">
+            <table className="w-full h-full max-h-full text-sm text-left border dark:border-gray-600 rounded-sm border-gray-200 text-gray-500  dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-4 py-3">
