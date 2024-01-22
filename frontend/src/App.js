@@ -48,7 +48,7 @@ export default function App() {
             <Route path="all-vendors" element={<AllVendors header="All Vendors" />} />
             <Route path="registered-vendors" element={<RegisteredVendors header="Rejected List Of Vendorss"/>} />
             <Route path="pending-vendors" element={<PendingVendors header="Pending List of Vendors"/>} />
-            <Route path="declined-vendors" element={<DeclinedVendors />} />
+            <Route path="declined-vendors" element={<DeclinedVendors header="Rejected List of Vendors"/>} />
 
             <Route path="products" element={<Inventory header="Products List"/>} />
             <Route path="productform" element={<ProductsForm />} />

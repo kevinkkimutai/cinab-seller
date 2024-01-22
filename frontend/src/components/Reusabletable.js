@@ -20,6 +20,7 @@ export default function ReusableTable({
   btnFn,
   onApprove,
   onButton,
+  onReject
 }) {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
@@ -74,6 +75,12 @@ export default function ReusableTable({
     }
   };
 
+  const handleReject = (row) => {
+    if (onReject) {
+      onDelete(row);
+    }
+  };
+
   const handleEdit = (row) => {
     if (onEdit) {
       onEdit(row);
@@ -86,7 +93,7 @@ export default function ReusableTable({
     }
   };
 
-  const handleQuote = (row) => {
+  const handleApprove = (row) => {
     if (onApprove) {
       onApprove(row);
     }
@@ -369,10 +376,18 @@ export default function ReusableTable({
                                     )}
                                     {onApprove && (
                                       <button
-                                        onClick={() => handleQuote(row)}
-                                        className="inline-flex items-center px-1.5 py-0.5 text-sm font-medium text-center text-white bg-green-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
+                                      onClick={() => handleApprove(row)}
+                                      className="inline-flex items-center px-2 py-0.5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                    >
+                                     Approve
+                                    </button>
+                                    )}
+                                    {onReject && (
+                                      <button
+                                        onClick={() => handleReject(row)}
+                                        className="inline-flex items-center px-1.5 py-0.5 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
                                       >
-                                        Approve
+                                       Reject
                                       </button>
                                     )}
                                     {onDelete && (
