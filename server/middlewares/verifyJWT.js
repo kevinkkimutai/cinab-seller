@@ -15,7 +15,7 @@ const verifyJWT = (req, res, next) => {
       id: decoded.id,
       schoolCode: decoded.schoolCode,
       username: decoded.name,
-    }; // Include schoolCode in req.user
+    };
     next();
   });
 };

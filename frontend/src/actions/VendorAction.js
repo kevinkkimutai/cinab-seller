@@ -9,6 +9,18 @@ export const VendorApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    rejectVendors: builder.mutation({
+      query: (id) => ({
+        url: `/reject/${id}`,
+        method: "PUT",
+      }),
+    }),
+    acceptVendors: builder.mutation({
+      query: (id) => ({
+        url: `/approve/${id}`,
+        method: "PUT",
+      }),
+    }),
     selfRegister: builder.mutation({
       query: (formData) => ({
         url: "/self-register",
@@ -25,10 +37,10 @@ export const VendorApiSlice = apiSlice.injectEndpoints({
     }),
 
     updateVendor: builder.mutation({
-      query: ({formData, id}) => ({
+      query: ({ formData, id }) => ({
         url: `/vendors/${id}`,
         method: "PUT",
-        body: { formData }, 
+        body: { formData },
       }),
     }),
     createVendor: builder.mutation({
@@ -43,6 +55,8 @@ export const VendorApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useSelfRegisterMutation,
+  useRejectVendorsMutation,
+  useAcceptVendorsMutation,
   useCreateVendorMutation,
   useDeleteVendorMutation,
   useGetVendorsMutation,

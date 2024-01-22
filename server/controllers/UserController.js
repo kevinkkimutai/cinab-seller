@@ -336,7 +336,7 @@ const userController = {
             name: user.name,
           },
           process.env.SECRET_KEY,
-          { algorithm: "HS256", expiresIn: "20m" }
+          { algorithm: "HS256", expiresIn: "5s" }
         );
 
         const refreshToken = jwt.sign(
@@ -358,9 +358,9 @@ const userController = {
           sameSite: "none",
         });
         const { id, email, name, role } = user;
-
         return res.status(201).json({
           refreshToken: refreshToken,
+          token: accessToken,
           user: {
             id,
             email,

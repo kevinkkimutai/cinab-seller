@@ -22,16 +22,18 @@ function generateRandomString(length) {
 const API = "https://cinab-seller-2m51.onrender.com";
 
 const itemsController = {
-  // getAllitems: async (req, res) => {
-  //   try {
-  //     const items = await item.findAll({
-  //       order: [["id", "ASC"]],
-  //     });
-  //     res.status(200).json(items);
-  //   } catch (error) {
-  //     res.status(500).json({ message: error.message });
-  //   }
-  // },
+  // get items for the logged in getVendors
+  getAllitem: async (req, res) => {
+    console.log(id);
+    try {
+      const items = await item.findAll({
+        order: [["id", "ASC"]],
+      });
+      res.status(200).json(items);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
 
   getAllitems: async (req, res) => {
     try {
@@ -173,7 +175,6 @@ const itemsController = {
 
       const updateditems = await items.update(updateditemsData);
 
-
       return res.status(200).json(updateditems);
     } catch (err) {
       console.error(err);
@@ -181,7 +182,6 @@ const itemsController = {
     }
   },
 
-  
   deleteitems: async (req, res) => {
     const { itemsId } = req.params;
 

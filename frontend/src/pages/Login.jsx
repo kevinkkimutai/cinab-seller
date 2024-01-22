@@ -46,6 +46,7 @@ const Login = () => {
       }
 
       const emailData = await login({ email, password }).unwrap();
+      console.log(emailData);
       if (emailData.error) {
         toast.error("Internal Server Error");
       } else {

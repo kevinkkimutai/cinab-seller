@@ -133,10 +133,10 @@ export default function UpdateProductsFn({
       <div className="h-full overflow-auto mt-2 scrollbar-hidden p-4 bg-primary-50 dark:bg-slate-800 shadow-lg rounded-lg">
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4">
-            <div class="mb-5">
+            <div className="mb-5">
               <label
                 for="email"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Product Name *
               </label>
@@ -146,7 +146,7 @@ export default function UpdateProductsFn({
                 id="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
 
@@ -191,7 +191,7 @@ export default function UpdateProductsFn({
             <div className="">
               <label
                 htmlFor="brand"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Select Product Brand *
               </label>
@@ -199,7 +199,7 @@ export default function UpdateProductsFn({
               <select
                 id="brand"
                 name="brand_id"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 value={formData.brand_id}
                 onChange={(e) => {
                   handleInputChange(e);
