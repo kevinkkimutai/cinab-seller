@@ -1,14 +1,52 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { TableProducts, TableResents } from "../components";
 import { useNavigate } from "react-router-dom";
 import { BiSolidOffer } from "react-icons/bi";
 import { FcSalesPerformance } from "react-icons/fc";
 import { FaCartShopping } from "react-icons/fa6";
 import { BiStoreAlt } from "react-icons/bi";
+import { useSelector, useDispatch } from "react-redux"; // Import useSelector and useDispatch
+import {
+  setProduct,
+  selectProducts,
+
+} from "../reducers/ProductReducers";
+import {
+  useGetProductsMutation,
+
+} from "../actions/ProductAction";
 
 
 export default function Dashboard() {
+  const dispatch = useDispatch(); // Get the dispatch function
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [getProducts] = useGetProductsMutation();
+  const [stockSum, setStockSum] = useState(0);
+  // Replace with your actual Redux selector
+  const products =  useSelector(selectProducts);
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    let res = null; // Declare res outside of the try block
+    try {
+      res = await getProducts();
+      if (!res.data) {
+        console.log("Failed to get Products");
+      } else {
+        dispatch(setProduct(res.data));
+         
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [dispatch, getProducts]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
 
   return (
     <div className="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700 h-full overflow-auto scrollbar-hidden">
@@ -36,7 +74,7 @@ export default function Dashboard() {
                   Inventory
                 </span>{" "}
               </div>
-              <span className="text-gray-950 text-md md:text-2xl">1000</span>{" "}
+              <span className="text-gray-950 text-md md:text-2xl">{products.length}</span>{" "}
             </div>
           </button>
         </div>

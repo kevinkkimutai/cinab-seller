@@ -1,11 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+
 import Image from "../assets/cinablogo.png";
 import { Link } from "react-router-dom";
 import { selectCurrentUser, selectUserRoles } from "../reducers/AuthReducers";
 import { useStateContext } from "../contexts/ContextProvider";
+import { Dashboard } from "../pages";
+import { RxDashboard } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  BiStore,
+  BiShoppingBag,
+  BiPlus,
+  BiLogIn,
+  BiSun,
+  BiMoon,
+  BiCart,
+} from "react-icons/bi"; // Import the icons you need from react-icons
+import {
+  useGetVendorsMutation,
+} from "../actions/VendorAction";
+import {
+  selectPendingVendors,
+  selectVendors,
+  setPendingVendor,
+  setVendor,
+
+} from "../reducers/VendorReducer";
+
 import { HiCog, HiLogout, HiViewGrid } from "react-icons/hi";
 import { Dropdown, Sidebar } from "flowbite-react";
-
 import { BiLogIn, BiSun, BiMoon } from "react-icons/bi"; // Import the icons you need from react-icons
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -18,9 +42,51 @@ import {
   HiUser,
 } from "react-icons/hi";
 
-export default function NavBar({ handleLogout }) {
+export default function NavBar({handleLogout}) {
+  const [loading, setLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [getVendorsMutation] = useGetVendorsMutation();
   const navigate = useNavigate();
+    // Get Vendors from the store
+  const VendorData = useSelector(selectVendors);
+  const pdata = useSelector(selectPendingVendors)
+  const dispatch = useDispatch();
+
+  // FUNCTION TO FETCH DATA
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await getVendorsMutation();
+      
+      if (!res.data) {
+        console.log("Failed to get Vendors");
+      } else {
+        // Dispatch the Vendors to store them in the store.
+        const filteredVendors = res.data.filter(
+          (vendor) => vendor.status === "pending"
+        );
+        const sumpdata = filteredVendors.length
+
+        dispatch(setPendingVendor(sumpdata));
+        fetchData();
+        // Dispatch the filtered vendors to store them in the Redux store.
+        dispatch(setVendor(filteredVendors));
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [dispatch, getVendorsMutation]);
+  
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -375,6 +441,28 @@ export default function NavBar({ handleLogout }) {
                 </li>
                 <li>
                   <Link
+                    to="/dashboard/processing-orders"
+                    className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                  >
+                    Processing Orders{" "}
+                    <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                      3
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/dashboard/rejected-orders"
+                    className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                  >
+                    Rejected Orders{" "}
+                    <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                      3
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to="/dashboard/cleared-orders"
                     className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                   >
@@ -442,8 +530,8 @@ export default function NavBar({ handleLogout }) {
                     className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                   >
                     Pending Vendors{" "}
-                    <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                      3
+                    <span className="inline-flex items-center justify-center w-2 h-2 p-2 text-center ms-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                     {pdata}
                     </span>
                   </Link>
                 </li>

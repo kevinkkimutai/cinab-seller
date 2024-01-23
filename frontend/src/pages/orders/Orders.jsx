@@ -1,113 +1,101 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ReusableTable } from "../../components";
+import { toast } from "react-toastify";
 import {
-  useGetOrdersMutation,
-  useUpdateOrderMutation,
-  useDeleteOrderMutation,
-} from "../../actions/OrderAction";
+  useGetVendorsMutation,
+  useUpdateVendorMutation,
+  useDeleteVendorMutation,
+} from "../../actions/VendorAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  selectOrders,
-  setOrder,
-  updateOrder as updateOrderAction,
-} from "../../reducers/OrderReducers";
+  selectVendors,
+  setVendor,
+  updateVendors,
+} from "../../reducers/VendorReducer";
 import { Spinner } from "react-bootstrap";
+import { Button } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
 
-
-export default function Orders() {
+export default function Vendors({ header }) {
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [getOrders] = useGetOrdersMutation();
-  const [updateOrder] = useUpdateOrderMutation();
-  const [deleteOrder] = useDeleteOrderMutation();
+
+  const [selectedVendor, setSelectedVendor] = useState(null);
+  const [getVendorsMutation] = useGetVendorsMutation();
+  const [updateVendorMutation] = useUpdateVendorMutation();
+  const [deleteVendorMutation] = useDeleteVendorMutation();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  // Get Orders from the store
-  const orderData = useSelector(selectOrders);
+  // Get Vendors from the store
+  const VendorData = useSelector(selectVendors);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   // FUNCTION TO FETCH DATA
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getOrders();
+      const res = await getVendorsMutation();
       console.log(res);
       if (!res.data) {
-        console.log("Failed to get Orders");
+        console.log("Failed to get Vendors");
       } else {
-        // Dispatch the Orders to store them in the store.
-        dispatch(setOrder(res.data));
+        // Dispatch the Vendors to store them in the store.
+        dispatch(setVendor(res.data));
       }
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
     }
-  }, [dispatch, getOrders]);
+  }, [dispatch, getVendorsMutation]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  // update Order
-  const handleUpdateOrder = async (e) => {
+  // update Vendor
+  const handleUpdateVendor = async (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
     try {
-      if (selectedOrder) {
+      if (selectedVendor) {
         const formData = new FormData();
 
-        formData.append("id", selectedOrder.id);
-        formData.append("name", selectedOrder.productName);
-        formData.append("stock", selectedOrder.stock);
-        formData.append("price", selectedOrder.price || 0);
-        formData.append("brand", selectedOrder.brand || "");
-        formData.append("category", selectedOrder.category || "");
-        formData.append("description", selectedOrder.description || "");
-        formData.append("approval", selectedOrder.approval || "");
+        formData.append("id", selectedVendor.id);
+        formData.append("name", selectedVendor.VendorName);
+        formData.append("stock", selectedVendor.stock);
+        formData.append("price", selectedVendor.price || 0);
+        formData.append("brand", selectedVendor.brand || "");
+        formData.append("category", selectedVendor.category || "");
+        formData.append("description", selectedVendor.description || "");
+        formData.append("approval", selectedVendor.approval || "");
 
         // Handle the image based on its type
         if (selectedImage instanceof File) {
           formData.append("image", selectedImage);
-        } else if (typeof selectedOrder.image === 'string') {
-          // Assuming selectedOrder.image is a string representing the image path
+        } else if (typeof selectedVendor.image === "string") {
+          // Assuming selectedVendor.image is a string representing the image path
           // If it's something else, adjust this part accordingly
-          formData.append("image", selectedOrder.image);
+          formData.append("image", selectedVendor.image);
         }
 
-        const { data } = await updateOrder({
-          id: selectedOrder.id,
+        const { data } = await updateVendorMutation({
+          id: selectedVendor.id,
           formData,
         });
 
-        console.log('Order updated successfully:');
-        console.log("Updated Order Data:", data);
+        console.log("Vendor updated successfully:");
+        console.log("Updated Vendor Data:", data);
 
-        dispatch(updateOrderAction(data));
+        dispatch(updateVendors(data));
 
         setSelectedImage(null);
         document.getElementById("crud-modal").classList.add("hidden");
       }
     } catch (error) {
-      console.error("Error updating Order:", error);
+      console.error("Error updating Vendor:", error);
     } finally {
-      setLoading(false)
-    }
-  };
-
-
-
-  // function to handle Order deletion
-  const handleDeleteOrder = async (OrderId) => {
-    try {
-      // Call the deleteOrder mutation with the correct id parameter
-      await deleteOrder(OrderId);
-
-      // Fetch the latest Orders and update the Redux store
-      fetchData();
-    } catch (error) {
-      console.error("Error deleting Order:", error);
+      setLoading(false);
     }
   };
 
@@ -119,9 +107,9 @@ export default function Orders() {
       // Log the selected image
       console.log("Selected Image:", file);
 
-      // Update selectedOrder with the new image
-      setSelectedOrder({
-        ...selectedOrder,
+      // Update selectedVendor with the new image
+      setSelectedVendor({
+        ...selectedVendor,
         image: file,
       });
     } else {
@@ -129,80 +117,75 @@ export default function Orders() {
     }
   };
 
-
-
   const handleModalInputChange = (e) => {
-    setSelectedOrder({
-      ...selectedOrder,
+    setSelectedVendor({
+      ...selectedVendor,
       [e.target.name]: e.target.value,
     });
   };
 
-
-
-  // Filter Orders based on search query
-  const filteredOrders = orderData.filter((order) =>
-    order.productName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter Vendors based on search query
+  // const filteredVendors = VendorData.filter((Vendor) =>
+  //   Vendor.VendorName.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   const handleEdit = (row) => {
     console.log(row.id);
-    setSelectedOrder(row)
-    // // Find the selected Order for editing
-    // const OrderToEdit = row.find(
-    //   (Order) => Order.id === OrderId
+    setSelectedVendor(row);
+    // // Find the selected Vendor for editing
+    // const VendorToEdit = row.find(
+    //   (Vendor) => Vendor.id === VendorId
     // );
-    // setSelectedOrder(OrderToEdit);
+    // setSelectedVendor(VendorToEdit);
 
     // // Open the modal
     document.getElementById("crud-modal").classList.remove("hidden");
   };
 
-  const handleDeleteClick = async (rowIndex, id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete products?"
-    );
-    if (confirmDelete) {
-      const orderId = rowIndex.id; // Renamed to avoid naming conflicts
-      try {
-        await deleteOrder(orderId);
+  const handleDeleteClick = async (row) => {
+    setSelectedVendor(row);
+    // Open the modal
+    document.getElementById("popup-modal").classList.remove("hidden");
+  };
 
-        // dispatch(deleteproduct(res.data));
-        fetchData();
-      } catch (error) {
-        console.error(error);
-      }
+  // function to handle Vendor deletion
+  const handleDeleteVendor = async () => {
+    setIsDeleting(true);
+    const id = selectedVendor.id;
+    try {
+      // Call the deleteVendor mutation with the correct id parameter
+      const res = await deleteVendorMutation(id);
+      console.log(res);
+      toast.success(`Vendor deleted successfully`);
+      document.getElementById("popup-modal").classList.add("hidden");
+      // Fetch the latest Vendors and update the Redux store
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting Vendor:", error);
+      toast.error("Failed to update Vendor");
+    } finally {
+      setIsDeleting(false);
     }
   };
-  const heading = (
 
-    <div className="bg-blue h-10">
-      <h1 className="font-bold text-xl ml-3 ">Your Orders</h1>
-    </div>
-
-  )
+  const handleAddVendor = (e) => {
+    e.preventDefault();
+    navigate("/dashboard/registered-vendors");
+  };
 
   return (
     <>
-
-
-
       <ReusableTable
-
         columns={[
-          "id",
-          "productName",
-          "stock",
-          "price",
-          "brand",
-          "category",
-          "description",
-
+          "image",
+          "ProductName",
+          "Quantity",
+          "status",
         ]}
-        data={orderData}
-        header={heading}
+        data={VendorData}
+        header={header}
         itemsPerPage={10}
-        isLoading={loading}
+        // isLoading={loading}
         actions={[
           {
             label: "Edit",
@@ -210,25 +193,106 @@ export default function Orders() {
           },
           {
             label: "Delete",
-            onClick: handleDeleteClick
-            ,
+            onClick: handleDeleteClick,
           },
-
         ]}
         // isError={errMsg}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
+        // onButton="Add Vendor"
+        btnFn={handleAddVendor}
         columnMapping={{
-          id: "ID",
-          name: "Company Name",
+          Image: "Product Image",
+          name: "Product Name",
           status: "Status",
-          Image: "Company Logo",
-          email: "Company Email",
-          KRA: "KRA Pin",
-          contact: "Phone No.",
-          location: "Address",
+          Quantity: "qty",
+         
         }}
       />
+      {/* start delete modal */}
+      <div
+        id="popup-modal"
+        tabIndex="-1"
+        className="hidden justify-center bg-gray-900/80 h-full flex mx-auto overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+      >
+        <div className="relative p-4 w-full max-w-lg max-h-full">
+          <div className="relative bg-white rounded-lg shadow dark:bg-gray-700 ">
+            <button
+              type="button"
+              onClick={() =>
+                document.getElementById("popup-modal").classList.add("hidden")
+              }
+              className="absolute top-3 end-2.5 text-gray-800 bg-red-200 dark:bg-red-400 hover:bg-red-300 hover:text-red-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white"
+            >
+              <svg
+                className="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span className="sr-only">Close modal</span>
+            </button>
+            <div className="p-4 md:p-5 text-center">
+              <svg
+                className="mx-auto mb-4 text-red-700 w-12 h-12 dark:text-red-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+              <h3 className="mb-5 text-lg font-normal text-gray-700 dark:text-gray-400">
+                Are you sure you want to delete{" "}
+                <span className="underline text-red-700 dark:text-red-500 font-bold uppercase">
+                  {" "}
+                  {selectedVendor?.pname || ""}
+                </span>{" "}
+                ?
+              </h3>
+
+              <Button
+                type="button"
+                onClick={() => handleDeleteVendor()}
+                className="text-white bg-red-600 py-1 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-3 text-center me-2"
+              >
+                {isDeleting ? (
+                  <div className="flex flex-row gap-3">
+                    <Spinner aria-label="Spinner button example" size="sm" />
+                    <span className="pl-3">Deleting...</span>
+                  </div>
+                ) : (
+                  "Yes!"
+                )}
+              </Button>
+              <button
+                onClick={() =>
+                  document.getElementById("popup-modal").classList.add("hidden")
+                }
+                type="button"
+                className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+              >
+                No?
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* <!-- Main modal --> */}
       <div
@@ -241,9 +305,12 @@ export default function Orders() {
           {/* <!-- Modal content --> */}
           <div className="relative bg-primary-50 rounded-lg shadow dark:bg-gray-700">
             {/* <!-- Modal header --> */}
-            <div className="flex items-center justify-between p-4 md:p-4 border-b rounded-t dark:border-gray-600">
+            <div className="flex items-center justify-between p-4 md:p-4 bVendor-b rounded-t dark:bVendor-gray-600">
               <h3 className="text-lg font-bold  text-gray-900 dark:text-white">
-                Update <span className="font-bold  text-green-600 dark:text-green-400 uppercase">{selectedOrder?.name || ""}</span>
+                Update{" "}
+                <span className="font-bold  text-green-600 dark:text-green-400 uppercase">
+                  {selectedVendor?.name || ""}
+                </span>
               </h3>
               <button
                 type="button"
@@ -270,8 +337,9 @@ export default function Orders() {
                 <span className="sr-only">Close modal</span>
               </button>
             </div>
+
             {/* <!-- Modal body --> */}
-            <form onSubmit={handleUpdateOrder}>
+            <form onSubmit={handleUpdateVendor}>
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">
                 {/* <!-- Display selected files --> */}
                 {selectedImage ? (
@@ -280,17 +348,18 @@ export default function Orders() {
                     src={URL.createObjectURL(selectedImage)}
                     alt="Selected Img"
                   />
-                ) : selectedOrder?.image && typeof selectedOrder.image === 'string' ? (
+                ) : selectedVendor?.image &&
+                  typeof selectedVendor.image === "string" ? (
                   <img
                     className="rounded-lg"
-                    src={selectedOrder.image}
-                    alt={selectedOrder.name}
+                    src={selectedVendor.image}
+                    alt={selectedVendor.name}
                   />
-                ) : selectedOrder?.image instanceof File ? (
+                ) : selectedVendor?.image instanceof File ? (
                   <img
                     className="rounded-lg"
-                    src={URL.createObjectURL(selectedOrder.image)}
-                    alt={selectedOrder.name}
+                    src={URL.createObjectURL(selectedVendor.image)}
+                    alt={selectedVendor.name}
                   />
                 ) : null}
 
@@ -302,7 +371,7 @@ export default function Orders() {
                     Upload image(s)
                   </label>
                   <input
-                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                    className="block w-full text-sm text-gray-900 bVendor bVendor-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:bVendor-gray-600 dark:placeholder-gray-400"
                     id="multiple_files"
                     type="file"
                     accept=".png, .jpg, .jpeg"
@@ -318,22 +387,20 @@ export default function Orders() {
                       htmlFor="name"
                       className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                     >
-                      Order Name
+                      Vendor Name
                     </label>
                     <input
                       type="text"
                       name="name"
                       id="name"
-                      value={selectedOrder?.name || ""}
+                      value={selectedVendor?.name || ""}
                       onChange={handleModalInputChange}
-                      className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Type Order name"
+                      className="block w-full p-2 text-gray-900 bVendor bVendor-gray-300 rounded-lg bg-gray-50 md:text-sm focus:ring-blue-500 focus:bVendor-blue-500 dark:bg-gray-700 dark:bVendor-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:bVendor-blue-500"
+                      placeholder="Type Vendor name"
                       required=""
                     />
                   </div>
                 </div>
-
-
 
                 <div className="w-full">
                   <label
@@ -346,10 +413,10 @@ export default function Orders() {
                     type="text"
                     name="brand"
                     id="brand"
-                    value={selectedOrder?.brand || ""}
+                    value={selectedVendor?.brand || ""}
                     onChange={handleModalInputChange}
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Order brand"
+                    className="block w-full p-2 text-gray-900 bVendor bVendor-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:bVendor-blue-500 dark:bg-gray-700 dark:bVendor-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:bVendor-blue-500"
+                    placeholder="Vendor brand"
                     required=""
                   />
                 </div>
@@ -362,9 +429,9 @@ export default function Orders() {
                   </label>
                   <select
                     id="category"
-                    value={selectedOrder?.category || ""}
+                    value={selectedVendor?.category || ""}
                     onChange={(e) => handleModalInputChange(e)}
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="block w-full p-2 text-gray-900 bVendor bVendor-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:bVendor-blue-500 dark:bg-gray-700 dark:bVendor-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:bVendor-blue-500"
                   >
                     <option>Select category</option>
                     <option value="TV">TV/Monitors</option>
@@ -383,10 +450,10 @@ export default function Orders() {
                   <input
                     type="number"
                     name="price"
-                    value={selectedOrder?.price || ""}
+                    value={selectedVendor?.price || ""}
                     onChange={handleModalInputChange}
                     id="price"
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="block w-full p-2 text-gray-900 bVendor bVendor-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:bVendor-blue-500 dark:bg-gray-700 dark:bVendor-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:bVendor-blue-500"
                     placeholder="3000"
                     required=""
                   />
@@ -402,9 +469,9 @@ export default function Orders() {
                     type="number"
                     name="stock"
                     id="stock"
-                    value={selectedOrder?.stock || ""}
+                    value={selectedVendor?.stock || ""}
                     onChange={handleModalInputChange}
-                    className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="block w-full p-2 text-gray-900 bVendor bVendor-gray-300 rounded-lg bg-gray-50 sm:text-sm focus:ring-blue-500 focus:bVendor-blue-500 dark:bg-gray-700 dark:bVendor-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:bVendor-blue-500"
                     placeholder="10"
                     required=""
                   />
@@ -420,26 +487,24 @@ export default function Orders() {
                     name="description"
                     id="description"
                     rows="4"
-                    value={selectedOrder?.description || ""}
+                    value={selectedVendor?.description || ""}
                     onChange={handleModalInputChange}
-                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg bVendor bVendor-gray-300 focus:ring-primary-500 focus:bVendor-primary-500 dark:bg-gray-700 dark:bVendor-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:bVendor-primary-500"
                     placeholder="Your description here"
                   ></textarea>
                 </div>
-
 
                 <div className="mt- sm:mt- sm:col-span-2">
                   <button
                     type="submit"
                     className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
                   >
-                    {loading ? (<div role="status">
-
-                      <span className="">updating...</span>
-                    </div>) : (
-
-                      "Update Order"
-
+                    {loading ? (
+                      <div role="status">
+                        <span className="">updating...</span>
+                      </div>
+                    ) : (
+                      "Update Vendor"
                     )}
                   </button>
                 </div>
@@ -449,5 +514,5 @@ export default function Orders() {
         </div>
       </div>
     </>
-  )
+  );
 }
