@@ -47,43 +47,45 @@ export default function App() {
           <Route path="/login" element={<Login />} className="md:w-12/12" />
           <Route index element={<Login />} className="md:w-12/12" />
           <Route path="/vendors/:code" element={<VendorPage />} />
+          <Route element={<RequireAuth />}>
+            <Route
+              path="/dashboard/"
+              element={<Layout handleLogout={handleLogout} />}
+            >
+              <Route path="vendor" element={<Dashboard />} />
+              <Route
+                path="all-vendors"
+                element={<AllVendors header="All Vendors" />}
+              />
+              <Route
+                path="registered-vendors"
+                element={
+                  <RegisteredVendors header="Rejected List Of Vendorss" />
+                }
+              />
+              <Route
+                path="pending-vendors"
+                element={<PendingVendors header="Pending List of Vendors" />}
+              />
+              <Route
+                path="declined-vendors"
+                element={<DeclinedVendors header="Rejected List of Vendors" />}
+              />
 
-          {/* <Route element={<RequireAuth />}> */}
-          <Route
-            path="/dashboard/"
-            element={<Layout handleLogout={handleLogout} />}
-          >
-            <Route path="vendor" element={<Dashboard />} />
-            <Route
-              path="all-vendors"
-              element={<AllVendors header="All Vendors" />}
-            />
-            <Route
-              path="registered-vendors"
-              element={<RegisteredVendors header="Rejected List Of Vendorss" />}
-            />
-            <Route
-              path="pending-vendors"
-              element={<PendingVendors header="Pending List of Vendors" />}
-            />
-            <Route
-              path="declined-vendors"
-              element={<DeclinedVendors header="Rejected List of Vendors" />}
-            />
+              <Route
+                path="products"
+                element={<Inventory header="Products List" />}
+              />
+              <Route path="productform" element={<ProductsForm />} />
+              <Route
+                path="pending-products"
+                element={<PendingProducts header="Pending List of Products" />}
+              />
+              <Route
+                path="inventory"
+                element={<Inventory header="Inventory List" />}
+              />
 
-            <Route
-              path="products"
-              element={<Inventory header="Products List" />}
-            />
-            <Route path="productform" element={<ProductsForm />} />
-            <Route
-              path="pending-products"
-              element={<PendingProducts header="Pending List of Products" />}
-            />
-            <Route
-              path="inventory"
-              element={<Inventory header="Inventory List" />}
-            />
 
             <Route path="orders" element={<Orders header="All Orders"/>} />
             <Route path="pending-orders" element={<Orders header="List of Pending Orders"/>} />
@@ -91,10 +93,12 @@ export default function App() {
             <Route path="rejected-orders" element={<Orders header="List of Rejected Orders"/>} />
             <Route path="cleared-orders" element={<Orders header="List of Cleared Orders"/>} />
 
-            <Route path="offers" element={<Offers />} />
-            <Route path="sales" element={<Sales />} />
+
+              <Route path="offers" element={<Offers />} />
+              <Route path="sales" element={<Sales />} />
+            </Route>
           </Route>
-          {/* <Route/> */}
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
