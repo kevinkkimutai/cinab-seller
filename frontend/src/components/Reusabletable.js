@@ -280,7 +280,9 @@ export default function ReusableTable({
                 ) : (
                   <>
                     {filteredData.length === 0 ? (
-                      <div></div>
+                      <div className="text-center py-4 flex justify-center text-gray-700 dark:text-gray-400">
+                        No data available.
+                      </div>
                     ) : (
                       sortData(filteredData)
                         .slice(offset, offset + itemsPerPage)

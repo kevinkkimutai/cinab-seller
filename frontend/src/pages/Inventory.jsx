@@ -29,6 +29,7 @@ export default function Products({ header }) {
     setLoading(true);
     try {
       const res = await getProducts();
+      console.log(res.data);
       if (!res.data) {
         console.log("Failed to get Products");
       } else {

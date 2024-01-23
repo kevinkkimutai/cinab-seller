@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { Op } = require("sequelize"); // Import the Op object from Sequelize
 require("dotenv").config();
-const { User, Token, UserProfile } = require("../models");
+const { User, Token, Vendor, UserProfile } = require("../models");
 
 const crypto = require("crypto");
 const { sendEmails, sendingEmails } = require("../middlewares/Verification");
@@ -50,10 +50,10 @@ const userController = {
   },
 
   newUser: async (userDataInfo, password) => {
-    console.log(userDataInfo);
     try {
       // Create the account'
       const expirationTime = new Date();
+
       expirationTime.setMinutes(expirationTime.getMinutes() + 5);
       const user = await User.create(userDataInfo);
       const expirationTimeISO = expirationTime.toISOString();
@@ -64,20 +64,20 @@ const userController = {
           token: crypto.randomBytes(16).toString("hex"),
         });
 
-        if (setToken) {
-          await sendEmails({
-            from: "no-reply@example.com",
-            to: `${user.email}`,
-            username: `${user.name}`,
-            subject: "Account Verification Link",
-            verificationLink: `localhost:3000/v1/verify-email/${user.id}/${setToken.token}`,
-          });
+        // if (setToken) {
+        //   await sendEmails({
+        //     from: "no-reply@example.com",
+        //     to: `${user.email}`,
+        //     username: `${user.name}`,
+        //     subject: "Account Verification Link",
+        //     verificationLink: `http://localhost:5000/v1/verify-email/${user.id}/${setToken.token}`,
+        //   });
 
-          // Return the created user
-          return user;
-        } else {
-          throw new Error("Token not created");
-        }
+        //   // Return the created user
+        //   return user;
+        // } else {
+        //   throw new Error("Token not created");
+        // }
       } else {
         throw new Error("User not created");
       }
@@ -104,7 +104,6 @@ const userController = {
 
       // Generate a new verification token and set it in the database
       const verificationToken = crypto.randomBytes(16).toString("hex");
-
       // Calculate the new expiration time (12 minutes from now)
       const tokenExpiration = new Date();
       tokenExpiration.setMinutes(tokenExpiration.getMinutes() + 12);
@@ -144,6 +143,8 @@ const userController = {
   verifyEmail: async (req, res) => {
     try {
       const { id, token } = req.params;
+      console.log("id" , id);
+      console.log()
       const now = new Date();
 
       const usertoken = await Token.findOne({
@@ -318,22 +319,26 @@ const userController = {
       const user = await User.findOne({
         where: { email },
       });
-      // Chech if user Exists
+
+      // Check if user exists
       if (!user) {
         return res.status(404).send({ error: "Email Not Found." });
       }
+
+      const vendor = await Vendor.findOne({ where: { userId: user.id } });
 
       // Validate Password
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
         return res.status(401).json({ error: "Invalid password" });
       } else {
-        // Assighn Accecc Key
+        // Assign Access Key
         const accessToken = jwt.sign(
           {
             email: user.email,
             id: user.id,
             name: user.name,
+            vendor: vendor, // Add vendor information to the token
           },
           process.env.SECRET_KEY,
           { algorithm: "HS256", expiresIn: "5s" }
@@ -366,6 +371,7 @@ const userController = {
             email,
             name,
             role,
+            vendor: vendor, // Add vendor information to the response
           },
         });
       }
