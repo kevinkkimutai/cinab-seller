@@ -11,6 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmails = async ({ to, subject, verificationLink, username }) => {
+  console.log("verificationLink", verificationLink);
   try {
     const emailTemplatePath = path.join(
       __dirname,

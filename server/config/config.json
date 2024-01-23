@@ -1,6 +1,6 @@
 {
 
-  "": {
+  "development": {
     "username": "ugiuhnbvokave",
     "password": "1u4@217kJbb@",
     "database": "dbheawk4u7vsfk",
@@ -12,7 +12,7 @@
     }
   },
 
-  "development": {
+  "": {
     "username": "root",
     "password": "",
     "database": "training_cinab",

@@ -45,6 +45,7 @@ module.exports = (sequelize, DataTypes) => {
       updated_at: DataTypes.DATE,
       license_name: DataTypes.TEXT,
       license_key: DataTypes.TEXT,
+      vendorId: DataTypes.INTEGER,
       item_type: DataTypes.STRING,
       thumbnail: DataTypes.STRING,
       affiliate_link: DataTypes.TEXT,
