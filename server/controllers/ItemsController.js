@@ -19,7 +19,7 @@ function generateRandomString(length) {
   return result;
 }
 
-const API = "https://cinab-seller-2m51.onrender.com";
+const API = "http://localhost:5000";
 
 const itemsController = {
   // get items for the logged in getVendors
@@ -99,6 +99,12 @@ const itemsController = {
     try {
       // Check if files were uploaded
       const fileData = req.files;
+      const id = req.user.id;
+
+      const vendor = await Vendor.findOne({ where: { userId: id } });
+      if (!vendor) {
+        return res.status(404).send("Vendor Not Found");
+      }
       // console.log(fileData);
       const imageFile = fileData.image[0];
       const imagePath = imageFile
@@ -122,6 +128,7 @@ const itemsController = {
         image: imagePath,
         slug: createdData.name.replace(/\s+/g, "-"),
         sku: randomSku,
+        vendorId: vendor.id,
         is_type: "undefine",
         specification_description: JSON.stringify(
           [createdData.specification_description].filter(Boolean)
