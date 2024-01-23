@@ -54,7 +54,7 @@ const Login = () => {
         setPassword("");
         dispatch(setCredentials(emailData));
         dispatch(setCurrentUser(emailData.user));
-        navigate("/dashboard");
+        navigate("/dashboard/vendor");
       }
     } catch (err) {
       console.log(err);
@@ -111,7 +111,7 @@ const Login = () => {
     }
   };
   return (
-    <section className="bg-gray-100 dark:bg-gray-900 w-full max-h-full overflow-y-auto">
+    <section className="bg-gray-100 h-full overflow-auto scrollbar-hidden dark:bg-gray-900 w-full max-h-full overflow-y-auto">
       <div className="flex flex-col items-center justify-between px-6 py-20">
         <div className="w-full bg-primary-50 rounded-lg shadow-lg  dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
