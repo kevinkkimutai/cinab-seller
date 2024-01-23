@@ -2,44 +2,44 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ReusableTable } from "../../components";
 import { toast } from "react-toastify";
 import {
-  useGetVendorsMutation,
+  useGetOrderMutation,
   useUpdateVendorMutation,
   useDeleteVendorMutation,
-} from "../../actions/VendorAction";
+} from "../../actions/OrderAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  selectVendors,
+  selectOrder,
   setVendor,
-  updateVendors,
+  updateOrder,
 } from "../../reducers/VendorReducer";
 import { Spinner } from "react-bootstrap";
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 
-export default function Vendors({ header }) {
+export default function Order({ header }) {
   const [loading, setLoading] = useState(false);
 
   const [selectedVendor, setSelectedVendor] = useState(null);
-  const [getVendorsMutation] = useGetVendorsMutation();
+  const [getOrderMutation] = useGetOrderMutation();
   const [updateVendorMutation] = useUpdateVendorMutation();
   const [deleteVendorMutation] = useDeleteVendorMutation();
   const [selectedImage, setSelectedImage] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Get Vendors from the store
-  const VendorData = useSelector(selectVendors);
+  // Get Order from the store
+  const VendorData = useSelector(selectOrder);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // FUNCTION TO FETCH DATA
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getVendorsMutation();
+      const res = await getOrderMutation();
       console.log(res);
       if (!res.data) {
-        console.log("Failed to get Vendors");
+        console.log("Failed to get Order");
       } else {
-        // Dispatch the Vendors to store them in the store.
+        // Dispatch the Order to store them in the store.
         dispatch(setVendor(res.data));
       }
     } catch (err) {
@@ -47,14 +47,14 @@ export default function Vendors({ header }) {
     } finally {
       setLoading(false);
     }
-  }, [dispatch, getVendorsMutation]);
+  }, [dispatch, getOrderMutation]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
   // update Vendor
-  const handleUpdateVendor = async (e) => {
+  const handleUpdateOrder = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -87,7 +87,7 @@ export default function Vendors({ header }) {
         console.log("Vendor updated successfully:");
         console.log("Updated Vendor Data:", data);
 
-        dispatch(updateVendors(data));
+        dispatch(updateOrder(data));
 
         setSelectedImage(null);
         document.getElementById("crud-modal").classList.add("hidden");
@@ -124,8 +124,8 @@ export default function Vendors({ header }) {
     });
   };
 
-  // Filter Vendors based on search query
-  // const filteredVendors = VendorData.filter((Vendor) =>
+  // Filter Order based on search query
+  // const filteredOrder = VendorData.filter((Vendor) =>
   //   Vendor.VendorName.toLowerCase().includes(searchQuery.toLowerCase())
   // );
 
@@ -158,7 +158,7 @@ export default function Vendors({ header }) {
       console.log(res);
       toast.success(`Vendor deleted successfully`);
       document.getElementById("popup-modal").classList.add("hidden");
-      // Fetch the latest Vendors and update the Redux store
+      // Fetch the latest Order and update the Redux store
       fetchData();
     } catch (error) {
       console.error("Error deleting Vendor:", error);
@@ -170,7 +170,7 @@ export default function Vendors({ header }) {
 
   const handleAddVendor = (e) => {
     e.preventDefault();
-    navigate("/dashboard/registered-vendors");
+    navigate("/dashboard/registered-Order");
   };
 
   return (
@@ -339,7 +339,7 @@ export default function Vendors({ header }) {
             </div>
 
             {/* <!-- Modal body --> */}
-            <form onSubmit={handleUpdateVendor}>
+            <form onSubmit={handleUpdateOrder}>
               <div className="grid gap-2 sm:grid-cols-2 sm:gap-6 p-4">
                 {/* <!-- Display selected files --> */}
                 {selectedImage ? (

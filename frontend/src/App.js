@@ -89,7 +89,7 @@ export default function App() {
 
             <Route path="orders" element={<Orders header="All Orders"/>} />
             <Route path="pending-orders" element={<Orders header="List of Pending Orders"/>} />
-            <Route path="processing-orders" element={<Orders header="List of Processed Orders"/>} />
+            <Route path="processed-orders" element={<Orders header="List of Processed Orders"/>} />
             <Route path="rejected-orders" element={<Orders header="List of Rejected Orders"/>} />
             <Route path="cleared-orders" element={<Orders header="List of Cleared Orders"/>} />
 
