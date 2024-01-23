@@ -45,6 +45,7 @@ const userController = {
       });
       return res.status(201).send(user);
     } catch (error) {
+      console.log(error);
       return res.status(500).send({ error: "Failed to create user" });
     }
   },

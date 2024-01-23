@@ -4,10 +4,14 @@ const VendorSlice = createSlice({
   name: "Vendor",
   initialState: {
     vendors: [],
+    pendingvendors: "0"
   },
   reducers: {
     setVendor: (state, action) => {
       state.vendors = action.payload;
+    },
+     setPendingVendor: (state, action) => {
+      state.pendingvendors = action.payload;
     },
 
     createVendor: (state, action) => {
@@ -30,9 +34,10 @@ const VendorSlice = createSlice({
   },
 });
 
-export const { setVendor, createVendor, updateVendors, deleteVendor } =
+export const { setVendor, setPendingVendor, createVendor, updateVendors, deleteVendor } =
   VendorSlice.actions;
 
 export default VendorSlice.reducer;
 
 export const selectVendors = (state) => state.Vendor.vendors;
+export const selectPendingVendors = (state) => state.Vendor.pendingvendors;
