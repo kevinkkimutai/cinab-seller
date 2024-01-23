@@ -75,10 +75,11 @@ const userController = {
         //   });
 
         //   // Return the created user
-        //   return user;
         // } else {
         //   throw new Error("Token not created");
         // }
+        return user;
+
       } else {
         throw new Error("User not created");
       }
