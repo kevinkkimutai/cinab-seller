@@ -8,6 +8,7 @@ const uploadMiddleware = require("../middlewares/UploadingFiles");
  * Get all orders.
  */
 router.get("/orders", orderController.getAllOrders);
+router.get("/order", orderController.getAllOrder);
 
 /**
  * Get a order by ID.
