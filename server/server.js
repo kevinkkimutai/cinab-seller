@@ -55,12 +55,12 @@ app.use("/v2", refreshTokenRoutes);
 // put here product routes
 
 //orders routes
-app.use("/v2", OrdersRoutes);
 
 // Enter All protected routes Below VerifyJWT
 app.use(verifyJWT);
 app.use("/v2", itemsRoutes);
 app.use("/v2", ProductRoutes);
+app.use("/v2", OrdersRoutes);
 
 const port = process.env.PORT || 5000;
 
