@@ -85,7 +85,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://e-procurement.onrender.com/v1/forget",
+        "https://server.cinab.co.ke/v2/forget",
         {
           email,
         }
@@ -111,12 +111,12 @@ const Login = () => {
     }
   };
   return (
-    <section className="bg-gray-100 h-full overflow-auto scrollbar-hidden dark:bg-gray-900 w-full max-h-full overflow-y-auto">
-      <div className="flex flex-col items-center justify-between px-6 py-20">
+    <section className="bg-gray-100 h-full overflow-auto scrollbar-hidden  w-full max-h-full overflow-y-auto">
+      <div className="flex h-full items-center justify-center">
         <div className="w-full bg-primary-50 rounded-lg shadow-lg  dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to Vendor account
+              Sign in to Seller account
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
@@ -153,7 +153,6 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                {/* Add a button to toggle password visibility */}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}

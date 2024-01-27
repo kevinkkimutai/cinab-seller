@@ -2,9 +2,15 @@ import React, { useState, useEffect } from "react";
 import { TiTickOutline } from "react-icons/ti";
 import { GrRevert } from "react-icons/gr";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import { BsViewStacked, BsCaretDownFill, BsCaretUpFill } from "react-icons/bs";
+import {
+  BsViewStacked,
+  BsCaretDownFill,
+  BsCaretUpFill,
+  BsWrenchAdjustable,
+  BsBackpack2Fill,
+} from "react-icons/bs";
 import ReusablePath from "./ReusablePath";
-import { Spinner } from "flowbite-react";
+import { Dropdown, Spinner } from "flowbite-react";
 export default function ReusableTable({
   columns,
   data,
@@ -20,6 +26,10 @@ export default function ReusableTable({
   onApprove,
   onButton,
   onReject,
+  onPackage,
+  onTransit,
+  onVendorAction,
+  prReject,
 }) {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
@@ -77,6 +87,24 @@ export default function ReusableTable({
   const handleReject = (row) => {
     if (onReject) {
       onReject(row);
+    }
+  };
+  // order rejection
+  const handleRejectOrder = (row) => {
+    if (prReject) {
+      prReject(row);
+    }
+  };
+
+  const handlePackage = (row) => {
+    if (onPackage) {
+      onPackage(row);
+    }
+  };
+
+  const handleTransit = (row) => {
+    if (onTransit) {
+      onTransit(row);
     }
   };
 
@@ -257,7 +285,10 @@ export default function ReusableTable({
                     </th>
                   ))}
                   {actions && (
-                    <th scope="col" className="cursor-pointer px-2 py-3 mr-4">
+                    <th
+                      scope="col"
+                      className="cursor-pointer flex justify-center px-2 py-3 mr-4"
+                    >
                       <span className="">Actions</span>
                     </th>
                   )}
@@ -336,7 +367,7 @@ export default function ReusableTable({
                               </td>
                             ))}
                             {actions && (
-                              <td className="flex-1 justify-between m-auto px-2">
+                              <td className="flex justify-center m-auto px-2">
                                 {editStates[row.id] ? (
                                   savingRows.has(row.id) ? (
                                     <div className="text-center">
@@ -390,6 +421,45 @@ export default function ReusableTable({
                                       >
                                         Reject
                                       </button>
+                                    )}
+                                    {onVendorAction && (
+                                      <Dropdown
+                                        label=""
+                                        dismissOnClick={false}
+                                        renderTrigger={() => (
+                                          <span className="text-2xl cursor-pointer flex justify-center max-xl:w-full">
+                                            ....
+                                          </span>
+                                        )}
+                                        placement="bottom"
+                                      >
+                                        {onPackage && (
+                                          <Dropdown.Item
+                                            icon={BsWrenchAdjustable}
+                                            onClick={() => handlePackage(row)}
+                                          >
+                                            Package
+                                          </Dropdown.Item>
+                                        )}
+                                        {onTransit && (
+                                          <Dropdown.Item
+                                            icon={BsWrenchAdjustable}
+                                            onClick={() => handleTransit(row)}
+                                          >
+                                            Transit{" "}
+                                          </Dropdown.Item>
+                                        )}
+                                        {prReject && (
+                                          <Dropdown.Item
+                                            icon={BsBackpack2Fill}
+                                            onClick={() =>
+                                              handleRejectOrder(row)
+                                            }
+                                          >
+                                            Reject{" "}
+                                          </Dropdown.Item>
+                                        )}
+                                      </Dropdown>
                                     )}
                                     {onDelete && (
                                       <button

@@ -5,13 +5,13 @@ const API = "https://cinab-seller-2m51.onrender.com/v2";
 
 const orderController = {
   getAllOrders: async (req, res) => {
-    const userId = req.user.id; // Assuming this is the user ID for the vendor
-
+    const userId = "1"; // Assuming this is the user ID for the vendor
     try {
       // Find the vendor based on the provided user ID
       const vendor = await Vendor.findOne({ where: { userId } });
 
       if (!vendor) {
+        console.log("Not found vendor");
         return res.status(404).json({ message: "Vendor not found" });
       }
 
@@ -20,34 +20,62 @@ const orderController = {
         order: [["id", "ASC"]],
       });
 
-      // Extract product IDs from the cart attribute and filter orders
-      const filteredOrders = await Promise.all(
+      // Extract order details and product details for each order
+      const ordersWithProducts = await Promise.all(
         allOrders.map(async (order) => {
           const cart = JSON.parse(order.cart);
-          const productIds = Object.keys(cart).map((productId) =>
-            productId.replace("-", "")
-          );
-          console.log(productIds);
 
-          // Check if any of the product IDs belong to the vendor
-          const productsForVendor = await Promise.all(
-            productIds.map(async (productId) => {
+          // Extract product IDs and quantities from the cart
+          const productDetails = await Promise.all(
+            Object.keys(cart).map(async (productId) => {
+              const formattedProductId = productId.replace("-", "");
               const product = await item.findOne({
-                where: { id: productId },
+                where: { id: formattedProductId },
               });
-              console.log(product);
-              return product && product.vendorId === vendor.id;
+
+              // Check if the product belongs to the vendor
+              if (product && product.vendorId === vendor.id) {
+                return {
+                  id: product.id,
+                  name: product.name,
+                  image: product.image, // Assuming you have an 'image' attribute in the item model
+                  qty: cart[productId].qty, // Extracting quantity from the cart attribute
+                };
+              } else {
+                return null;
+              }
             })
           );
 
-          return productsForVendor.some(Boolean);
+          // Filter out null values (products not belonging to the vendor)
+          const filteredProductDetails = productDetails.filter(Boolean);
+
+          // Extract order details
+          const orderDetails = {
+            id: order.id,
+            payment_status: order.payment_status,
+            image:
+              filteredProductDetails.length > 0
+                ? filteredProductDetails[0].image
+                : null,
+            name:
+              filteredProductDetails.length > 0
+                ? filteredProductDetails[0].name
+                : null,
+            qty:
+              filteredProductDetails.length > 0
+                ? filteredProductDetails[0].qty
+                : null,
+            orders_status: order.order_status,
+          };
+
+          return orderDetails;
         })
       );
 
       // Filter out orders where none of the products belong to the vendor
-
-      const finalOrders = allOrders.filter(
-        (order, index) => filteredOrders[index]
+      const finalOrders = ordersWithProducts.filter(
+        (orderDetails) => orderDetails.image !== null
       );
 
       // Check if there are any vendor orders
@@ -57,11 +85,66 @@ const orderController = {
           .json({ message: "No data found for the vendor" });
       }
 
-      const vendorOrders = finalOrders.map((order) => JSON.parse(order.cart));
-      res.status(200).json({ orders: vendorOrders });
+      res.status(200).json(finalOrders);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+
+  // Packaging orders
+
+  PackageOrder: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const orders = await order.findOne({ where: { id } });
+      if (!orders) {
+        return res.status(404).send("Order Not Found");
+      }
+      const packedOrder = await orders.update({
+        order_status: "Packaging",
+      });
+      console.log(orders);
+      return res.status(202).send({ packedOrder });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send("Internal Server Error");
+    }
+  },
+  // REJECT ORDER
+  RejectOrder: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const orders = await order.findOne({ where: { id } });
+      if (!orders) {
+        return res.status(404).send("Order Not Found");
+      }
+      const packedOrder = await orders.update({
+        order_status: "Rejected",
+      });
+      console.log(orders);
+      return res.status(202).send({ packedOrder });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send("Internal Server Error");
+    }
+  },
+         
+  TransitOrder: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const orders = await order.findOne({ where: { id } });
+      if (!orders) {
+        return res.status(404).send("Order Not Found");
+      }
+      const packedOrder = await orders.update({
+        order_status: "Transit",
+      });
+      console.log(orders);
+      return res.status(202).send({ packedOrder });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send("Internal Server Error");
     }
   },
 
