@@ -19,7 +19,7 @@ function generateRandomString(length) {
   return result;
 }
 
-const API = "http://localhost:5000";
+const API = "https://server.cinab.co.ke";
 
 const itemsController = {
   // get items for the logged in getVendors
@@ -49,9 +49,8 @@ const itemsController = {
       });
 
       // Extract and flatten product IDs
-      const productIDs = carts.flatMap((item) => Object.keys(item.cart));
 
-      res.status(200).json(productIDs);
+      res.status(200).json(orders);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

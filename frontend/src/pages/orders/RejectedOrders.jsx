@@ -27,8 +27,10 @@ export default function Order({ header }) {
         console.log("Failed to get Order");
       } else {
         // Dispatch the Order to store them in the store.
-
-        dispatch(setOrder(res.data));
+        const pendindData = res.data.filter(
+          (order) => order.orders_status === "Rejected"
+        );
+        dispatch(setOrder(pendindData));
       }
     } catch (err) {
       console.log(err);
@@ -75,7 +77,7 @@ export default function Order({ header }) {
         header={header}
         itemsPerPage={10}
         // isLoading={loading}
-        actions={true}
+        actions={false}
         onVendorAction={true}
         onPackage={handlePackage}
         prReject={handleReject}

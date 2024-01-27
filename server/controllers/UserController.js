@@ -71,7 +71,7 @@ const userController = {
         //     to: `${user.email}`,
         //     username: `${user.name}`,
         //     subject: "Account Verification Link",
-        //     verificationLink: `http://localhost:5000/v1/verify-email/${user.id}/${setToken.token}`,
+        //     verificationLink: `https://server.cinab.co.ke/v2/verify-email/${user.id}/${setToken.token}`,
         //   });
 
         //   // Return the created user
@@ -127,7 +127,7 @@ const userController = {
       const username = user.name;
       const to = user.email;
       const subject = "Resend Account Verification Link";
-      const verificationLink = `https://e-procurement.onrender.com/v1/verify-email/${userId}/${verificationToken}`;
+      const verificationLink = `https://server.cinab.co.ke/v2/verify-email/${userId}/${verificationToken}`;
       // Send the new verification link to the user's email
 
       sendEmails(to, verificationLink, subject, username);
@@ -164,7 +164,7 @@ const userController = {
       } else {
         const user = await User.findOne({ where: { id } });
         if (!user) {
-          return res.status(401).redirect("localhost:3000/register");
+          return res.status(401).redirect("https://sellercenter.cinab.co.ke//register");
         } else if (user.isVerified) {
           return res.status(200).redirect("https/login");
         } else {
@@ -174,7 +174,7 @@ const userController = {
           // Remove the verification token from the database after successful verification
           await usertoken.destroy();
 
-          return res.status(200).redirect("localhost:3000/login");
+          return res.status(200).redirect("https://sellercenter.cinab.co.ke//login");
         }
       }
     } catch (error) {
