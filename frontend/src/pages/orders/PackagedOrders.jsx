@@ -7,6 +7,7 @@ import {
   useGetOrdersMutation,
   usePackageOrderMutation,
   useRejectOrderMutation,
+  useTransitOrderMutation,
 } from "../../actions/OrderAction";
 import { selectOrders, setOrder } from "../../reducers/OrderReducers";
 import { toast } from "react-toastify";
@@ -14,7 +15,7 @@ import { toast } from "react-toastify";
 export default function Order({ header }) {
   const [getOrderMutation] = useGetOrdersMutation();
   const [packageMutation] = usePackageOrderMutation();
-  const [rejectOrderMutation] = useRejectOrderMutation();
+  const [transitOrderMutation] = useTransitOrderMutation();
   // Get Order from the store
   const orderData = useSelector(selectOrders);
   const dispatch = useDispatch();
@@ -27,8 +28,10 @@ export default function Order({ header }) {
         console.log("Failed to get Order");
       } else {
         // Dispatch the Order to store them in the store.
-
-        dispatch(setOrder(res.data));
+        const pendindData = res.data.filter(
+          (order) => order.orders_status === "Packaging"
+        );
+        dispatch(setOrder(pendindData));
       }
     } catch (err) {
       console.log(err);
@@ -40,24 +43,10 @@ export default function Order({ header }) {
     fetchData();
   }, [fetchData]);
 
-  const handlePackage = async (row) => {
+  const handleTransit = async (row) => {
     const id = row.id;
     try {
-      await packageMutation(id);
-      toast.success("Packaged successfully");
-      fetchData();
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to package the order");
-    }
-    console.log("Clicked");
-  };
-
-  const handleReject = async (row) => {
-    const id = row.id;
-    try {
-      console.log(id);
-      await rejectOrderMutation(id);
+      await transitOrderMutation(id);
       toast.success("Packaged successfully");
       fetchData();
     } catch (error) {
@@ -77,8 +66,7 @@ export default function Order({ header }) {
         // isLoading={loading}
         actions={true}
         onVendorAction={true}
-        onPackage={handlePackage}
-        prReject={handleReject}
+        onTransit={handleTransit}
         columnMapping={{
           Image: "Product Image",
           name: "Product Name",

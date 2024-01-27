@@ -14,6 +14,9 @@ import {
   PendingVendors,
   DeclinedVendors,
   PendingProducts,
+  PendingOrders,
+  RejectedOrder,
+  PackagedOrders,
 } from "./pages";
 import { useStateContext } from "./contexts/ContextProvider";
 import Vendor from "./pages/Vendors/steps/Vendor";
@@ -86,13 +89,23 @@ export default function App() {
                 element={<Inventory header="Inventory List" />}
               />
 
-
-            <Route path="orders" element={<Orders header="All Orders"/>} />
-            <Route path="pending-orders" element={<Orders header="List of Pending Orders"/>} />
-            <Route path="processed-orders" element={<Orders header="List of Processed Orders"/>} />
-            <Route path="rejected-orders" element={<Orders header="List of Rejected Orders"/>} />
-            <Route path="cleared-orders" element={<Orders header="List of Cleared Orders"/>} />
-
+              <Route path="orders" element={<Orders header="All Orders" />} />
+              <Route
+                path="pending-orders"
+                element={<PendingOrders header="List of Pending Orders" />}
+              />
+              <Route
+                path="packaged-orders"
+                element={<PackagedOrders header="List of Packaed Orders" />}
+              />
+              <Route
+                path="rejected-orders"
+                element={<RejectedOrder header="List of Rejected Orders" />}
+              />
+              <Route
+                path="cleared-orders"
+                element={<Orders header="List of Cleared Orders" />}
+              />
 
               <Route path="offers" element={<Offers />} />
               <Route path="sales" element={<Sales />} />

@@ -192,8 +192,8 @@ export default function NavBar({ handleLogout }) {
                 </Link>{" "}
               </Sidebar.Item>
               <Sidebar.Item>
-                <Link to="/dashboard/processed-orders">
-                  Processed Orders
+                <Link to="/dashboard/packaged-orders">
+                  Packaged Orders
                   <sup className="w-4 h-4 bg-blue-100 p-3 inline-flex justify-center items-center rounded-full">
                     3
                   </sup>

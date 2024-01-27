@@ -3,12 +3,12 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn("items", "vendorId", {
+    await queryInterface.addColumn("categories", "vendorId", {
       type: Sequelize.INTEGER,
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn("items", "vendorId");
+    await queryInterface.removeColumn("categories", "vendorId");
   },
 };
