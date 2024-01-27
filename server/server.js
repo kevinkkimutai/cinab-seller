@@ -27,9 +27,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",
-      "https://cinab-seller.vercel.app",
-      "https://cinab-seller-git-kel-kevinkkimutai.vercel.app",
+      "https://sellercenter.cinab.co.ke",
     ],
     credentials: true,
   })
@@ -53,14 +51,14 @@ app.use("/v2", offerRoutes);
 app.use("/v2", refreshTokenRoutes);
 
 // put here product routes
+app.use("/v2", OrdersRoutes);
+app.use("/v2", itemsRoutes);
 
 //orders routes
 
 // Enter All protected routes Below VerifyJWT
 app.use(verifyJWT);
-app.use("/v2", itemsRoutes);
 app.use("/v2", ProductRoutes);
-app.use("/v2", OrdersRoutes);
 
 const port = process.env.PORT || 5000;
 
@@ -69,9 +67,8 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: [
-      "http://localhost:3000",
-      "https://cinab-seller.vercel.app/",
-      "http://localhost:5000",
+      "https://sellercenter.cinab.co.ke/",
+      "https://server.cinab.co.ke/",
     ],
     credentials: true,
   },
