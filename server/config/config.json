@@ -1,33 +1,22 @@
 {
 
-  "": {
-    "username": "ugiuhnbvokave",
-    "password": "1u4@217kJbb@",
-    "database": "dbheawk4u7vsfk",
-    "host": "cinab.co.ke",
+
+  "development": {
+    "username": "cinabcok_cinab",
+    "password": "qpq3L+M$eju_",
+    "database": "cinabcok_cinab",
+    "host": "127.0.0.1",
     "port": 3306,
     "dialect": "mysql",
     "dialectOptions": {
       "ssl": false
     }
   },
-
-  "development": {
-    "username": "root",
-    "password": "",
-    "database": "cinab",
-    "host": "127.0.0.1",
-    "port": 2000,
-    "dialect": "mysql",
-    "dialectOptions": {
-      "ssl": false
-    }
-  },
   "production": {
-    "username": "ugiuhnbvokave",
-    "password": "1u4@217kJbb@",
-    "database": "dbheawk4u7vsfk",
-    "host": "cinab.co.ke",
+    "username": "cinabcok_cinab",
+    "password": "qpq3L+M$eju_",
+    "database": "cinabcok_cinab",
+    "host": "127.0.0.1",
     "port": 3306,
     "dialect": "mysql",
     "dialectOptions": {

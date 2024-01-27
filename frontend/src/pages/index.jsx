@@ -7,6 +7,8 @@ export {default as Error} from "../pages/Error";
 export { default as Orders } from "./orders/Orders";
 export { default as PendingOrders } from "./orders/PendingOrders";
 export { default as ClearedOrders } from "./orders/ClearedOrders";
+export {default as RejectedOrder} from "./orders/RejectedOrders"
+export {default as PackagedOrders} from "./orders/PackagedOrders"
 
 export { default as ProductsForm } from "../pages/products/ProductsForm";
 export { default as PendingProducts } from "../pages/products/PendingProducts";

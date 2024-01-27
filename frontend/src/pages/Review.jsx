@@ -84,7 +84,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://e-procurement.onrender.com/v1/forget",
+        "https://server.cinab.co.ke/v2/forget",
         {
           email,
         }

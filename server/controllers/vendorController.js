@@ -1,6 +1,6 @@
 const { Vendor, User } = require("../models");
 const { sendSecretCode, sellerCenter } = require("../middlewares/Verification");
-const API = "http://localhost:5000";
+const API = "https://server.cinab.co.ke";
 const bcrypt = require("bcrypt");
 const { newUser } = require("./UserController");
 
@@ -63,7 +63,7 @@ const vendorController = {
       const randomString = generateRandomString(20);
       sendSecretCode({
         email: companyEmail,
-        secretCode: `http://localhost:3000/vendors/${randomString}`,
+        secretCode: `https://sellercenter.cinab.co.ke/vendors/${randomString}`,
       });
       const createdVendor = await Vendor.create({
         companyEMail: companyEmail,
@@ -137,7 +137,7 @@ const vendorController = {
       // Send a welcome email to the new vendor
       sellerCenter({
         email: companyEmail,
-        link: "https://cinab-seller.vercel.app/",
+        link: "https://sellercenter.cinab.co.ke",
         companyName: companyName,
       });
 
