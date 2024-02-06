@@ -17,6 +17,7 @@ import {
   PendingOrders,
   RejectedOrder,
   PackagedOrders,
+  AdminSection,
 } from "./pages";
 import { useStateContext } from "./contexts/ContextProvider";
 import Vendor from "./pages/Vendors/steps/Vendor";
@@ -63,7 +64,7 @@ export default function App() {
               <Route
                 path="registered-vendors"
                 element={
-                  <RegisteredVendors header="Rejected List Of Vendorss" />
+                  <RegisteredVendors header="Rejected List Of Vendors" />
                 }
               />
               <Route
@@ -96,7 +97,7 @@ export default function App() {
               />
               <Route
                 path="packaged-orders"
-                element={<PackagedOrders header="List of Packaed Orders" />}
+                element={<PackagedOrders header="List of Packaged Orders" />}
               />
               <Route
                 path="rejected-orders"
@@ -109,6 +110,8 @@ export default function App() {
 
               <Route path="offers" element={<Offers />} />
               <Route path="sales" element={<Sales />} />
+
+              <Route path="admins" element={<AdminSection  header="List of Admins" />}/>
             </Route>
           </Route>
 

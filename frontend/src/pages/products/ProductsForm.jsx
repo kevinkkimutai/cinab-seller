@@ -20,7 +20,7 @@ import {
 import ReusablePath from "../../components/ReusablePath";
 export default function ProductsForm() {
   const [formData, setFormData] = useState({
-    userId: 1,
+  
     category_id: null,
     subcategory_id: null,
     childcategory_id: null,
