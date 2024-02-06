@@ -6,7 +6,7 @@ require("dotenv").config();
 const { User, Token, Vendor, UserProfile } = require("../models");
 
 const crypto = require("crypto");
-const { sendEmails, sendingEmails } = require("../middlewares/Verification");
+const {sendingEmails } = require("../middlewares/Verification");
 function generateOTP() {
   const min = 1000; // Minimum 4-digit number
   const max = 9999; // Maximum 4-digit number
@@ -50,36 +50,24 @@ const userController = {
     }
   },
 
-  newUser: async (userDataInfo, password) => {
+  newUser: async (userDataInfo) => {
     try {
-      // Create the account'
+      // Create the account
       const expirationTime = new Date();
-
       expirationTime.setMinutes(expirationTime.getMinutes() + 5);
+  
       const user = await User.create(userDataInfo);
       const expirationTimeISO = expirationTime.toISOString();
+      
       if (user) {
-        const setToken = await Token.create({
+        await Token.create({
           userId: user.id,
           expiresAt: expirationTimeISO,
           token: crypto.randomBytes(16).toString("hex"),
         });
-
-        // if (setToken) {
-        //   await sendEmails({
-        //     from: "no-reply@example.com",
-        //     to: `${user.email}`,
-        //     username: `${user.name}`,
-        //     subject: "Account Verification Link",
-        //     verificationLink: `https://server.cinab.co.ke/v2/verify-email/${user.id}/${setToken.token}`,
-        //   });
-
-        //   // Return the created user
-        // } else {
-        //   throw new Error("Token not created");
-        // }
+     
+        // Return the created user
         return user;
-
       } else {
         throw new Error("User not created");
       }
@@ -88,6 +76,7 @@ const userController = {
       throw new Error("Error creating account");
     }
   },
+  
 
   resendVerificationLink: async (req, res) => {
     try {
@@ -247,6 +236,7 @@ const userController = {
       // Return the list of users in a JSON response
       return res.status(200).json(users);
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ error: "Failed to retrieve users" });
     }
   },

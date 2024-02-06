@@ -4,10 +4,12 @@ const path = require("path");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
+  secure: true,
   auth: {
     user: "onlinecinab@gmail.com",
     pass: "gguoalwewnoqzcql",
   },
+  tls: {rejectUnauthorized: false}
 });
 
 const sendEmails = async ({ to, subject, verificationLink, username }) => {

@@ -27,6 +27,9 @@ const ProfileComponent = ({ handleClick }) => {
     setShowPassword(!showPassword); // Toggle password visibility state
   };
 
+  console.log(userData);
+
+
   return (
     <div className="w-full me-4 pshadow-lg rounded-lg mt-2 bg-gray-50 dark:bg-gray-500">
       <form onSubmit={handleSubmit}>

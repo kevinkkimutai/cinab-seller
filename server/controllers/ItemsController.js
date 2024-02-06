@@ -99,6 +99,7 @@ const itemsController = {
       // Check if files were uploaded
       const fileData = req.files;
       const id = req.user.id;
+
       const vendor = await Vendor.findOne({ where: { userId: id } });
       if (!vendor) {
         return res.status(404).send("Vendor Not Found");
@@ -148,7 +149,6 @@ const itemsController = {
       console.log(error);
       res.status(500).json({ message: error.message });
     }
-
   },
 
   getitemsById: async (req, res) => {

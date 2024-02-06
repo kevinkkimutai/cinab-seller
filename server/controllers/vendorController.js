@@ -27,7 +27,7 @@ const vendorController = {
       }
     } catch (error) {
       console.error(error);
-      return res.status(500).send({ error: "Internal Server Error" });
+      return res.status(500).send({ error: "Internal Server Error vend" });
     }
   },
 
@@ -51,14 +51,14 @@ const vendorController = {
     console.log(req.body);
     try {
       // Check if a user with the given companyEmail already exists
-      const existingUser = await User.findOne({
-        where: { email: companyEmail },
-      });
-      if (existingUser) {
-        return res
-          .status(409)
-          .send({ error: "company email already registered" });
-      }
+      // const existingUser = await User.findOne({
+      //   where: { email: companyEmail },
+      // });
+      // if (existingUser) {
+      //   return res
+      //     .status(409)
+      //     .send({ error: "company email already registered" });
+      // }
 
       const randomString = generateRandomString(20);
       sendSecretCode({
@@ -87,7 +87,6 @@ const vendorController = {
       username,
       contact,
     } = req.body;
-    console.log(req.body);
 
     try {
       // Check if a user with the given companyEmail already exists
@@ -145,7 +144,9 @@ const vendorController = {
       return res.status(201).json(createdVendor);
     } catch (error) {
       console.error(error);
-      return res.status(500).send({ error: "Internal Server Error" });
+      return res
+        .status(500)
+        .send({ error: "Internal Server Error  for Vendor" });
     }
   },
 
@@ -262,6 +263,23 @@ const vendorController = {
       return res.status(500).send({ error: "Internal Server Error" });
     }
   },
+  // Here the vendor updates there details after sending to them the link
+
+  updateDetails: async (req, res) => {
+    const updatedData = req.body;
+    try {
+      const secretCode = updatedData.secretCode;
+      console.log(updatedData.secretCode);
+      const vendor = await Vendor.findOne({ where: { secretCode } });
+      if (!vendor) {
+        return res.status(401).send({ error: "Unauthorized Vendor " });
+      }
+      const updatedVendor = await vendor.update(updatedData);
+      return res.status(202).send(updatedVendor);
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
   approveVendor: async (req, res) => {
     const { id } = req.params;
@@ -285,7 +303,7 @@ const vendorController = {
       if (!vendor) {
         return res.status(404).send({ error: "Vendor Not Found" });
       } else {
-        await vendor.update({ status: "rejected"});
+        await vendor.update({ status: "rejected" });
         return res.status(204).send(vendor); // Successful deletion, no content to return
       }
     } catch (error) {

@@ -43,6 +43,14 @@ export const VendorApiSlice = apiSlice.injectEndpoints({
         body: { formData },
       }),
     }),
+
+    updateVendorDetails: builder.mutation({
+      query: (formData) => ({
+        url: `/vendors`,
+        method: "PUT",
+        body: formData ,
+      }),
+    }),
     createVendor: builder.mutation({
       query: (formData) => ({
         url: `/vendors`,
@@ -60,5 +68,6 @@ export const {
   useCreateVendorMutation,
   useDeleteVendorMutation,
   useGetVendorsMutation,
+  useUpdateVendorDetailsMutation,
   useUpdateVendorMutation,
 } = VendorApiSlice;

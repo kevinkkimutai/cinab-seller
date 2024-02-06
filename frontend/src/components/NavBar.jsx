@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { selectCurrentUser, selectUserRoles } from "../reducers/AuthReducers";
 import { useStateContext } from "../contexts/ContextProvider";
 import { HiCog, HiLogout, HiViewGrid } from "react-icons/hi";
-import { MdAdminPanelSettings } from "react-icons/md";
 import { Dropdown, Sidebar } from "flowbite-react";
 
 import { BiLogIn, BiSun, BiMoon } from "react-icons/bi"; // Import the icons you need from react-icons
@@ -167,9 +166,6 @@ export default function NavBar({ handleLogout }) {
           <Sidebar.ItemGroup>
             <Sidebar.Item icon={HiChartPie}>
               <Link to="/dashboard/vendor"> Dashboard</Link>
-            </Sidebar.Item>
-            <Sidebar.Item icon={MdAdminPanelSettings }>
-              <Link to="/dashboard/admins"> Admins</Link>
             </Sidebar.Item>
             <Sidebar.Collapse icon={HiShoppingBag} label="Manage Products">
               <Sidebar.Item>

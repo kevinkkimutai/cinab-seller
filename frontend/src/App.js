@@ -17,7 +17,6 @@ import {
   PendingOrders,
   RejectedOrder,
   PackagedOrders,
-  AdminSection,
 } from "./pages";
 import { useStateContext } from "./contexts/ContextProvider";
 import Vendor from "./pages/Vendors/steps/Vendor";
@@ -26,6 +25,8 @@ import NotFound from "./components/NotFound";
 import { useDispatch } from "react-redux";
 import { logOut } from "./reducers/AuthReducers";
 import RequireAuth from "./actions/requireAuth";
+import AirtelMoney from "./components/AirtelMoney";
+import Unauthorized from "./components/Uautherised";
 
 export default function App() {
   const { setCurrentColor, setCurrentMode, currentMode } = useStateContext();
@@ -49,32 +50,48 @@ export default function App() {
       <div className="h-full bg-slate-100">
         <Routes>
           <Route path="/login" element={<Login />} className="md:w-12/12" />
+          <Route
+            path="/unautherized"
+            element={<Unauthorized />}
+            className="md:w-12/12"
+          />
+
+          <Route
+            path="/money"
+            element={<AirtelMoney />}
+            className="md:w-12/12"
+          />
           <Route index element={<Login />} className="md:w-12/12" />
           <Route path="/vendors/:code" element={<VendorPage />} />
-          <Route element={<RequireAuth />}>
+
+          {/* Admin protected routes */}
+          <Route element={<RequireAuth requiredRoles={["Admin"]} />}>
+            <Route
+              path="all-vendors"
+              element={<AllVendors header="All Vendors" />}
+            />
+
+            <Route
+              path="registered-vendors"
+              element={<RegisteredVendors header="Rejected List Of Vendorss" />}
+            />
+            <Route
+              path="pending-vendors"
+              element={<PendingVendors header="Pending List of Vendors" />}
+            />
+
+            <Route
+              path="declined-vendors"
+              element={<DeclinedVendors header="Rejected List of Vendors" />}
+            />
+          </Route>
+
+          <Route element={<RequireAuth requiredRoles={["Vendor"]} />}>
             <Route
               path="/dashboard/"
               element={<Layout handleLogout={handleLogout} />}
             >
               <Route path="vendor" element={<Dashboard />} />
-              <Route
-                path="all-vendors"
-                element={<AllVendors header="All Vendors" />}
-              />
-              <Route
-                path="registered-vendors"
-                element={
-                  <RegisteredVendors header="Rejected List Of Vendors" />
-                }
-              />
-              <Route
-                path="pending-vendors"
-                element={<PendingVendors header="Pending List of Vendors" />}
-              />
-              <Route
-                path="declined-vendors"
-                element={<DeclinedVendors header="Rejected List of Vendors" />}
-              />
 
               <Route
                 path="products"
@@ -97,7 +114,7 @@ export default function App() {
               />
               <Route
                 path="packaged-orders"
-                element={<PackagedOrders header="List of Packaged Orders" />}
+                element={<PackagedOrders header="List of Packaed Orders" />}
               />
               <Route
                 path="rejected-orders"
@@ -110,8 +127,6 @@ export default function App() {
 
               <Route path="offers" element={<Offers />} />
               <Route path="sales" element={<Sales />} />
-
-              <Route path="admins" element={<AdminSection  header="List of Admins" />}/>
             </Route>
           </Route>
 
