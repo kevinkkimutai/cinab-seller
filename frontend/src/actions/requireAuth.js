@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentToken, logOut } from "../reducers/AuthReducers";
+import { selectCurrentToken,  selectUserRoles } from "../reducers/AuthReducers";
 
-const RequireAuth = () => {
+const RequireAuth = ({ requiredRoles = [] }) => {
   const token = useSelector(selectCurrentToken);
   const location = useLocation();
+  const userRoles = useSelector(selectUserRoles);
   const [retryCount, setRetryCount] = useState(0);
   const dispatch = useDispatch();
 
-  const logout = () => {
-    // Dispatch the logout action
-    dispatch(logOut());
-  };
+
 
   useEffect(() => {
     if (!token && retryCount < 3) {
@@ -35,15 +33,17 @@ const RequireAuth = () => {
         clearInterval(retryInterval); // Clean up the interval when the component unmounts
       };
     }
-  }, [token, retryCount, dispatch]); // Include dispatch in the dependency array to prevent potential issues
+  }, [token, retryCount, dispatch]);
 
-  return token ? (
+  // Check if userRoles is not null before using includes method
+  const hasRequiredRole =
+    userRoles && (requiredRoles.length === 0 || requiredRoles.some((role) => userRoles.includes(role)));
+
+  return token && hasRequiredRole ? (
     <Outlet />
   ) : (
     <>
-      <Navigate to="/" state={{ from: location }} replace />
-      {/* Dispatch the logout action when the user logs out */}
-      {logout()}
+      <Navigate to="/unautherized" state={{ from: location }} replace />
     </>
   );
 };

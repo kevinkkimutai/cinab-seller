@@ -35,55 +35,42 @@ export default function Products() {
   }, [fetchData]);
 
   return (
-    <div className="">
-  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-    <caption className="pl-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-primary-50 dark:text-white dark:bg-gray-800">
+    <div className="h-full">
+      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 h-full overflow-auto">
+        <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-primary-50 dark:text-white dark:bg-gray-800">
           Recently Added Products
         </caption>
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="p-4">
-                    <div class="flex items-center">
-                      #
-                    </div>
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Product name
-                </th>
-                <th scope="col" class="px-6 py-3">
-                In-Stock
-                </th>
-                <th scope="col" class="px-6 py-3">
-                   Units-left
-                </th>
-            </tr>
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" className="px-6 py-3">
+              Product name
+            </th>
+            <th scope="col" className="px-6 py-3">
+              In-Stock
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Units Left
+            </th>
+          </tr>
         </thead>
         <tbody>
-        {productData.slice(-8).map((product) => (
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" 
-            key={product.id}
+          {productData.slice(-8).map((product) => (
+            <tr
+              key={product.id} // Assuming your product objects have a unique id
+              className="bg-primary-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                     {product.index}.
-                    </div>
-                </td>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
                 {product.name.slice(0, 10)}
-                </th>
-                <td class="px-6 py-4">
-                {product.inStock ? "Yes" : "No"}
-                </td>
-                <td class="px-6 py-4">
-                {product.stock}
-                </td>
+              </th>
+              <td className="px-6 py-4">{product.inStock ? "Yes" : "No"}</td>
+              <td className="px-6 py-4">{product.stock}</td>
             </tr>
-       ))}
+          ))}
         </tbody>
-    </table>
-</div>
-
+      </table>
     </div>
   );
 }
