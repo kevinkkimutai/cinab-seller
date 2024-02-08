@@ -2,14 +2,14 @@ import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { StepperContext } from "../../../contexts/StepperContext";
 import { useDispatch } from "react-redux";
-import { useUpdateVendorMutation } from "../../../actions/VendorAction";
 import { createVendor } from "../../../reducers/VendorReducer";
+import { useUpdateVendorDetailsMutation } from "../../../actions/VendorAction";
 
-export default function PaymentInformation({ currentStep, handleClick }) {
+export default function PaymentInformation({ handleClick }) {
   const dispatch = useDispatch();
   const [loading, setIsLoading] = useState(false);
   const { userData, setUserData } = useContext(StepperContext);
-  const [createVendorRequest] = useUpdateVendorMutation();
+  const [createVendorRequest] = useUpdateVendorDetailsMutation();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,8 +20,6 @@ export default function PaymentInformation({ currentStep, handleClick }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const secretCodeValue = localStorage.getItem("secretCode");
-    setUserData({ ...userData, secretCode: secretCodeValue });
     try {
       const formData = new FormData();
 
@@ -32,8 +30,10 @@ export default function PaymentInformation({ currentStep, handleClick }) {
           formData.append(key, userData[key]);
         }
       }
+      const secretCodeValue = userData.secretCode;
+      console.log(secretCodeValue);
       const res = await createVendorRequest(formData).unwrap();
-      dispatch(createVendor(res.data)); // Dispatch action to set vendor in Redux store
+      dispatch(createVendor(res.data));
       toast.success("Vendor created successfully");
       console.log(res);
       handleClick("next");
@@ -42,10 +42,14 @@ export default function PaymentInformation({ currentStep, handleClick }) {
         toast.error("Vendor Not Found");
       } else if (error.status === 500) {
         toast.error("Failed To create Vendor try again");
-      } else {
+      } 
+      else if (error.status === 401) {
+        toast.error(error.data.error);
+      } 
+      else {
         toast.error("Internal Server Error");
       }
-      console.log(error.status);
+      console.log(error.data.error);
     } finally {
       setIsLoading(false);
     }

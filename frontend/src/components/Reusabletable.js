@@ -473,11 +473,9 @@ export default function ReusableTable({
                                     {onView && (
                                       <button
                                         onClick={() => handleView(row)}
-                                        className="text-yellow-500"
+                                        className="inline-flex items-center px-1.5 py-0.5 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:ring-green-300 dark:focus:green-red-900"
                                       >
-                                        <TooltipComponent title="View">
-                                          <BsViewStacked className=" text-xl" />
-                                        </TooltipComponent>
+                                        View
                                       </button>
                                     )}
                                   </div>
