@@ -47,3 +47,4 @@ export const {
 export default AdminSlice.reducer;
 
 export const selectAdmin = (state) => state.Admins;
+
