@@ -28,6 +28,7 @@ app.use(
   cors({
     origin: [
       "https://sellercenter.cinab.co.ke",
+      "http://localhost:3000",
     ],
     credentials: true,
   })
