@@ -1,13 +1,14 @@
 {
-  "developments": {
+
+  "development": {
     "username": "cinabcok_online",
     "password": "?SEL1pX;{-)O",
     "database": "cinabcok_main",
-    "host": "127.0.0.1",
+    "host": "cinab.co.ke",
     "port": 3306,
     "dialect": "mysql",
     "dialectOptions": {
-      "ssl": false
+      "ssl": true
     }
   },
   "development": {
