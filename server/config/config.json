@@ -1,9 +1,9 @@
 {
-  "": {
+  "developments": {
     "username": "cinabcok_online",
     "password": "?SEL1pX;{-)O",
     "database": "cinabcok_main",
-    "host": "cinab.co.ke",
+    "host": "127.0.0.1",
     "port": 3306,
     "dialect": "mysql",
     "dialectOptions": {
@@ -13,7 +13,7 @@
   "development": {
     "username": "root",
     "password": "",
-    "database": "training_cinab",
+    "database": "cinabdb",
     "host": "127.0.0.1",
     "port": 3306,
     "dialect": "mysql",
@@ -21,7 +21,7 @@
       "ssl": false
     }
   },
-  "production": {
+  "": {
     "username": "ugiuhnbvokave",
     "password": "1u4@217kJbb@",
     "database": "dbheawk4u7vsfk",
