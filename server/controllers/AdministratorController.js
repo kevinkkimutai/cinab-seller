@@ -87,6 +87,7 @@ const administratorController = {
     }
   },
 
+  
   delete: async (req, res) => {
     const adminId = req.params.id;
 

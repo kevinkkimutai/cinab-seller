@@ -19,7 +19,7 @@ export default function Unauthorized() {
         <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl">
           401
         </h1>
-        <p className="mb-4 text-3xl tracking-tight font-bold text-white md:text-4xl dark:text-white">
+        <p className="mb-4 text-3xl tracking-tight font-bold text-black md:text-4xl">
           Not allowed{" "}
         </p>{" "}
         <div className="flex gap-4">
