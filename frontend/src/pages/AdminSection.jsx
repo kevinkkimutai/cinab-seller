@@ -2,27 +2,29 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ReusableTable } from "../components";
 import {
   useGetAdminsMutation,
+  useCreateAdminMutation,
   useDeleteAdminMutation,
 } from "../actions/AdminAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  selectAdmins,
+  selectAdmin,
   setAdmin,
 
 } from "../reducers/AdminReducers";
 import { toast } from "react-toastify";
-import UpdateAdminsFn from "./Admins/updatedProudct";
 import { Button, Spinner } from "flowbite-react";
-import { useNavigate } from "react-router-dom";
+import { addAdmin } from "../reducers/AdminReducers";
+
 
 export default function Admins({ header }) {
   const [loading, setLoading] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const [getAdmins] = useGetAdminsMutation();
+  const [createAdmin] = useCreateAdminMutation();
   const [deleteAdminMutation] = useDeleteAdminMutation();
-  const [showUpdatePage, setShowUpdatePage] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const adminData = useSelector(selectAdmins);
+  const adminData = useSelector(selectAdmin);
   const dispatch = useDispatch();
 
   const fetchData = useCallback(async () => {
@@ -46,8 +48,68 @@ export default function Admins({ header }) {
     fetchData();
   }, [fetchData]);
 
+
+  const [formData, setFormData] = useState({
+
+    name: null,
+    contact: "+254746645142",
+    email: "",
+    password: "",
+    image: null,
+
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const formDataToSend = new FormData();
+
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("contact", formData.contact);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("password", formData.password);
+    formDataToSend.append("image", formData.image);
+  
+
+    console.log("formData before:", formData);
+
+    try {
+      const { data } = await createAdmin(formDataToSend);
+      if (data) {
+        dispatch(addAdmin(data));
+        console.log("formData after:", formData);
+        toast.success(`${formData.name} added to Admins successfully`);
+      } else {
+        toast.error("Failed to create Admin");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to create Admin");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleFileChange = (e) => {
+    const files = e.target.files;
+    if (e.target.name === "image") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        image: files[0],
+      }));
+    }
+  };
+
+
   const handleEdit = (row) => {
-    setShowUpdatePage(true);
+
     setSelectedAdmin(row);
   };
 
@@ -57,6 +119,7 @@ export default function Admins({ header }) {
     setSelectedAdmin(row);
     // Open the modal
     document.getElementById("popup-modal").classList.remove("hidden");
+  
   };
 
   const handleDeleteClick = async () => {
@@ -64,7 +127,7 @@ export default function Admins({ header }) {
     setLoading(true);
     try {
       await deleteAdminMutation(id);
-      toast.success("Item deleted successfully");
+      toast.success("Admin deleted successfully");
       document.getElementById("popup-modal").classList.add("hidden");
       fetchData();
     } catch (error) {
@@ -74,34 +137,25 @@ export default function Admins({ header }) {
     }
   };
 
-  const handleClose = (e) => {
-    setShowUpdatePage(false);
-  };
-const navigate = useNavigate()
+
   const handleAddAdmin = (e) => {
-    navigate("/dashboard/Adminform")
+    document.getElementById("authentication-modal").classList.remove("hidden");
   }
 
   return (
     <>
-      {showUpdatePage ? (
-        <UpdateAdminsFn
-          formData={selectedAdmin}
-          setSelectedAdmin={setSelectedAdmin}
-          handleClose={handleClose}
-        />
-      ) : (
+  
         <ReusableTable
           columns={[
             "image",
             "name",
-            "Email",
+            "email",
           ]}
           data={adminData}
           header={header}
           itemsPerPage={10}
           btnFn={handleAddAdmin}
-          // isLoading={loading}
+          isLoading={loading}
 
           onButton="Add Admin"
           onDelete={handleOpenModal}
@@ -122,7 +176,7 @@ const navigate = useNavigate()
             image: "Image",
           }}
         />
-      )}
+      
 
       {/* start delete modal */}
       <div
@@ -176,7 +230,7 @@ const navigate = useNavigate()
                 Are you sure you want to delete{" "}
                 <span className="underline text-red-700 dark:text-red-500 font-bold uppercase">
                   {" "}
-                  {selectedAdmin?.pname || ""}
+                  {selectedAdmin?.name || ""}
                 </span>{" "}
                 ?
               </h3>
@@ -208,6 +262,61 @@ const navigate = useNavigate()
           </div>
         </div>
       </div>
+
+
+
+{/* <!-- Main modal --> */}
+<div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden justify-center bg-gray-900/80 mx-auto flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 j items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-xl max-h-full">
+        {/* <!-- Modal content --> */}
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            {/* <!-- Modal header --> */}
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Add Admin
+                </h3>
+                <button type="button" onClick={() =>
+                document.getElementById("authentication-modal").classList.add("hidden")
+              } class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            {/* <!-- Modal body --> */}
+            <div class="p-4 md:p-5">
+                <form class="space-y-4"  onSubmit={handleSubmit}>
+                   <div className="w-full flex gap-2">
+                   <div className="w-1/2">
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter FullName</label>
+                        <input type="text" name="name" id="name"  value={formData.name}
+                onChange={handleInputChange}
+                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Kevin Kirui" required />
+                    </div>
+                    <div className="w-1/2">
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Email</label>
+                        <input type="email" name="email" id="email"   value={formData.email}  onChange={handleInputChange}
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="cinabonline@gmail.com" required />
+                    </div>
+                   </div>
+                   <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload image</label>
+                        <input onChange={handleFileChange} class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file" />
+                   </div>
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter password</label>
+                        <input type="password" name="password"  value={formData.password}  onChange={handleInputChange} id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
+                    </div>
+                
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 
+
     </>
   );
 }
