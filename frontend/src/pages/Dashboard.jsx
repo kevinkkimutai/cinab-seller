@@ -12,18 +12,9 @@ import {
 
 } from "../reducers/ProductReducers";
 import {
-  setOrder,
-  selectOrders,
-
-} from "../reducers/OrderReducers";
-import {
   useGetProductsMutation,
 
 } from "../actions/ProductAction";
-import {
-  useGetOrdersMutation,
-
-} from "../actions/OrderAction";
 
 
 export default function Dashboard() {
@@ -55,55 +46,6 @@ export default function Dashboard() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
-  // orders
-   const [getOrders] = useGetOrdersMutation();
-  const orders =  useSelector(selectOrders);
-  const fetchOrders = useCallback(async () => {
-    setLoading(true);
-    let res = null; // Declare res outside of the try block
-    try {
-      res = await getOrders();
-      if (!res.data) {
-        console.log("Failed to get Orders");
-      } else {
-        dispatch(setOrder(res.data));
-         
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [dispatch, getOrders]);
-  useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
-
-
-  const ordersd =  useSelector(selectOrders);
-  const fetchOrdersd = useCallback(async () => {
-    setLoading(true);
-    let res = null; // Declare res outside of the try block
-    try {
-      res = await getOrders();
-      if (!res.data) {
-        console.log("Failed to get Orders");
-      } else {
-        // Filter orders based on the "delivered" status
-        const deliveredOrders = res.data.filter(order => order.status === 'delivered');
-        dispatch(setOrder(deliveredOrders));
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [dispatch, getOrders]); 
-
-  useEffect(() => {
-    fetchOrdersd();
-  }, [fetchOrdersd]);
 
 
   return (
@@ -160,7 +102,7 @@ export default function Dashboard() {
                   Offers{" "}
                 </span>{" "}
               </div>
-              <span className="text-gray-950 text-md md:text-2xl">0</span>{" "}
+              <span className="text-gray-950 text-md md:text-2xl">1000</span>{" "}
             </div>
           </button>
         </div>
@@ -188,7 +130,7 @@ export default function Dashboard() {
                   Orders{" "}
                 </span>{" "}
               </div>
-              <span className="text-gray-950 text-md md:text-2xl">{orders.length}</span>{" "}
+              <span className="text-gray-950 text-md md:text-2xl">1000</span>{" "}
             </div>
           </button>
         </div>
@@ -216,17 +158,17 @@ export default function Dashboard() {
                   Sales{" "}
                 </span>{" "}
               </div>
-              <span className="text-gray-950 text-md md:text-2xl">{ordersd.length}</span>{" "}
+              <span className="text-gray-950 text-md md:text-2xl">1000</span>{" "}
             </div>
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-4 h-full">
-        <div className=" h-fu rounded ">
+        <div className=" h-full rounded bg-gray-50  overflow-auto scrollbar-hidden dark:bg-gray-800">
           <TableProducts />
         </div>
-        <div className=" h-fu rounded ">
+        <div className=" h-full rounded bg-gray-50  overflow-auto scrollbar-hidden dark:bg-gray-800">
           <TableResents />
         </div>
       </div>

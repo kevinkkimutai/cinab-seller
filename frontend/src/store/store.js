@@ -8,6 +8,7 @@ import vendorReducer from "../reducers/VendorReducer";
 import productReducer from "../reducers/ProductReducers";
 import orderReducer from "../reducers/OrderReducers";
 import offerReducer from "../reducers/OfferReducer";
+import AdminReducers from "../reducers/AdminReducers";
 
 const authPersistConfig = {
   key: "auth",
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   Product: productReducer,
   Order: orderReducer,
   Offer: offerReducer,
+  Admin: AdminReducers,
 
   [apiSlice.reducerPath]: apiSlice.reducer,
 });

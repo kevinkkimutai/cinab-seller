@@ -12,6 +12,8 @@ import {
   setSubCategory,
 } from "../../reducers/ProductReducers";
 import { toast } from "react-toastify";
+import imageCompression from "browser-image-compression"; 
+
 import {
   useCreateProductMutation,
   useGetBrandsMutation,
@@ -20,10 +22,10 @@ import {
 import ReusablePath from "../../components/ReusablePath";
 export default function ProductsForm() {
   const [formData, setFormData] = useState({
-  
-    category_id: null,
-    subcategory_id: null,
-    childcategory_id: null,
+    userId: 1,
+    category_id: 0,
+    subcategory_id: 0,
+    childcategory_id: 0,
     tax_id: 3,
     brand_id: null,
     name: "",
@@ -97,20 +99,53 @@ export default function ProductsForm() {
       [e.target.name]: e.target.value,
     });
   };
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const files = e.target.files;
-    if (e.target.name === "image") {
+
+    if (e.target.name === "image" && files.length > 0) {
+      // Compress the main image before setting it in the state
+      const compressedImage = await compressImage(files[0]);
       setFormData((prevFormData) => ({
         ...prevFormData,
-        image: files[0],
+        image: compressedImage,
       }));
-    } else if (e.target.name === "gallery") {
+    } else if (e.target.name === "gallery" && files.length > 0) {
+      // Compress each gallery image before adding it to the state
+      const compressedGallery = await Promise.all(
+        Array.from(files).map((file) => compressImage(file))
+      );
+
       setFormData((prevFormData) => ({
         ...prevFormData,
-        gallery: [...prevFormData.gallery, ...files],
+        gallery: [...prevFormData.gallery, ...compressedGallery],
       }));
     }
   };
+
+
+  const compressImage = async (file) => {
+    const options = {
+      maxSizeMB: 0.1, // Set the maximum file size to 10KB
+      maxWidthOrHeight: 400, 
+      useWebWorker: true,
+      quality: 0.8,
+    };
+  
+    try {
+      const compressedBlob = await imageCompression(file, options);
+      
+      // Create a File object with the same data, name, and type
+      const compressedFile = new File([compressedBlob], file.name, {
+        type: compressedBlob.type,
+      });
+  
+      return compressedFile;
+    } catch (error) {
+      console.error("Error compressing image:", error);
+      return file; // Return the original file if compression fails
+    }
+  };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
