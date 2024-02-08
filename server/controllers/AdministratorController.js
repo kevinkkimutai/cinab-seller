@@ -1,18 +1,49 @@
-const { Administrator } = require("../models");
+const { Administrator, User } = require("../models");
+const { newUser } = require("./UserController");
+const bcrypt = require("bcrypt");
 
 const administratorController = {
   create: async (req, res) => {
-    const { name, location, gender, contact, email } = req.body;
+    const { name, email, password, contact } = req.body;
 
+    const imageFile = req.file;
     try {
+      const existingUser = await User.findOne({
+        where: { email: email },
+      });
+      if (existingUser) {
+        return res.status(409).send({ error: "Email Already Exists" });
+      }
+      // Find the id of the last user
+      const lastUser = await User.findOne({
+        order: [["id", "DESC"]],
+      });
+      // Set a default password for the user
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const imagePath = imageFile
+        ? `${API}/uploads/${imageFile.filename}`
+        : null;
+
+      // Create a new user
+      const userDataInfo = {
+        name,
+        email,
+        role: "Admin",
+        refreshToken: null,
+        status: "Approved",
+        password: hashedPassword,
+        id: lastUser ? lastUser.id + 1 : 1,
+      };
+      const createdUser = await newUser(userDataInfo, password);
+
       const createdAdmin = await Administrator.create({
         name,
-        location,
-        gender,
-        contact,
         email,
+        contact,
+        userId: createdUser.id,
+        image: imagePath,
       });
-
       res.status(201).json(createdAdmin);
     } catch (error) {
       console.error(error);
@@ -55,10 +86,6 @@ const administratorController = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
-
-
-
-
 
   delete: async (req, res) => {
     const adminId = req.params.id;
