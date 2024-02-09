@@ -1,6 +1,6 @@
 {
 
-  "development": {
+  "developments": {
     "username": "cinabcok_online",
     "password": "?SEL1pX;{-)O",
     "database": "cinabcok_main",
@@ -14,9 +14,9 @@
   "development": {
     "username": "root",
     "password": "",
-    "database": "cinabdb",
+    "database": "kelvin",
     "host": "127.0.0.1",
-    "port": 3306,
+    "port": 81,
     "dialect": "mysql",
     "dialectOptions": {
       "ssl": false
