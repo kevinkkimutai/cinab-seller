@@ -6,6 +6,6 @@ const router = express.Router();
 router.post("/authorize", airtelMoneyController.authorize);
 router.get("/authorize", airtelMoneyController.getAuthToken)
 router.post("/collectMoney", airtelMoneyController.collectMoney);
-router.get("/checkCollectionStatus/:accessToken/:id", airtelMoneyController.checkCollectionStatus);
+router.get("/checkCollectionStatus/:id", airtelMoneyController.checkCollectionStatus);
 
 module.exports = router;
