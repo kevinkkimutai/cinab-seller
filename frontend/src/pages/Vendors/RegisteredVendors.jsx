@@ -25,7 +25,7 @@ export default function RegisteredVendors() {
   const [loading, setIsLoading] = useState(false);
   const [creatVendorMutation] = useCreateVendorMutation();
   const [selfRegistrationMutation] = useSelfRegisterMutation();
-  const dispatch = useDispatch();
+  const dispatcher = useDispatch();
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setVendorData((prevData) => ({
@@ -49,7 +49,7 @@ export default function RegisteredVendors() {
     const res = await selfRegistrationMutation(modalData);
     if (res.data) {
       toast.success("Vendor created successfull");
-      dispatch(createVendor(res.data));
+      dispatcher(createVendor(res.data));
       setOpenModal(false);
       setOpenModal({
         companyEmail: "",
@@ -84,7 +84,7 @@ export default function RegisteredVendors() {
     const res = await creatVendorMutation(vendorData);
     if (res.data) {
       toast.success("Vendor created successfull");
-      dispatch(createVendor(res.data));
+      dispatcher(createVendor(res.data));
       setVendorData({
         companyEmail: "",
         companyName: "",
