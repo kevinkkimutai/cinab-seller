@@ -16,7 +16,7 @@
     "password": "",
     "database": "kelvin",
     "host": "127.0.0.1",
-    "port": 81,
+    "port": 2000,
     "dialect": "mysql",
     "dialectOptions": {
       "ssl": false
@@ -34,3 +34,4 @@
     }
   }
 }
+
