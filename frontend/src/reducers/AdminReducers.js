@@ -40,11 +40,11 @@ const AdminSlice = createSlice({
 export const {
   setAdmin,
   addAdmin,
-//   updateAdmin,
+ updateAdmin,
   deleteAdmin,
 } = AdminSlice.actions;
 
 export default AdminSlice.reducer;
 
-export const selectAdmin = (state) => state.Admins;
+export const selectAdmins = (state) => state.Admin.admins;
 
