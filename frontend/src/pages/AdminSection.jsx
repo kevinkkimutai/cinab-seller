@@ -4,11 +4,13 @@ import {
   useGetAdminsMutation,
   useCreateAdminMutation,
   useDeleteAdminMutation,
+  useUpdateAdminMutation,
 } from "../actions/AdminAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  selectAdmin,
+  selectAdmins,
   setAdmin,
+  updateAdmin,
 
 } from "../reducers/AdminReducers";
 import { toast } from "react-toastify";
@@ -23,8 +25,10 @@ export default function Admins({ header }) {
   const [createAdmin] = useCreateAdminMutation();
   const [deleteAdminMutation] = useDeleteAdminMutation();
   const [isLoading, setIsLoading] = useState(false);
+  const [updateAdminMutation] = useUpdateAdminMutation();
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  const adminData = useSelector(selectAdmin);
+  const adminData = useSelector(selectAdmins);
   const dispatch = useDispatch();
 
   const fetchData = useCallback(async () => {
@@ -80,8 +84,9 @@ export default function Admins({ header }) {
         dispatch(addAdmin(data));
         console.log("formData after:", formData);
         toast.success(`${formData.name} added to Admins successfully`);
+        document.getElementById("authentication-modal").classList.add("hidden");
       } else {
-        toast.error("Failed to create Admin");
+        toast.error("Email Already Exists.");
       }
     } catch (error) {
       console.error(error);
@@ -109,12 +114,62 @@ export default function Admins({ header }) {
 
 
   const handleEdit = (row) => {
-
-    setSelectedAdmin(row);
+    if (row && row.hasOwnProperty('name')) {
+      document.getElementById("edit-modal").classList.remove("hidden");
+      setSelectedAdmin(row);
+    } else {
+      console.error('Invalid row data:', row);
+    }
   };
-
+  
+  const handleInputChangeUpdate = (e) => {
+    setSelectedAdmin({
+      ...selectedAdmin,
+      [e.target.name]: e.target.value,
+    });
+  };
+  
+  
+    // update Admin
+    const handleUpdateAdmin = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      try {
+        if (selectedAdmin) {
+          const formData = new FormData();
+    
+        
+          formData.append("name", selectedAdmin.name);
+          formData.append("email", selectedAdmin.email);
+          formData.append("contact", selectedAdmin.contact);
+    
+          // Handle the image based on its type
+          if (selectedImage instanceof File) {
+            formData.append("image", selectedImage);
+          } else if (typeof selectedAdmin.image === "string") {
+            formData.append("image", selectedAdmin.image);
+          }
+    
+          const { data } = await updateAdminMutation({
+            id: selectedAdmin.id,
+            formData,
+          });
+    
+          dispatch(updateAdmin(data));
+          toast.success(`${data.name} updated successfully`);
+    
+          setSelectedImage(null);
+        }
+      } catch (error) {
+        console.error("Error updating Admin:", error);
+        toast.error("An error occurred while updating admin. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+  
   //   open modal
-
   const handleOpenModal = async (row) => {
     setSelectedAdmin(row);
     // Open the modal
@@ -263,6 +318,63 @@ export default function Admins({ header }) {
         </div>
       </div>
 
+{/* <!-- Start Edit modal --> */}
+<div id="edit-modal" tabindex="-1" aria-hidden="true" class="hidden justify-center bg-gray-900/80 mx-auto flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 j items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-xl max-h-full">
+        {/* <!-- Modal content --> */}
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            {/* <!-- Modal header --> */}
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                   Update Admin
+                </h3>
+                <button type="button" onClick={() =>
+                document.getElementById("edit-modal").classList.add("hidden")
+              } class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            {/* <!-- Modal body --> */}
+            <div class="p-4 md:p-5">
+                <form class="space-y-4"  onSubmit={handleUpdateAdmin}>
+                   <div className="w-full flex gap-2">
+                   <div className="w-1/2">
+                        <label for="name1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter FullName</label>
+                        <input type="text" name="name" id="name1"  value={selectedAdmin ? selectedAdmin.name : ""} 
+  onChange={handleInputChangeUpdate} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Kevin Kirui" required />
+                    </div>
+                    <div className="w-1/2">
+                        <label for="email1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Email</label>
+                        <input type="email" name="email1" id="email1" value={formData.email} 
+                    onChange={handleInputChangeUpdate}
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="cinabonline@gmail.com" required />
+                    </div>
+                   </div>
+
+                   <div className="w-full flex gap-2">
+                   <div className="w-1/2">
+                        <label for="contact1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Contact</label>
+                        <input type="text" name="contact1" id="contact1" 
+                       value={formData.contact} 
+                        onChange={handleInputChange}
+                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Kevin Kirui" required />
+                    </div>
+                   <div className="w-1/2">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar1">Upload image</label>
+                        <input onChange={handleFileChange} class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar1" type="file" />
+                   </div>
+                   </div>
+                  
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 
 
 
 {/* <!-- Main modal --> */}
@@ -300,10 +412,20 @@ export default function Admins({ header }) {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="cinabonline@gmail.com" required />
                     </div>
                    </div>
-                   <div>
+
+                   <div className="w-full flex gap-2">
+                   <div className="w-1/2">
+                        <label for="contact" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Contact</label>
+                        <input type="text" name="contact" id="contact"  value={formData.contact}
+                onChange={handleInputChange}
+                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Kevin Kirui" required />
+                    </div>
+                   <div className="w-1/2">
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload image</label>
                         <input onChange={handleFileChange} class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file" />
                    </div>
+                   </div>
+                  
                     <div>
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter password</label>
                         <input type="password" name="password"  value={formData.password}  onChange={handleInputChange} id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
