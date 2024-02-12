@@ -16,22 +16,32 @@ const airtelMoneyController = {
   },
 
   collectMoney: async (req, res) => {
-    const {
-      accessToken,
-      reference,
-      customerPhoneNumber,
-      amount,
-      transactionId,
-    } = req.body;
-
     try {
-      const collectResults = await airtelMoneyController.collectMoneyHelper(
-        accessToken,
+      const accessToken = await airtelMoneyController.getAuthToken();
+      const {
         reference,
         customerPhoneNumber,
         amount,
-        transactionId
+        transactionId,
+      } = req.body;
+
+      const generateTransactionId = () => {
+        let result = "";
+        for (let i = 0; i < 10; i++) {
+          // You can adjust the length of the transaction ID as needed
+          result += Math.floor(Math.random() * 10); // Generates a random digit (0-9)
+        }
+        return result;
+      };
+
+      const collectResults = await airtelMoneyController.collectMoneyHelper(
+        accessToken,
+        (reference = "Tom Otieno"),
+        (customerPhoneNumber = "0780967277"),
+        (amount = "10"),
+        (transactionId = generateTransactionId())
       );
+      console.log(collectResults);
       if (collectResults.success) {
         res.json(collectResults.data);
       } else {
@@ -43,14 +53,16 @@ const airtelMoneyController = {
   },
 
   checkCollectionStatus: async (req, res) => {
-    const { accessToken, id } = req.params;
-
     try {
+      const accessToken = await airtelMoneyController.getAuthToken();
+      const { id } = req.params;
+
       const collectionStatus =
         await airtelMoneyController.checkCollectionStatusHelper(
           accessToken,
           id
         );
+
       if (collectionStatus.success) {
         res.json(collectionStatus.data);
       } else {
@@ -71,18 +83,21 @@ const airtelMoneyController = {
       Accept: "*/*",
     };
     const data = {
-      client_id: "98ef8277-2d05-4ec7-a53a-cb2b42e727fa",
-      client_secret: "****************************",
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET_KEY,
       grant_type: "client_credentials",
     };
 
     try {
       const response = await axios.post(url, data, { headers });
-      const success = response.status === 200;
-      return { success, data: response.data };
+      if (response.status === 200) {
+        return response.data.access_token;
+      } else {
+        throw new Error("Failed to obtain access token");
+      }
     } catch (ex) {
-      console.log(ex);
-      return { success: false, message: ex.message };
+      console.error(ex);
+      throw new Error("Failed to obtain access token");
     }
   },
 
@@ -98,21 +113,21 @@ const airtelMoneyController = {
     const headers = {
       "Content-Type": "application/json",
       Accept: "*/*",
-      "X-Country": "UG", // payer's country in ISO format
-      "X-Currency": "UGX", // payer's currency in ISO format
+      "X-Country": "KE", // Kenya
+      "X-Currency": "KES", // Kenyan Shilling
       Authorization: `Bearer ${accessToken}`,
     };
     const data = {
       reference: reference,
       subscriber: {
-        country: "UG",
-        currency: "UGX",
+        country: "KE",
+        currency: "KES",
         msisdn: parseInt(customerPhoneNumber),
       },
       transaction: {
         amount: parseInt(amount),
-        country: "UG",
-        currency: "UGX",
+        country: "KE",
+        currency: "KES",
         id: transactionId,
       },
     };
@@ -132,8 +147,8 @@ const airtelMoneyController = {
     const headers = {
       "Content-Type": "application/json",
       Accept: "*/*",
-      "X-Country": "UG",
-      "X-Currency": "UGX",
+      "X-Country": "KE",
+      "X-Currency": "KES",
       Authorization: `Bearer ${accessToken}`,
     };
 
@@ -152,7 +167,7 @@ const airtelMoneyController = {
 
   baseUrl: () => {
     return process.env.DEBUG
-      ? "https://openapiuat.airtel.africa"
+      ? "https://openapi.airtel.africa"
       : "https://openapi.airtel.africa";
   },
 };
