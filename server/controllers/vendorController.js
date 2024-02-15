@@ -88,6 +88,7 @@ const vendorController = {
       AddressOne,
       username,
       contact,
+      password,
     } = req.body;
 
     try {
@@ -106,7 +107,6 @@ const vendorController = {
         order: [["id", "DESC"]],
       });
       // Set a default password for the user
-      const password = "123456"
       const hashedPassword = await bcrypt.hash(password, 10);
       // Create a new user
       const userDataInfo = {
