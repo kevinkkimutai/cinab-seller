@@ -96,9 +96,9 @@ const UnderVerification = async ({ username, email, next }) => {
       html: `
       <p>Dear ${username},</p>
 
-      <p>Thank you for selecting CINAB as your e-commerce partner. We're thrilled about our upcoming business collaboration. Your account is currently under review. Rest assured, we're carefully examining the information provided to ensure a seamless onboarding process.</p>
+      <p>Thank you for selecting CINAB as your e-commerce partner. We're thrilled about our upcoming business collaboration. Your account is currently under review. Rest assured, we're carefully examining the information provided to ensure a seamless onboarding process.
       
-      <p>We appreciate your patience during this review. If you have urgent questions, please contact us at <a href="mailto:info@cinab.co.ke">info@cinab.co.ke</a> / <a href="tel:+254718888628">+254718888628</a>.</p>
+       <br/>We appreciate your patience during this review. If you have urgent questions, please contact us at: <br/> <a href="mailto:info@cinab.co.ke">info@cinab.co.ke</a> / <a href="tel:+254718888628">+254718888628</a>.</p>
       
       <p>Thank you for your cooperation. We're eager to assist you in achieving your business objectives through our platform.</p>
       
