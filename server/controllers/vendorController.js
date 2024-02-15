@@ -51,14 +51,14 @@ const vendorController = {
     console.log(req.body);
     try {
       // Check if a user with the given companyEmail already exists
-      // const existingUser = await User.findOne({
-      //   where: { email: companyEmail },
-      // });
-      // if (existingUser) {
-      //   return res
-      //     .status(409)
-      //     .send({ error: "company email already registered" });
-      // }
+      const existingUser = await User.findOne({
+        where: { email: companyEmail },
+      });
+      if (existingUser) {
+        return res
+          .status(409)
+          .send({ error: "company email already registered" });
+      }
 
       const randomString = generateRandomString(20);
       sendSecretCode({

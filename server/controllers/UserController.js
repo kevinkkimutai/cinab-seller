@@ -175,7 +175,7 @@ const userController = {
     try {
       const { otp } = req.body;
       if (!otp) {
-        return res.status(400).json({ error: "Email is required" });
+        return res.status(400).json({ error: "Otp is required" });
       }
 
       const user = await User.findOne({ where: { otp } });
@@ -262,7 +262,7 @@ const userController = {
 
       // Send the OTP to the user's email
       sendingEmails({
-        from: "no-reply@example.com",
+        from: `"Cinab" <seller@cinab.co.ke>`,
         to: email,
         subject: "OTP for Password Reset",
         text: `Hello, ${user.name} Your OTP is: ${otp}`,
@@ -270,6 +270,7 @@ const userController = {
 
       return res.status(200).json({ message: "OTP sent successfully." });
     } catch (error) {
+      console.log(error);
       return res.status(500).send({ error: "Failed to send OTP" });
     }
   },

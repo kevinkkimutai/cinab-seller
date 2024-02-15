@@ -1,6 +1,6 @@
 export { default as Dashboard} from "../pages//Dashboard";
 export { default as Inventory } from "../pages/Inventory";
-export { default as Login } from "../pages/Login";
+export { default as Login } from "./Auth/Login";
 export { default as Offers } from "../pages/Offers";
 export {default as Error} from "../pages/Error";
 
@@ -24,5 +24,6 @@ export {default as RegisteredVendors} from "./Vendors/RegisteredVendors";
 export {default as DeclinedVendors} from "./Vendors/DeclinedVendors";
 export {default as AdminSection } from "./AdminSection";
 export {default as Registration} from "./Registration"
+export {default as ResetPassword} from "./Auth/ForgetPassword"
 
 

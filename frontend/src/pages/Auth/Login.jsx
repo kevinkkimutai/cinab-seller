@@ -1,23 +1,19 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { Alert, Button } from "react-bootstrap";
-import { setCredentials, setCurrentUser } from "../reducers/AuthReducers";
-import Spinner from "react-bootstrap/Spinner";
+import { setCredentials, setCurrentUser } from "../../reducers/AuthReducers";
 
 // Add icon imports
 import { FiEye, FiEyeOff } from "react-icons/fi";
 // import Cookies from "js-cookie";
-import axios from "axios";
-import { useLoginMutation } from "../actions/authActions";
+import { useLoginMutation } from "../../actions/authActions";
 import { toast } from "react-toastify";
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isReseting, setIsReseting] = useState(false);
-  const [showResetPassword, setResetPassword] = useState(true); // State for password visibility
+
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
@@ -73,43 +69,7 @@ const Login = () => {
     }
   };
 
-  const handleResetPassword = async () => {
-    setIsReseting(true);
-
-    if (!email) {
-      // Check if the email is empty
-      toast.error("Please enter an email");
-      setIsReseting(false);
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        "https://server.cinab.co.ke/v2/forget",
-        {
-          email,
-        }
-      );
-      console.log(response);
-      setResetPassword(false);
-    } catch (err) {
-      console.log(err);
-      if (!err.response) {
-        toast.error("No Server Response");
-      } else if (err.response.status === 404) {
-        toast.error(err.response.data.error || "User Not Found");
-      } else if (err.response.status === 403) {
-        toast.error(err.response.data.error);
-      } else if (err.response.status === 401) {
-        toast.error(err.response.data.error);
-      } else {
-        toast.error("Failed to send Otp Code");
-      }
-      emailRef.current.focus();
-    } finally {
-      setIsReseting(false);
-    }
-  };
+  
   return (
     <section className="bg-gray-100 h-full overflow-auto scrollbar-hidden  w-full max-h-full overflow-y-auto">
       <div className="flex h-full items-center justify-center">
@@ -175,7 +135,7 @@ const Login = () => {
                   </div>
                 </div>
                 <Link
-                  to="/forget"
+                  to="/resetpassword"
                   className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Forgot password?
