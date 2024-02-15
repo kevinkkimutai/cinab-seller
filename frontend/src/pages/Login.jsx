@@ -26,6 +26,7 @@ export default function Login() {
   const [isReseting, setIsReseting] = useState(false);
   const [showResetPassword, setResetPassword] = useState(true); // State for password visibility
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [activeTab, setActiveTab] = useState('profile');
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
@@ -38,6 +39,10 @@ export default function Login() {
 
   const isValidEmail = (email) => Email_REGEX.test(email);
   // const isValidPassword = (password) => Password_REGEX.test(password);
+
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -125,6 +130,7 @@ export default function Login() {
     AddressOne: "",
     username: "",
     contact: "",
+    password: "",
   });
   const [modalData, setModalData] = useState({
     companyEmail: "",
@@ -200,6 +206,7 @@ export default function Login() {
         AddressOne: "",
         username: "",
         contact: "",
+        password: "",
       });
     } else {
       if (res.error.status === 409) {
@@ -220,22 +227,22 @@ export default function Login() {
     }
   };
   return (
-    <section className="bg-gray-100 h-full overflow-auto scrollbar-hidden  w-full max-h-full overflow-y-auto">
-    <div className="flex h-full items-center justify-center">
-      <div className="w-full mx-2 bg-primary-50 rounded-lg shadow-lg  dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+    <section className="bg-gray-100 md:h-full w-full">
+    <div className="flex h-full  pt-0 md:items-center md:justify-center  pt-0 ">
+      <div className="w-full mx-2  sm:pt-20 bg-primary-50 rounded-lg shadow-lg  dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
 
-<div class="mb- border-b border-gray-200 dark:border-gray-700">
-    <ul class="w-full flex -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
-        <li class=" w-1/2" role="presentation">
-            <button class="inline-block text-bold text-xl p-2 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Login</button>
-        </li>
-        <li class="w-1/2" role="presentation">
-            <button class="inline-block text-bold text-xl p-2 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">Register</button>
-        </li>
-    </ul>
-</div>
+      <div className="mb- border-b border-gray-200 dark:border-gray-700">
+        <ul className="w-full flex -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+          <li className={activeTab === 'profile' ? 'w-1/2' : 'w-1/2 border-b-2 rounded-t-lg'} role="presentation">
+            <button className="inline-block text-bold text-xl p-2" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected={activeTab === 'profile'} onClick={() => handleTabClick('profile')}>Login</button>
+          </li>
+          <li className={activeTab === 'dashboard' ? 'w-1/2' : 'w-1/2 border-b-2 rounded-t-lg'} role="presentation">
+            <button className="inline-block text-bold text-xl p-2 hover:text-gray-600 dark:hover:text-gray-300" id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected={activeTab === 'dashboard'} onClick={() => handleTabClick('dashboard')}>Register</button>
+          </li>
+        </ul>
+      </div>
 <div id="default-tab-content">
-    <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+    <div className={activeTab === 'dashboard' ? 'hidden' : 'p-2 rounded-lg bg-gray-50 dark:bg-gray-800'} id="profile">
     <div className="p-2 space-y-4 md:space-y- sm:p-8">
             <h1 className="text-xl font-bold leading-tight text-center tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign in to Seller account
@@ -269,7 +276,7 @@ export default function Login() {
                <div>
                <ContactInputBox
                   type={showPassword ? "text" : "password"}
-                  name="password"w
+                  name="password"
                   ref={passwordRef}
                   placeholder="*****************"
                   value={password}
@@ -344,14 +351,13 @@ export default function Login() {
     </div>
 
     {/* register */}
-    <div class="hidden p-2 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+    <div className={activeTab === 'profile' ? 'hidden' : 'rounded-lg bg-gray-50 dark:bg-gray-800 h-100'} id="dashboard">
     <div>
-    <h1 className="text-xl font-bold leading-tight mb-6 text-center tracking-tight text-gray-900 md:text-2xl dark:text-white">
+    <h1 className="text-xl font-bold leading-tight mb-6 mt-2 text-center tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign up to Seller account
             </h1>
-          <form className="space-y-4 md:space-y-4" onSubmit={handleFormSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-1">
-              <div className="mb-4">
+          <form className="space-y-4 md:space-y-4 p-2" onSubmit={handleFormSubmit}>
+          <div className="mb-4">
                 <label
                   for="email"
                   className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
@@ -362,6 +368,7 @@ export default function Login() {
                   type="email"
                   name="companyEmail"
                   id="email"
+                  capture
                   value={vendorData.companyEmail}
                   onChange={handleFormChange}
                   className="bg-blue-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -369,6 +376,8 @@ export default function Login() {
                   required=""
                 />
               </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-1">
+       
 
               <div>
                 <label
@@ -464,6 +473,30 @@ export default function Login() {
                   required=""
                 />
               </div>
+              <div className="mb-4 relative">
+              <label
+                  htmlFor="password"
+                  className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
+                >
+                  Your password
+                </label>
+               
+                 <ContactInputBox
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={vendorData.password}
+                  onChange={handleFormChange}
+                  placeholder="*****************"
+                  
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-10 text-gray-600  hover:text-gray-800 cursor-pointer"
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
             </div>
 
             <div className="flex justify-end mb-2">
@@ -471,7 +504,7 @@ export default function Login() {
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full disabled:opacity-50"
               >
-                {loading ? <div>Craeting...</div> : "Register"}{" "}
+                {loading ? <div>Creating...</div> : "Register"}{" "}
               </button>
             </div>
           </form>
