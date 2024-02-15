@@ -31,7 +31,6 @@ router.get("/users", userController.getAllUsers);
   /**
  * VERYFY EMAILS.
  */
-router.get('/verify-email/:id/:token', userController.verifyEmail)
 
 
 module.exports = router;

@@ -18,6 +18,7 @@ import {
   RejectedOrder,
   PackagedOrders,
   AdminSection,
+  Registration,
 } from "./pages";
 import { useStateContext } from "./contexts/ContextProvider";
 import Vendor from "./pages/Vendors/steps/Vendor";
@@ -48,8 +49,9 @@ export default function App() {
     <div className={currentMode === "Dark" ? "dark h-full" : " h-full"}>
       <div className="h-full bg-slate-100">
         <Routes>
-          <Route path="/login" element={<Login />} className="md:w-12/12" />
-          <Route index element={<Login />} className="md:w-12/12" />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Registration />} />
+          <Route index element={<Login />}  />
           <Route path="/vendors/:code" element={<VendorPage />} />
           <Route element={<RequireAuth />}>
             <Route

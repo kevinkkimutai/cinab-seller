@@ -29,6 +29,14 @@ export const VendorApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    registerVendor: builder.mutation({
+      query: (formData) => ({
+        url: "/register/vendors",
+        method: "POST",
+        body: formData,
+      }),
+    }),
+
     deleteVendor: builder.mutation({
       query: (id) => ({
         url: `/vendors/${id}`,
@@ -66,6 +74,7 @@ export const {
   useRejectVendorsMutation,
   useAcceptVendorsMutation,
   useCreateVendorMutation,
+  useRegisterVendorMutation,
   useDeleteVendorMutation,
   useGetVendorsMutation,
   useUpdateVendorDetailsMutation,
