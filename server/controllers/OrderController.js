@@ -1,20 +1,20 @@
 // controllers/orderController.js
+const { sendingEmails } = require("../middlewares/Verification");
 const { Order, order, Vendor, item } = require("../models");
 
 const API = "https://cinab-seller-2m51.onrender.com/v2";
 
 const orderController = {
+
   getAllOrders: async (req, res) => {
-    const userId = "1"; // Assuming this is the user ID for the vendor
     try {
+      const userId = req.user.id
       // Find the vendor based on the provided user ID
       const vendor = await Vendor.findOne({ where: { userId } });
 
       if (!vendor) {
-        console.log("Not found vendor");
         return res.status(404).json({ message: "Vendor not found" });
       }
-
       // Find all orders
       const allOrders = await order.findAll({
         order: [["id", "ASC"]],
@@ -97,53 +97,102 @@ const orderController = {
   PackageOrder: async (req, res) => {
     const { id } = req.params;
     try {
+      const userId = req.user.id;
       const orders = await order.findOne({ where: { id } });
+      const vendor = await Vendor.findOne({ where: { userId } });
+      const companyName = vendor.companyName;
       if (!orders) {
         return res.status(404).send("Order Not Found");
       }
+      // Parse the JSON-encoded cart property
+      const cart = JSON.parse(orders.cart);
+
+      // Extract names from all items in the cart
+      const itemNames = Object.values(cart).map(item => item.name);
+
       const packedOrder = await orders.update({
         order_status: "Packaging",
       });
-      console.log(orders);
+
+      // Send email with correct string interpolation
+      await sendingEmails({
+        to: "cinabonline@gmail.com",
+        from: `${companyName} <seller@cinab.co.ke>`,
+        subject: "Order At Packaging",
+        text: `Dear Cinab Team,\nThese product ${itemNames.join(", ")} is being packaged.\nBest Regards,\n${companyName}`,
+      });
+
       return res.status(202).send({ packedOrder });
     } catch (error) {
-      console.log(error);
       return res.status(500).send("Internal Server Error");
     }
   },
   // REJECT ORDER
   RejectOrder: async (req, res) => {
     const { id } = req.params;
+    const userId = req.user.id;
+    const orders = await order.findOne({ where: { id } });
+    const vendor = await Vendor.findOne({ where: { userId } });
+    const companyName = vendor.companyName;
     try {
       const orders = await order.findOne({ where: { id } });
       if (!orders) {
         return res.status(404).send("Order Not Found");
       }
+      // Parse the JSON-encoded cart property
+      const cart = JSON.parse(orders.cart);
+
+      // Extract names from all items in the cart
+      const itemNames = Object.values(cart).map(item => item.name);
+
       const packedOrder = await orders.update({
         order_status: "Rejected",
       });
-      console.log(orders);
+
+      await sendingEmails({
+        to: "cinabonline@gmail.com",
+        from: `${companyName} <seller@cinab.co.ke>`,
+        subject: "Order Rejected",
+        text: `Dear Cinab Team,\nThese product ${itemNames.join(", ")} has been rejected.\nBest Regards,\n${companyName}`,
+      });
+
+
       return res.status(202).send({ packedOrder });
     } catch (error) {
-      console.log(error);
       return res.status(500).send("Internal Server Error");
     }
   },
-         
+
   TransitOrder: async (req, res) => {
     const { id } = req.params;
     try {
+      const userId = req.user.id;
       const orders = await order.findOne({ where: { id } });
+      const vendor = await Vendor.findOne({ where: { userId } });
+      const companyName = vendor.companyName;
       if (!orders) {
         return res.status(404).send("Order Not Found");
       }
       const packedOrder = await orders.update({
         order_status: "Transit",
       });
-      console.log(orders);
+
+      // Parse the JSON-encoded cart property
+      const cart = JSON.parse(orders.cart);
+
+      // Extract names from all items in the cart
+      const itemNames = Object.values(cart).map(item => item.name);
+
+
+      await sendingEmails({
+        to: "cinabonline@gmail.com",
+        from: `${companyName} <seller@cinab.co.ke>`,
+        subject: "Order In Transit",
+        text: `Dear Cinab Team,\nThese product ${itemNames.join(", ")} is in transit.\nBest Regards,\n${companyName}`,
+      });
+
       return res.status(202).send({ packedOrder });
     } catch (error) {
-      console.log(error);
       return res.status(500).send("Internal Server Error");
     }
   },
