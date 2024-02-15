@@ -206,7 +206,7 @@ export default function ProductsForm() {
     <>
       <ReusablePath header="Add Products" />
 
-      <div className="h-full max-h-full bg-primary-50 dark:bg-gray-800 overflow-auto scrollbar-hidden shadow-lg rounded-lg">
+      <div className="w-full h-full max-h-full bg-primary-50 dark:bg-gray-800 overflow-auto scrollbar-hidden shadow-lg rounded-lg">
         <form
           className=""
           onSubmit={handleSubmit}
