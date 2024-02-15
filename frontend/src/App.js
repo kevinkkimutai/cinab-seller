@@ -42,11 +42,12 @@ export default function App() {
   const handleLogout = async (e) => {
     dispatch(logOut());
     navigate("/");
+    window.location.reload(); // Refresh the page
   };
 
   return (
     <div className={currentMode === "Dark" ? "dark h-full" : " h-full"}>
-      <div className="h-full bg-slate-100">
+      <div className="h-full dark:bg-gray-900  bg-slate-100">
         <Routes>
           <Route path="/login" element={<Login />} className="md:w-12/12" />
           <Route index element={<Login />} className="md:w-12/12" />

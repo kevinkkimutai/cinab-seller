@@ -37,7 +37,7 @@ export default function NavBar({ handleLogout }) {
 
   useEffect(() => {
     if (currentUser) {
-      setCompanyEmail(currentUser.vendor.companyEMail);
+      setCompanyEmail(currentUser.email);
       setCompanyName(currentUser.name);
     }
   }, [currentUser]);
@@ -67,7 +67,7 @@ export default function NavBar({ handleLogout }) {
 
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full bg-primary-50 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+      <nav className="fixed top-0 z-50 w-full max-w-full bg-primary-50 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -168,9 +168,11 @@ export default function NavBar({ handleLogout }) {
             <Sidebar.Item icon={HiChartPie}>
               <Link to="/dashboard/vendor"> Dashboard</Link>
             </Sidebar.Item>
+            {userRole === "Admin" && (
             <Sidebar.Item icon={MdAdminPanelSettings }>
               <Link to="/dashboard/admins"> Admins</Link>
             </Sidebar.Item>
+            )}
             <Sidebar.Collapse icon={HiShoppingBag} label="Manage Products">
               <Sidebar.Item>
                 <Link to="/dashboard/products">All Products</Link>
@@ -215,28 +217,28 @@ export default function NavBar({ handleLogout }) {
                 <Link to="/dashboard/cleared-orders">Cleared Orders</Link>{" "}
               </Sidebar.Item>
             </Sidebar.Collapse>
+            {userRole === "Admin" && (
+  <Sidebar.Collapse icon={HiShoppingBag} label="Manage Vendors">
+    <Sidebar.Item>
+      <Link to="/dashboard/all-vendors">All Vendors</Link>{" "}
+    </Sidebar.Item>
+    <Sidebar.Item>
+      <Link to="/dashboard/registered-vendors">Registered Vendors</Link>
+    </Sidebar.Item>
+    <Sidebar.Item>
+      <Link to="/dashboard/pending-vendors">
+        Pending Vendors{" "}
+        <sup className="w-4 h-4 bg-blue-100 p-3 inline-flex justify-center items-center rounded-full">
+          3
+        </sup>{" "}
+      </Link>{" "}
+    </Sidebar.Item>{" "}
+    <Sidebar.Item>
+      <Link to="/dashboard/declined-vendors">Rejected Vendors</Link>{" "}
+    </Sidebar.Item>
+  </Sidebar.Collapse>
+)}
 
-            <Sidebar.Collapse icon={HiShoppingBag} label="Manage Vendors">
-              <Sidebar.Item>
-                <Link to="/dashboard/all-vendors">All Vendors</Link>{" "}
-              </Sidebar.Item>
-              <Sidebar.Item>
-                <Link to="/dashboard/registered-vendors">
-                  Registered Vendors
-                </Link>
-              </Sidebar.Item>
-              <Sidebar.Item>
-                <Link to="/dashboard/pending-vendors">
-                  Pending Vendors{" "}
-                  <sup className="w-4 h-4 bg-blue-100 p-3 inline-flex justify-center items-center rounded-full">
-                    3
-                  </sup>{" "}
-                </Link>{" "}
-              </Sidebar.Item>{" "}
-              <Sidebar.Item>
-                <Link to="/dashboard/declined-vendors">Rejected Vendors</Link>{" "}
-              </Sidebar.Item>
-            </Sidebar.Collapse>
 
             <Sidebar.Item href="#" icon={HiArrowSmRight}>
               <Link to="/login">Login</Link>{" "}
