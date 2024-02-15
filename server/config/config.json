@@ -14,9 +14,9 @@
   "development": {
     "username": "root",
     "password": "",
-    "database": "kelvin",
+    "database": "cinabdb",
     "host": "127.0.0.1",
-    "port": 2000,
+    "port": 3306,
     "dialect": "mysql",
     "dialectOptions": {
       "ssl": false

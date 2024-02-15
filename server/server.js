@@ -47,25 +47,23 @@ app.set("views", path.join(__dirname, "views"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Put here unprotected routes
-app.use("/v2", UserRoutes);
 app.use("/v2", unprotectRoutes);
-app.use("/v2", VendorsRoutes);
-app.use("/v2", offerRoutes);
-app.use("/v2", administratorsRoutes)
+
 app.use("/v2", refreshTokenRoutes);
 
-// put here product routes
-app.use("/v2", OrdersRoutes);
-
-//orders routes
 
 // Enter All protected routes Below VerifyJWT
-app.use(verifyJWT);
+// app.use(verifyJWT);
 app.use("/v2", ProductRoutes);
 app.use("/v2", itemsRoutes);
+app.use("/v2", OrdersRoutes);
+app.use("/v2", VendorsRoutes);
+app.use("/v2", offerRoutes);
+app.use("/v2", UserRoutes);
+app.use("/v2", administratorsRoutes)
 
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8001;
 
 // Socket.IO setup
 const server = http.createServer(app);

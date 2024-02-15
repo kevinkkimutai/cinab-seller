@@ -1,15 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-
+import { Alert, Button } from "react-bootstrap";
 import { setCredentials, setCurrentUser } from "../reducers/AuthReducers";
 import Spinner from "react-bootstrap/Spinner";
-import Reusablepath from "../components/ReusablePath";
-import { Button, Modal, Label, TextInput } from "flowbite-react";
-import {
-  useCreateVendorMutation,
-  useSelfRegisterMutation,
-} from "../actions/VendorAction";
 
 // Add icon imports
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -17,8 +11,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import axios from "axios";
 import { useLoginMutation } from "../actions/authActions";
 import { toast } from "react-toastify";
-import { createVendor } from "../reducers/VendorReducer";
-export default function Login() {
+const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const [email, setEmail] = useState("");
@@ -26,7 +19,6 @@ export default function Login() {
   const [isReseting, setIsReseting] = useState(false);
   const [showResetPassword, setResetPassword] = useState(true); // State for password visibility
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
-  const [activeTab, setActiveTab] = useState('profile');
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
@@ -39,10 +31,6 @@ export default function Login() {
 
   const isValidEmail = (email) => Email_REGEX.test(email);
   // const isValidPassword = (password) => Password_REGEX.test(password);
-
-  const handleTabClick = (tabId) => {
-    setActiveTab(tabId);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -122,129 +110,12 @@ export default function Login() {
       setIsReseting(false);
     }
   };
-
-  const [vendorData, setVendorData] = useState({
-    companyEmail: "",
-    companyName: "",
-    location: "",
-    AddressOne: "",
-    username: "",
-    contact: "",
-    password: "",
-  });
-  const [modalData, setModalData] = useState({
-    companyEmail: "",
-  });
-  const [openModal, setOpenModal] = useState(false);
-  const [loading, setIsLoading] = useState(false);
-  const [creatVendorMutation] = useCreateVendorMutation();
-  const [selfRegistrationMutation] = useSelfRegisterMutation();
-  const dispatcher = useDispatch();
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setVendorData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleMdalChange = (e) => {
-    const { name, value } = e.target;
-    setModalData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleModalSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const res = await selfRegistrationMutation(modalData);
-    if (res.data) {
-      toast.success("Vendor created successfull");
-      dispatcher(createVendor(res.data));
-      setOpenModal(false);
-      setOpenModal({
-        companyEmail: "",
-      });
-    } else {
-      if (res.error.status === 409) {
-        toast.error(res.error.data.error);
-      } else if (res.error.status === 500) {
-        toast.error("Internal server Error");
-        setOpenModal(true);
-      } else {
-        toast.error("Failed to create vendor try again");
-        setOpenModal(true);
-      }
-    }
-
-    try {
-    } catch (error) {
-      toast.error("Failed to create vendor");
-      setOpenModal(true);
-
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const res = await creatVendorMutation(vendorData);
-    if (res.data) {
-      toast.success("Vendor created successfull");
-      dispatcher(createVendor(res.data));
-      setVendorData({
-        companyEmail: "",
-        companyName: "",
-        location: "",
-        AddressOne: "",
-        username: "",
-        contact: "",
-        password: "",
-      });
-    } else {
-      if (res.error.status === 409) {
-        toast.error(res.error.data.error);
-      } else if (res.error.status === 500) {
-        toast.error("Internal server Error");
-      } else {
-        toast.error("Failed to create vendor try again");
-      }
-    }
-
-    try {
-    } catch (error) {
-      toast.error("Failed to create vendor");
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
   return (
-    <section className="bg-gray-100 md:h-full w-full">
-    <div className="flex h-full  pt-0 md:items-center md:justify-center  pt-0 ">
-      <div className="w-full mx-2  sm:pt-20 bg-primary-50 rounded-lg shadow-lg  dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-
-      <div className="mb- border-b border-gray-200 dark:border-gray-700">
-        <ul className="w-full flex -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
-          <li className={activeTab === 'profile' ? 'w-1/2' : 'w-1/2 border-b-2 rounded-t-lg'} role="presentation">
-            <button className="inline-block text-bold text-xl p-2" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected={activeTab === 'profile'} onClick={() => handleTabClick('profile')}>Login</button>
-          </li>
-          <li className={activeTab === 'dashboard' ? 'w-1/2' : 'w-1/2 border-b-2 rounded-t-lg'} role="presentation">
-            <button className="inline-block text-bold text-xl p-2 hover:text-gray-600 dark:hover:text-gray-300" id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected={activeTab === 'dashboard'} onClick={() => handleTabClick('dashboard')}>Register</button>
-          </li>
-        </ul>
-      </div>
-<div id="default-tab-content">
-    <div className={activeTab === 'dashboard' ? 'hidden' : 'p-2 rounded-lg bg-gray-50 dark:bg-gray-800'} id="profile">
-    <div className="p-2 space-y-4 md:space-y- sm:p-8">
-            <h1 className="text-xl font-bold leading-tight text-center tracking-tight text-gray-900 md:text-2xl dark:text-white">
+    <section className="bg-gray-100 h-full overflow-auto scrollbar-hidden  w-full max-h-full overflow-y-auto">
+      <div className="flex h-full items-center justify-center">
+        <div className="w-full bg-primary-50 rounded-lg shadow-lg  dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign in to Seller account
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
@@ -265,57 +136,50 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-             
+
               <div className="relative">
-              <label
+                <label
                   htmlFor="password"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Your password
                 </label>
-               <div>
-               <ContactInputBox
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  ref={passwordRef}
-                  placeholder="*****************"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-10 text-gray-600 hover:text-gray-800 cursor-pointer"
-                >
-                  {showPassword ? <FiEyeOff /> : <FiEye />}
-                </button>
-               </div>
+                <div>
+                  <ContactInputBox
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    w
+                    ref={passwordRef}
+                    placeholder="*****************"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2 top-10 text-gray-600 hover:text-gray-800 cursor-pointer"
+                  >
+                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                  </button>
+                </div>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="remember"
-                      aria-describedby="remember"
-                      type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                    />
-                  </div>
                   <div className="ml-3 text-sm">
-                    <label
-                      for="remember"
-                      className="text-gray-500 dark:text-gray-300"
+                    <Link
+                      to="/register"
+                      className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                     >
-                      Remember me
-                    </label>
+                      Register{" "}
+                    </Link>
                   </div>
                 </div>
-                <a
-                  href="/forget"
+                <Link
+                  to="/forget"
                   className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <button
                 type="submit"
@@ -348,178 +212,11 @@ export default function Login() {
               </button>
             </form>
           </div>
-    </div>
-
-    {/* register */}
-    <div className={activeTab === 'profile' ? 'hidden' : 'rounded-lg bg-gray-50 dark:bg-gray-800 h-100'} id="dashboard">
-    <div>
-    <h1 className="text-xl font-bold leading-tight mb-6 mt-2 text-center tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign up to Seller account
-            </h1>
-          <form className="space-y-4 md:space-y-4 p-2" onSubmit={handleFormSubmit}>
-          <div className="mb-4">
-                <label
-                  for="email"
-                  className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
-                >
-                  Company Email{" "}
-                </label>
-                <input
-                  type="email"
-                  name="companyEmail"
-                  id="email"
-                  capture
-                  value={vendorData.companyEmail}
-                  onChange={handleFormChange}
-                  className="bg-blue-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="name@company.com"
-                  required=""
-                />
-              </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-1">
-       
-
-              <div>
-                <label
-                  for="name"
-                  className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
-                >
-                  Company Name{" "}
-                </label>
-                <input
-                  type="text"
-                  name="companyName"
-                  id="name"
-                  className="bg-blue-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="company name"
-                  required=""
-                  value={vendorData.companyName}
-                  onChange={handleFormChange}
-                />
-              </div>
-
-              <div className="mb-4">
-                <label
-                  for="name"
-                  className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
-                >
-                  Location
-                </label>
-                <input
-                  type="text"
-                  name="location"
-                  id="location"
-                  value={vendorData.location}
-                  onChange={handleFormChange}
-                  className="bg-blue-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="company location"
-                  required=""
-                />
-              </div>
-
-              <div>
-                <label
-                  for="address"
-                  className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
-                >
-                  Address{" "}
-                </label>
-                <input
-                  type="text"
-                  name="AddressOne"
-                  value={vendorData.AddressOne}
-                  onChange={handleFormChange}
-                  id="address"
-                  className="bg-blue-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="company Address"
-                  required=""
-                />
-              </div>
-
-              <div className="mb-4">
-                <label
-                  for="name"
-                  className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
-                >
-                  Sales Agent{" "}
-                </label>
-                <input
-                  type="text"
-                  name="username"
-                  id="username"
-                  value={vendorData.username}
-                  onChange={handleFormChange}
-                  className="bg-blue-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Sales Agent"
-                  required=""
-                />
-              </div>
-
-              <div>
-                <label
-                  for="contact"
-                  className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
-                >
-                  Contact{" "}
-                </label>
-                <input
-                  type="text"
-                  name="contact"
-                  value={vendorData.contact}
-                  onChange={handleFormChange}
-                  id="contact"
-                  className="bg-blue-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="+25471295568"
-                  required=""
-                />
-              </div>
-              <div className="mb-4 relative">
-              <label
-                  htmlFor="password"
-                  className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
-                >
-                  Your password
-                </label>
-               
-                 <ContactInputBox
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={vendorData.password}
-                  onChange={handleFormChange}
-                  placeholder="*****************"
-                  
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-10 text-gray-600  hover:text-gray-800 cursor-pointer"
-                >
-                  {showPassword ? <FiEyeOff /> : <FiEye />}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex justify-end mb-2">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full disabled:opacity-50"
-              >
-                {loading ? <div>Creating...</div> : "Register"}{" "}
-              </button>
-            </div>
-          </form>
         </div>
       </div>
-    
-   
-</div>
-
-   </div>
-    </div>
     </section>
-    
-  )
-}
+  );
+};
 
 const ContactInputBox = React.forwardRef(
   ({ type, placeholder, name, value, onChange }, ref) => {
@@ -540,3 +237,4 @@ const ContactInputBox = React.forwardRef(
   }
 );
 
+export default Login;
