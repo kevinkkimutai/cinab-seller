@@ -23,5 +23,6 @@ export {default as PendingVendors} from "./Vendors/PendingVendors";
 export {default as RegisteredVendors} from "./Vendors/RegisteredVendors";
 export {default as DeclinedVendors} from "./Vendors/DeclinedVendors";
 export {default as AdminSection } from "./AdminSection";
+export {default as Registration} from "./Registration"
 
 

@@ -6,7 +6,7 @@ require("dotenv").config();
 const { User, Token, Vendor, UserProfile } = require("../models");
 
 const crypto = require("crypto");
-const {sendingEmails } = require("../middlewares/Verification");
+const { sendingEmails } = require("../middlewares/Verification");
 function generateOTP() {
   const min = 1000; // Minimum 4-digit number
   const max = 9999; // Maximum 4-digit number
@@ -55,17 +55,17 @@ const userController = {
       // Create the account
       const expirationTime = new Date();
       expirationTime.setMinutes(expirationTime.getMinutes() + 5);
-  
+
       const user = await User.create(userDataInfo);
       const expirationTimeISO = expirationTime.toISOString();
-      
+
       if (user) {
         await Token.create({
           userId: user.id,
           expiresAt: expirationTimeISO,
           token: crypto.randomBytes(16).toString("hex"),
         });
-     
+
         // Return the created user
         return user;
       } else {
@@ -76,7 +76,7 @@ const userController = {
       throw new Error("Error creating account");
     }
   },
-  
+
 
   resendVerificationLink: async (req, res) => {
     try {
@@ -134,7 +134,7 @@ const userController = {
   verifyEmail: async (req, res) => {
     try {
       const { id, token } = req.params;
-      console.log("id" , id);
+      console.log("id", id);
       console.log()
       const now = new Date();
 
@@ -311,14 +311,19 @@ const userController = {
       const user = await User.findOne({
         where: { email },
       });
-
+  
       // Check if user exists
       if (!user) {
         return res.status(404).send({ error: "Email Not Found." });
       }
-
+  
+      // Check if the user is NOT verified
+      if (!user.isVerified) {
+        return res.status(401).send({ error: "Account under review. Please be patient." });
+      }
+  
       const vendor = await Vendor.findOne({ where: { userId: user.id } });
-
+  
       // Validate Password
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
@@ -335,7 +340,7 @@ const userController = {
           process.env.SECRET_KEY,
           { algorithm: "HS256", expiresIn: "5s" }
         );
-
+  
         const refreshToken = jwt.sign(
           {
             email: user.email,
@@ -347,7 +352,7 @@ const userController = {
         );
         user.refreshToken = refreshToken;
         await user.save();
-
+  
         res.cookie("jwt", refreshToken, {
           maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
           secure: true,
@@ -372,6 +377,7 @@ const userController = {
       return res.status(400).send({ error: "Login failed" });
     }
   },
+  
 
   logout: async (req, res) => {
     try {

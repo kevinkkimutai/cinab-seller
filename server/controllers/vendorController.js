@@ -1,5 +1,5 @@
 const { Vendor, User } = require("../models");
-const { sendSecretCode, sellerCenter } = require("../middlewares/Verification");
+const { UnderVerification, sendSecretCode, sellerCenter, sendVerification, } = require("../middlewares/Verification");
 const API = "https://server.cinab.co.ke";
 const bcrypt = require("bcrypt");
 const { newUser } = require("./UserController");
@@ -78,6 +78,8 @@ const vendorController = {
     }
   },
 
+
+
   createVendor: async (req, res) => {
     const {
       companyEmail,
@@ -99,29 +101,25 @@ const vendorController = {
           .send({ error: "company email already registered" });
       }
 
-      // Generate a random string for additional security
-      const randomString = generateRandomString(20);
-
       // Find the id of the last user
       const lastUser = await User.findOne({
         order: [["id", "DESC"]],
       });
       // Set a default password for the user
-      const password = "123456";
+      const password = "123456"
       const hashedPassword = await bcrypt.hash(password, 10);
-
       // Create a new user
       const userDataInfo = {
         name: username,
         email: companyEmail,
         role: "Vendor",
         refreshToken: null,
-        status: "pending",
+        status: "Verified",
+        isVerified: true,
         password: hashedPassword,
         id: lastUser ? lastUser.id + 1 : 1,
       };
       const createdUser = await newUser(userDataInfo, password);
-
       // Create a new vendor
       const createdVendor = await Vendor.create({
         companyEMail: companyEmail,
@@ -149,6 +147,78 @@ const vendorController = {
         .send({ error: "Internal Server Error  for Vendor" });
     }
   },
+
+
+  register: async (req, res) => {
+    const {
+      companyEmail,
+      companyName,
+      location,
+      AddressOne,
+      username,
+      password,
+      contact,
+    } = req.body;
+console.log(req.body);
+    try {
+      // Check if a user with the given companyEmail already exists
+      const existingUser = await User.findOne({
+        where: { email: companyEmail },
+      });
+
+      if (existingUser) {
+        return res.status(409).send({ error: "company email already registered" });
+      }
+
+      // Find the id of the last user
+      const lastUser = await User.findOne({
+        order: [["id", "DESC"]],
+      });
+
+      // Set a default password for the user
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Create a new user
+      const userDataInfo = {
+        name: username,
+        email: companyEmail,
+        role: "Vendor",
+        refreshToken: null,
+        status: "pending",
+        password: hashedPassword,
+        id: lastUser ? lastUser.id + 1 : 1,
+      };
+
+      const createdUser = await newUser(userDataInfo, password);
+
+      // Create a new vendor
+      const createdVendor = await Vendor.create({
+        companyEMail: companyEmail,
+        city: location,
+        companyName,
+        AddressOne,
+        username,
+        userId: createdUser.id,
+        MpesaNumber: contact,
+      });
+
+      // Create an array of promises for email sending
+      const emailPromises = [
+        sendVerification({ email: companyEmail, companyName, contact }),
+        UnderVerification({ username, email: companyEmail }),
+      ];
+
+      // Wait for all email promises to complete
+      await Promise.all(emailPromises);
+
+      console.log("Sent emails to", companyEmail, companyName);
+      return res.status(201).json(createdVendor);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: "Internal Server Error for Vendor" });
+    }
+  },
+
 
   updateVendor: async (req, res) => {
     const {
@@ -202,6 +272,7 @@ const vendorController = {
           email: vendor.companyEMail,
           role: "Vendor",
           refreshToken: null,
+          isVerified: true,
           password: hashedPassword,
           id: lastUser ? lastUser.id + 1 : 1,
         };
@@ -285,10 +356,12 @@ const vendorController = {
     const { id } = req.params;
     try {
       const vendor = await Vendor.findByPk(id);
+      const user = await User.findByPk(vendor.userId);
       if (!vendor) {
         return res.status(404).send({ error: "Vendor Not Found" });
       } else {
         await vendor.update({ status: "approved" });
+        await user.update({ isVerified: true });
         return res.status(204).send(vendor); // Successful deletion, no content to return
       }
     } catch (error) {

@@ -23,7 +23,6 @@ const rootReducer = combineReducers({
   Order: orderReducer,
   Offer: offerReducer,
   Admin: AdminReducers,
-
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 
@@ -31,9 +30,9 @@ export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // Disable serializableCheck
+      serializableCheck: false, 
     }).concat(apiSlice.middleware, thunk),
-  devTools: false, // Disable Redux DevTools
+  devTools: false,
 });
 
 export const persistor = persistStore(store);
