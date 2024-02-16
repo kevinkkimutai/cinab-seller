@@ -38,15 +38,16 @@ export default function ProductsForm() {
     is_specification: 0,
     details: "",
     photo: "",
-    discount_price: 0,
-    previous_price: 0,
-    stock: 0,
+    retail_price: "",
+    wholesale_price: "",
+    stock: "",
     status: 0,
     file: null,
     link: "",
     image: null,
     gallery: [],
   });
+  console.log(formData)
 
   const [createProduct] = useCreateProductMutation();
   const [getCategory] = useGetCategoryMutation();
@@ -171,8 +172,8 @@ export default function ProductsForm() {
     );
     formDataToSend.append("is_specification", formData.is_specification);
     formDataToSend.append("details", formData.details);
-    formDataToSend.append("discount_price", formData.discount_price);
-    formDataToSend.append("previous_price", formData.previous_price);
+    formDataToSend.append("retail_price", formData.retail_price);
+    formDataToSend.append("wholesale_price", formData.wholesale_price);
     formDataToSend.append("stock", formData.stock);
     formDataToSend.append("status", formData.status);
     formDataToSend.append("file", formData.file);
@@ -267,6 +268,7 @@ export default function ProductsForm() {
               </label>
               <input
                 type="number"
+                min="2"
                 name="stock"
                 id="s_price"
                 value={formData.stock}
@@ -277,24 +279,7 @@ export default function ProductsForm() {
               />
             </div>
 
-            <div className="">
-              <label
-                htmlFor="video"
-                className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Video Link
-              </label>
-              <input
-                type="text"
-                name="video"
-                id="video"
-                value={formData.video}
-                onChange={handleInputChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="3000"
-              />
-            </div>
-
+        
             <div className="">
               <label
                 htmlFor="price"
@@ -304,8 +289,9 @@ export default function ProductsForm() {
               </label>
               <input
                 type="number"
-                name="price"
-                id="price"
+                min="0"
+                name="wholesale_price"
+                id="wholesale_price"
                 value={formData.wholesale_price}
                 onChange={handleInputChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -323,9 +309,10 @@ export default function ProductsForm() {
               </label>
               <input
                 type="number"
-                name="discount_price"
+                min="0"
+                name="retail_price"
                 id="d_price"
-                value={formData.discount_price}
+                value={formData.retail_price}
                 onChange={handleInputChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="3000"
@@ -445,7 +432,7 @@ export default function ProductsForm() {
                 onChange={handleFileChange}
                 accept=".png, .jpg, .jpeg"
                 //  multiple
-                // required
+                required
               />
 
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
@@ -468,7 +455,7 @@ export default function ProductsForm() {
                 onChange={handleFileChange}
                 accept=".png, .jpg, .jpeg"
                 multiple
-                // required
+                required
               />
 
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
