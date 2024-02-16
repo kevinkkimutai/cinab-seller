@@ -194,7 +194,7 @@ const userController = {
   ResetPassword: async (req, res) => {
     try {
       const { otp, newPassword } = req.body;
-
+    console.log(req.body);
       if (!otp) {
         return res.status(400).json({ error: "OTP is required" }); // Changed "Email is required" to "OTP is required"
       }
@@ -219,9 +219,10 @@ const userController = {
 
       // Save the changes to the user
       await user.save();
-
-      return res.status(200).json({ message: "Password successfully reset." });
+      console.log(user);
+      return res.status(200).send({ message: "Password successfully reset." });
     } catch (error) {
+      console.log(error);
       return res.status(500).send({ error: "Failed to reset the password" });
     }
   },

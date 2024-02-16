@@ -4,6 +4,7 @@ import axios from "axios";
 import { useVerifyOtpMutation } from "../../actions/authActions";
 import { toast } from "react-toastify";
 import ResetPasswordForm from "./ResetPassword";
+import { useNavigate } from "react-router-dom";
 
 function OTPVerification({ email }) {
   // State variables
@@ -30,11 +31,12 @@ function OTPVerification({ email }) {
       }
     }
   };
-
+  const navigate = useNavigate();
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
     setIsverifying(true);
     const otpCode = otp.join("");
+    setNewOtp(otpCode);
     try {
       const res = await verificationOtp({
         otp: otpCode,
@@ -49,11 +51,10 @@ function OTPVerification({ email }) {
           toast.error("Failed To Verify");
         }
       } else {
-        console.log(res);
         // Handle other cases where res.error is not present
         toast.success("OTP verified successfully.");
-        setShowNewPassword(true)
-    }
+        setShowNewPassword(true);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -64,7 +65,7 @@ function OTPVerification({ email }) {
   return (
     <>
       {showNewPassword ? (
-        <ResetPasswordForm otp={newOtp} /> // Render the ResetPassword component when showNewPassword is true
+        <ResetPasswordForm otp={newOtp} /> 
       ) : (
         <div className="relative flex h-screen  w-full justify-center items-center overflow-hidden bg-gray-200 py-12">
           <div className="relative bg-primary-50 px-6 pt-10 pb-9 shadow-xl mx-auto w-full max-w-lg rounded-2xl">
