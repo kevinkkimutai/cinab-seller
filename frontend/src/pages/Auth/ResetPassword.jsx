@@ -14,6 +14,7 @@ export default function ResetPasswordForm({ otp }) {
   const handlePasswordChange = (e) => {
     setNewPassword(e.target.value);
   };
+  
 
   const handleConfirmPasswordChange = (e) => {
     setConfirmPassword(e.target.value);

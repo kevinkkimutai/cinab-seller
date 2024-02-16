@@ -9,6 +9,7 @@ router.post(
   administratorController.create
 );
 
+
 router.get("/administrators", administratorController.read);
 router.put("/administrators/:id", administratorController.update);
 router.delete("/administrators/:id", administratorController.delete);
