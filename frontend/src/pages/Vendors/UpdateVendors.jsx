@@ -17,6 +17,7 @@ function UpdateVendors({ openModal, setOpenModal, data }) {
           <div className="h-[62vh] overflow-auto">
             <div class=" h-full">
               {/* Top Div */}
+
               <div className="flex-1 sm:flex w-full">
                 {/* Left Column - Image */}
                 <div className="w-4/12">
@@ -44,10 +45,12 @@ function UpdateVendors({ openModal, setOpenModal, data }) {
                     <div className="bg-blue-50 border border-gray-300 rounded">
                       <p className="text-gray-600 ms-1">Email:</p>
                       <p className="font-semibold ms-1">
+
                         {" "}
                         {data.companyEMail ? `${data.companyEMail}` : "N/A"}
                       </p>
                     </div>
+
                     </div>
                     <div className="grid grid-cols-2 gap-2 mt-2 rounded ">
                     <div className="bg-blue-50 border border-gray-300 rounded">
@@ -58,6 +61,7 @@ function UpdateVendors({ openModal, setOpenModal, data }) {
                       </p>
                     </div>
 
+
                     <div className="bg-blue-50 border border-gray-300 rounded">
                       <p className="text-gray-600 ms-1">KRA:</p>
                       <p className="font-semibold ms-1">
@@ -65,6 +69,7 @@ function UpdateVendors({ openModal, setOpenModal, data }) {
                         {data.Kra ? `${data.Kra}` : "N/A"}
                       </p>
                     </div>
+
                 </div>
                   </div>
                 </div>
@@ -79,6 +84,7 @@ function UpdateVendors({ openModal, setOpenModal, data }) {
                         {data.country ? `${data.country}` : "N/A"}
                       </p>
                     </div>
+
               <div className="bg-blue-50 border border-gray-300 rounded">
                       <p className="text-gray-600 ms-1">Licence:</p>
                       <p className="font-semibold ms-1">
@@ -93,6 +99,7 @@ function UpdateVendors({ openModal, setOpenModal, data }) {
                     {data.AccountNumber ? `${data.AccountNumber}` : "N/A"},
                   </p>
                 </div>
+
                 <div className="bg-blue-50 border border-gray-300 rounded">
                   <p className="text-gray-600 ms-1">Bank:</p>
                   <p className="font-semibold ms-1">

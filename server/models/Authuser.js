@@ -6,7 +6,8 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // Add associations here if needed
+      User.hasOne(models.Vendor, { foreignKey: 'userId', as: 'vendor' });
+
     }
   }
 
@@ -25,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
       role: {
         type: DataTypes.STRING,
       },
+      isVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+
       email: {
         type: DataTypes.STRING,
         allowNull: false,

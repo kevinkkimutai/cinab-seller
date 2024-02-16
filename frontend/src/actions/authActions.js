@@ -45,7 +45,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: editedUserProfile,
       }),
     }),
-    
+
     getUser: builder.mutation({
       query: () => ({
         url: "/users",
@@ -58,23 +58,34 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "get",
       }),
     }),
- 
+
 
     forgetPassword: builder.mutation({
       query: (email) => ({
-        url: "/forget-password",
+        url: "/forget",
         method: "POST",
-        body: { email },
+        body: email,
+
       }),
     }),
+    
     resetPassword: builder.mutation({
       query: (resetData) => ({
-        url: "/reset-password",
-        method: "POST",
-        body: { ...resetData },
+        url: "/forget-password",
+        method: "PUT",
+        body: resetData,
       }),
     }),
- 
+
+    verifyOtp: builder.mutation({
+      query: (otp) => ({
+        url: "/verify-otp",
+        method: "POST",
+        body: otp
+      })
+    }),
+
+
     logout: builder.mutation({
       query: () => ({
         url: "/logout",
@@ -104,4 +115,6 @@ export const {
   useGetRefreshTokenMutation,
   useUpdateUserProfileMutation,
   useGetUserProfileMutation,
+  useVerifyOtpMutation,
+
 } = authApiSlice;

@@ -50,8 +50,6 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/v2", unprotectRoutes);
 app.use("/v2", refreshTokenRoutes);
 
-
-
 // Enter All protected routes Below VerifyJWT
 app.use(verifyJWT);
 app.use("/v2", ProductRoutes);
@@ -61,7 +59,6 @@ app.use("/v2", VendorsRoutes);
 app.use("/v2", offerRoutes);
 app.use("/v2", UserRoutes);
 app.use("/v2", administratorsRoutes)
-
 
 
 const port = process.env.PORT || 8001;

@@ -28,6 +28,9 @@ import { useDispatch } from "react-redux";
 import { logOut } from "./reducers/AuthReducers";
 import RequireAuth from "./actions/requireAuth";
 
+import ForgetPassword from "./pages/Auth/ForgetPassword";
+
+
 export default function App() {
   const { setCurrentColor, setCurrentMode, currentMode } = useStateContext();
   useEffect(() => {
@@ -44,14 +47,18 @@ export default function App() {
     dispatch(logOut());
     navigate("/");
     window.location.reload(); // Refresh the page
+
   };
 
   return (
     <div className={currentMode === "Dark" ? "dark h-full" : " h-full"}>
-      <div className="h-full dark:bg-gray-900  bg-slate-100">
+
+      <div className="h-full bg-slate-100">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
+          <Route path="/resetpassword" element={<ForgetPassword/>}/>
+
           <Route index element={<Login />}  />
           <Route path="/vendors/:code" element={<VendorPage />} />
           <Route element={<RequireAuth />}>

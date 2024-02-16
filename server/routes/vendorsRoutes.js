@@ -9,7 +9,6 @@ router.get("/vendors", vendorController.getVendors);
 router.put("/approve/:id", vendorController.approveVendor);
 router.put("/reject/:id", vendorController.rejectVendor);
 router.get("/vendors/:id", vendorController.getVendorById);
-
 router.post("/self-register", vendorController.selfRegistration);
 router.put(
   "/vendor/:id",

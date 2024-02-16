@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setCredentials, logOut } from "../reducers/AuthReducers";
 
 const baseQuery = fetchBaseQuery({
+
   baseUrl: "https://server.cinab.co.ke/v2",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
