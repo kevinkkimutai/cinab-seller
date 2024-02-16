@@ -51,6 +51,7 @@ const vendorController = {
     console.log(req.body);
     try {
       // Check if a user with the given companyEmail already exists
+
       const existingUser = await User.findOne({
         where: { email: companyEmail },
       });
@@ -59,6 +60,16 @@ const vendorController = {
           .status(409)
           .send({ error: "company email already registered" });
       }
+
+      // const existingUser = await User.findOne({
+      //   where: { email: companyEmail },
+      // });
+      // if (existingUser) {
+      //   return res
+      //     .status(409)
+      //     .send({ error: "company email already registered" });
+      // }
+
 
       const randomString = generateRandomString(20);
       sendSecretCode({
@@ -88,6 +99,7 @@ const vendorController = {
       AddressOne,
       username,
       contact,
+      password,
     } = req.body;
 
     try {
@@ -107,6 +119,7 @@ const vendorController = {
       });
       // Set a default password for the user
       const password = "123456"
+
       const hashedPassword = await bcrypt.hash(password, 10);
       // Create a new user
       const userDataInfo = {

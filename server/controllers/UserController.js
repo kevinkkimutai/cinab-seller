@@ -176,6 +176,7 @@ const userController = {
       const { otp } = req.body;
       if (!otp) {
         return res.status(400).json({ error: "Otp is required" });
+
       }
 
       const user = await User.findOne({ where: { otp } });
@@ -194,7 +195,6 @@ const userController = {
   ResetPassword: async (req, res) => {
     try {
       const { otp, newPassword } = req.body;
-    console.log(req.body);
       if (!otp) {
         return res.status(400).json({ error: "OTP is required" }); // Changed "Email is required" to "OTP is required"
       }
@@ -219,10 +219,8 @@ const userController = {
 
       // Save the changes to the user
       await user.save();
-      console.log(user);
       return res.status(200).send({ message: "Password successfully reset." });
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ error: "Failed to reset the password" });
     }
   },
@@ -271,7 +269,6 @@ const userController = {
 
       return res.status(200).json({ message: "OTP sent successfully." });
     } catch (error) {
-      console.log(error);
       return res.status(500).send({ error: "Failed to send OTP" });
     }
   },

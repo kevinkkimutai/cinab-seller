@@ -17,9 +17,10 @@ function UpdateVendors({ openModal, setOpenModal, data }) {
           <div className="h-[62vh] overflow-auto">
             <div class=" h-full">
               {/* Top Div */}
-              <div className="flex-1 sm:flex">
+
+              <div className="flex-1 sm:flex w-full">
                 {/* Left Column - Image */}
-                <div className="mr-8">
+                <div className="w-4/12">
                   <img
                     src={
                       data.images
@@ -27,79 +28,88 @@ function UpdateVendors({ openModal, setOpenModal, data }) {
                         : "https://flowbite.com/docs/images/examples/image-4@2x.jpg"
                     }
                     alt="Profile"
-                    className="rounded-full border-4 border-gray-300 w-32 h-32 object-cover"
+                    className="rounded-full border-4 border-gray-300 rounded w-32 h-32 object-cover"
                   />
                 </div>
                 {/* Right Column - 6 Attributes */}
-                <div>
-                  <h2 className="text-3xl font-semibold text-gray-800 my-4 ">
-                    {data.username ? `${data.username}` : "N/A"}
-                  </h2>
-                  <div className="grid grid-cols-2  sm:grid-cols-3  space-x-10 space-y-3">
-                    <div>
-                      <p className="text-gray-600">Email:</p>
-                      <p className="font-semibold">
+                <div className="w-8/12">
+              
+                <div className="">
+                  <div className="grid grid-cols-2  gap-2 rounded ">
+                  <div className="bg-blue-50 border border-gray-300 rounded">
+                <p className="text-gray-600 ms-1">CompanyName:</p>
+                      <p className="font-semibold ms-1">
+                      {data.username ? `${data.username}` : "N/A"}
+                      </p>
+                </div>
+                    <div className="bg-blue-50 border border-gray-300 rounded">
+                      <p className="text-gray-600 ms-1">Email:</p>
+                      <p className="font-semibold ms-1">
+
                         {" "}
                         {data.companyEMail ? `${data.companyEMail}` : "N/A"}
                       </p>
                     </div>
-                    <div>
-                      <p className="text-gray-600">Company Name:</p>
-                      <p className="font-semibold">
-                        {" "}
-                        {data.companyName ? `${data.companyName}` : "N/A"}
-                      </p>
-                    </div>{" "}
-                    <div>
-                      <p className="text-gray-600">Licence:</p>
-                      <p className="font-semibold">
-                        {" "}
-                        {data.licence ? `${data.licence}` : "N/A"}
-                      </p>
-                    </div>{" "}
-                    <div>
-                      <p className="text-gray-600">Mpesa NO:</p>
-                      <p className="font-semibold">
+
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mt-2 rounded ">
+                    <div className="bg-blue-50 border border-gray-300 rounded">
+                      <p className="text-gray-600 ms-1">Mpesa NO:</p>
+                      <p className="font-semibold ms-1">
                         {" "}
                         {data.MpesaNumber ? `${data.MpesaNumber}` : "N/A"},
                       </p>
                     </div>
-                    <div>
-                      <p className="text-gray-600">KRA:</p>
-                      <p className="font-semibold">
+
+
+                    <div className="bg-blue-50 border border-gray-300 rounded">
+                      <p className="text-gray-600 ms-1">KRA:</p>
+                      <p className="font-semibold ms-1">
                         {" "}
                         {data.Kra ? `${data.Kra}` : "N/A"}
                       </p>
                     </div>
-                    <div>
-                      <p className="text-gray-600">Location:</p>
-                      <p className="font-semibold">
+
+                </div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-2 grid grid-cols-4 gap-2">
+            
+                    <div className="bg-blue-50 border border-gray-300 rounded">
+                      <p className="text-gray-600 ms-1">Location:</p>
+                      <p className="font-semibold ms-1">
                         {" "}
                         {data.city ? `${data.city}` : "N/A"},
                         {data.country ? `${data.country}` : "N/A"}
                       </p>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 h-1/2 grid grid-cols-4 gap-4">
-                <div>
-                  <p className="text-gray-600">Account:</p>
-                  <p className="font-semibold">
+
+              <div className="bg-blue-50 border border-gray-300 rounded">
+                      <p className="text-gray-600 ms-1">Licence:</p>
+                      <p className="font-semibold ms-1">
+                        {" "}
+                        {data.licence ? `${data.licence}` : "N/A"}
+                      </p>
+                    </div>{" "}
+                <div className="bg-blue-50 border border-gray-300 rounded">
+                  <p className="text-gray-600 ms-1">Account:</p>
+                  <p className="font-semibold ms-1">
                     {" "}
                     {data.AccountNumber ? `${data.AccountNumber}` : "N/A"},
                   </p>
                 </div>
-                <div>
-                  <p className="text-gray-600">Bank:</p>
-                  <p className="font-semibold">
+
+                <div className="bg-blue-50 border border-gray-300 rounded">
+                  <p className="text-gray-600 ms-1">Bank:</p>
+                  <p className="font-semibold ms-1">
                     {data.BankName ? `${data.BankName}` : "N/A"},
                   </p>
                 </div>
 
-                <div>
-                  <p className="text-gray-600">Name:</p>
-                  <p className="font-semibold">
+                <div className="bg-blue-50 border border-gray-300 rounded">
+                  <p className="text-gray-600 ms-1">Name:</p>
+                  <p className="font-semibold ms-1">
                     {" "}
                     {data.MpesaName ? `${data.MpesaName}` : "N/A"},
                   </p>

@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.hasOne(models.Vendor, { foreignKey: 'userId', as: 'vendor' });
+
     }
   }
 
@@ -29,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+
       email: {
         type: DataTypes.STRING,
         allowNull: false,
