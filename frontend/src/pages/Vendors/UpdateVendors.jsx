@@ -3,7 +3,7 @@ import { Button, Modal, Select } from "flowbite-react";
 
 function UpdateVendors({ openModal, setOpenModal, data }) {
   const [modalPlacement, setModalPlacement] = useState("center");
-  console.log(data);
+ 
   return (
     <>
       <Modal

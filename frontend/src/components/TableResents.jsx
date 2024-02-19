@@ -1,38 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useGetProductsMutation } from "../actions/ProductAction";
-import { useDispatch, useSelector } from "react-redux";
-import { selectProducts, setProduct } from "../reducers/ProductReducers";
+import React, { useState } from "react";
 
-export default function TableResents() {
+
+export default function TableResents({ordersd}) {
   const [loading, setLoading] = useState(false);
-  const [getProducts] = useGetProductsMutation();
 
-  // Get Products from the store
-  const productData = useSelector(selectProducts);
-  const dispatch = useDispatch();
-
-  // FUNCTION TO FETCH DATA
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await getProducts();
-      console.log(res);
-      if (!res.data) {
-        console.log("Failed to get Products");
-      } else {
-        // Dispatch the Products to store them in the store.
-        dispatch(setProduct(res.data));
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  }, [dispatch, getProducts]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   return (
     <div className="">
@@ -60,26 +31,26 @@ export default function TableResents() {
             </tr>
         </thead>
         <tbody>
-        {productData.slice(-8).map((product) => (
+    
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" 
-            key={product.id}
+            key={ordersd.id}
             >
                 <td class="w-4 p-4">
                     <div class="flex items-center">
-                     {product.index}.
+                   
                     </div>
                 </td>
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                {product.name.slice(0, 10)}
+                {ordersd.name}
                 </th>
                 <td class="px-6 py-4">
-                {product.inStock ? "Yes" : "No"}
+                {ordersd.qty}
                 </td>
                 <td class="px-6 py-4">
-                {product.stock}
+                {ordersd.Price}
                 </td>
             </tr>
-       ))}
+   
         </tbody>
     </table>
 </div>
