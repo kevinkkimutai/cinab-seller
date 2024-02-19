@@ -227,7 +227,7 @@ export default function Dashboard() {
           <TableProducts />
         </div>
         <div className=" h-fu rounded ">
-          <TableResents />
+          <TableResents ordersd={ordersd}/>
         </div>
       </div>
     </div>
