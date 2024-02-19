@@ -1,20 +1,20 @@
 {
 
-  "developments": {
+  "development": {
     "username": "cinabcok_online",
     "password": "?SEL1pX;{-)O",
-    "database": "cinabcok_cinabserve",
+    "database": "cinabcok_cinabserver",
     "host": "cinab.co.ke",
     "port": 3306,
     "dialect": "mysql",
     "dialectOptions": {
-      "ssl": true
+      "ssl": false
     }
   },
-  "development": {
+  "developments": {
     "username": "root",
     "password": "",
-    "database": "cinabdb",
+    "database": "cinabdb1",
     "host": "127.0.0.1",
     "port": 3306,
     "dialect": "mysql",

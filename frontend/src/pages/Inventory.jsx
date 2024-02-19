@@ -96,8 +96,8 @@ const navigate = useNavigate()
             "image",
             "name",
             "stock",
-            "discount_price",
-            "previous_price",
+            "retail_price",
+            "wholesale_price",
           ]}
           data={productData}
           header={header}
@@ -121,10 +121,10 @@ const navigate = useNavigate()
           columnMapping={{
             name: "Product Name",
 
-            discount_price: "Discount",
+            retail_price: "Retail Price",
             status: "Status",
             image: "Image",
-            previous_price: "previous price",
+            wholesale_price: "wholesale price",
           }}
         />
       )}

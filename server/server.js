@@ -51,7 +51,7 @@ app.use("/v2", unprotectRoutes);
 app.use("/v2", refreshTokenRoutes);
 
 // Enter All protected routes Below VerifyJWT
-app.use(verifyJWT);
+// app.use(verifyJWT);
 app.use("/v2", ProductRoutes);
 app.use("/v2", itemsRoutes);
 app.use("/v2", OrdersRoutes);

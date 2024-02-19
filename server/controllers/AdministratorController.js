@@ -32,6 +32,7 @@ const administratorController = {
         role: "Admin",
         refreshToken: null,
         status: "Approved",
+        isVerified: true,
         password: hashedPassword,
         id: lastUser ? lastUser.id + 1 : 1,
       };

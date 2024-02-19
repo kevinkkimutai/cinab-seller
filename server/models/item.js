@@ -30,7 +30,12 @@ module.exports = (sequelize, DataTypes) => {
       is_specification: DataTypes.INTEGER,
       details: DataTypes.TEXT,
       photo: DataTypes.STRING,
-      discount_price: DataTypes.DOUBLE,
+      wholesale_price: {
+        type: DataTypes.DECIMAL(10, 2), 
+      },
+      retail_price: {
+        type: DataTypes.DECIMAL(10, 2), 
+      },
       previous_price: DataTypes.DOUBLE,
       stock: DataTypes.INTEGER,
       meta_keywords: DataTypes.TEXT,
