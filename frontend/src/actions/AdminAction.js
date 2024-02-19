@@ -11,14 +11,14 @@ export const AdminApiSlice = apiSlice.injectEndpoints({
     
     deleteAdmin: builder.mutation({
         query: (id) => ({
-          url: `/administrators/${id}`,  // Add a slash before the id
+          url: `/administrators/${id}`,  
           method: "DELETE",
         }),
       }),
       
       updateAdmin: builder.mutation({
         query: ({ id, formData }) => ({
-          url: `/administrators/${id}`,  // Use dynamic parameter for the Admin ID
+          url: `/administrators/${id}`,  
           method: "PUT",
           body: formData,
         }),
