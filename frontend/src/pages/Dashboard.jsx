@@ -222,13 +222,11 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4 h-full">
+      <div className="grid grid-cols-1 full">
         <div className=" h-fu rounded ">
           <TableProducts />
         </div>
-        <div className=" h-fu rounded ">
-          <TableResents />
-        </div>
+      
       </div>
     </div>
   );
