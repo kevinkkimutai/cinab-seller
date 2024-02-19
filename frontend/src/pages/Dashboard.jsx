@@ -226,7 +226,7 @@ export default function Dashboard() {
         <div className=" h-fu rounded ">
           <TableProducts />
         </div>
-      
+
       </div>
     </div>
   );
