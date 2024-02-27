@@ -18,6 +18,8 @@ export { default as GetVendors } from "./Vendors/GetVendors";
 export { default as Sales } from "../pages/Sales";
 export {default as Stepper} from "../pages/Vendors/Stepper";
 
+export {default as AllUsers} from "./users/AllUsers";
+
 export {default as Vendor} from "./Vendors/steps/Vendor";
 export {default as AllVendors} from "./Vendors/AllVendors";
 export {default as PendingVendors} from "./Vendors/PendingVendors";

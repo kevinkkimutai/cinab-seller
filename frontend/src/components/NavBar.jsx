@@ -151,6 +151,9 @@ export default function NavBar({ handleLogout }) {
                 <Link to="/dashboard/admins"> Admins</Link>
               </Sidebar.Item>
             )}
+            <Sidebar.Item icon={MdAdminPanelSettings}>
+                <Link to="/dashboard/users"> Users</Link>
+              </Sidebar.Item>
             <Sidebar.Collapse icon={HiShoppingBag} label="Manage Products">
               <Sidebar.Item>
                 <Link to="/dashboard/products">All Products</Link>
