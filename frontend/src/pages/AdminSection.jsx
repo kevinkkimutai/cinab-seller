@@ -56,7 +56,7 @@ export default function Admins({ header }) {
   const [formData, setFormData] = useState({
 
     name: null,
-    contact: "+254746645142",
+    contact: "",
     email: "",
     password: "",
     image: null,
@@ -86,6 +86,7 @@ export default function Admins({ header }) {
         toast.success(`${formData.name} added to Admins successfully`);
         document.getElementById("authentication-modal").classList.add("hidden");
       } else {
+        console.log(data);
         toast.error("Email Already Exists.");
       }
     } catch (error) {

@@ -19,6 +19,7 @@ import {
   PackagedOrders,
   AdminSection,
   Registration,
+  AllUsers,
 } from "./pages";
 import { useStateContext } from "./contexts/ContextProvider";
 import Vendor from "./pages/Vendors/steps/Vendor";
@@ -122,6 +123,7 @@ export default function App() {
               <Route path="sales" element={<Sales />} />
 
               <Route path="admins" element={<AdminSection  header="List of Admins" />}/>
+              <Route path="users" element={<AllUsers header="List of Users" />}/>
             </Route>
           </Route>
 
